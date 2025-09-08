@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:untitled/constants/image_helper.dart';
+import 'package:untitled/screens/dashboard/profile_screen.dart';
+import 'package:untitled/screens/dashboard/setting_screen.dart';
+import 'package:untitled/screens/dashboard/video_screen.dart';
+
+import '../../constants/base_appbar.dart';
+import '../../constants/colors_constant.dart';
+import '../../constants/strings.dart';
+import 'home_screen.dart';
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _currentIndex = 0;
+  final List<Widget> _screens = [
+    HomeScreen(),
+    VideoScreen(),
+    ProfileScreen(),
+    SettingScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: ColorConstant.scaffoldColor,
+        body: _screens[_currentIndex],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6,
+                offset: Offset(0, -2), // shadow above the nav bar
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            useLegacyColorScheme: true,
+            selectedItemColor: ColorConstant.primaryColor,
+            unselectedItemColor: ColorConstant.textColor,
+            backgroundColor: Colors.white,
+
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon:SvgPicture.asset(_currentIndex ==0 ? ImageHelper.homeSelected:ImageHelper.homeUnselected),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(_currentIndex ==1 ? ImageHelper.videoSelect:ImageHelper.videoUnselect),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(_currentIndex ==2 ? ImageHelper.profileSelected:ImageHelper.profileUnselect),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(_currentIndex ==3 ? ImageHelper.settingSelected: ImageHelper.settingUnselected),
+                label: '',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

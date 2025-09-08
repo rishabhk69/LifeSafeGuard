@@ -1,0 +1,54 @@
+
+class ImageHelper{
+  static const appLogo = "assets/images/logo_image.png";
+  static const appLogoWhite = "assets/images/logo_image_white.png";
+  static const String img_splash = "assets/images/splash_screen_img.png";
+  static const String imgEmailVerify = "assets/images/img_email_verify.png";
+  static const String logoLion = "assets/images/logo_lion.png";
+  static const String labourImage = "assets/images/labour_image.jpg";
+  static const String language_frame = "assets/images/language_frame.svg";
+  static const String languageCircle = "assets/images/language-circle.svg";
+  static const String imageEnableToggle = "assets/images/enable_toggle.svg";
+  static const String homeUnselected = "assets/images/home_unselected.svg";
+  static const String homeSelected = "assets/images/home_sel.svg";
+  static const String videoUnselect = "assets/images/video_unselect.svg";
+  static const String videoSelect = "assets/images/video_selected.svg";
+  static const String profileUnselect = "assets/images/profile_unselect.svg";
+  static const String profileSelected = "assets/images/profile_selected.svg";
+  static const String settingSelected = "assets/images/setting_selected.svg";
+  static const String settingUnselected = "assets/images/setting_unselect.svg";
+  static const String photoIc = "assets/images/photo_ic.svg";
+  static const String fbIc = "assets/images/fb_ic.svg";
+  static const String instaIc = "assets/images/insta_ic.svg";
+  static const String twitterIc = "assets/images/twitter_ic.svg";
+  static const String contactUs = "assets/images/contact_us.svg";
+  static const String aboutUsIc = "assets/images/about_us_ic.svg";
+  static const String paypalIc = "assets/images/paypal_ic.svg";
+  static const String upiIc = "assets/images/upi_ic.svg";
+  static const String bombIc = "assets/images/bomb_ic.svg";
+  static const String planeIc = "assets/images/plane_ic.svg";
+  static const String missileIc = "assets/images/missile_ic.svg";
+  static const String dogIc = "assets/images/dog_ic.svg";
+  static const String humanIc = "assets/images/human_ic.svg";
+  static const String landIc = "assets/images/dog_ic.svg";
+  static const String fightIc = "assets/images/fight_ic.svg";
+  static const String otherIc = "assets/images/other_ic.svg";
+  static const String attackIc = "assets/images/attack_ic.svg";
+  static const String roadIc = "assets/images/road_ic.svg";
+  static const String mapPin = "assets/images/map_pin.svg";
+  static const String mapImage = "assets/images/map_image.png";
+  static const String editOrange = "assets/images/edit_orange.svg";
+  static const String editGrey = "assets/images/edit_grey.svg";
+  static const String bgImage = "assets/images/bg.png";
+  static const String mobileIc = "assets/images/mobile_ic.svg";
+  static const String cameraIc = "assets/images/camera.svg";
+  static const String smsIc = "assets/images/sms_ic.svg";
+  static const String callIc = "assets/images/call_ic.svg";
+  static const String profileIc = "assets/images/profile_ic.svg";
+  static const String messageIc = "assets/images/message_ic.svg";
+  static const String sendIc = "assets/images/send_ic.svg";
+  static const String locationIc = "assets/images/location_ic.svg";
+  static const String timerIc = "assets/images/timer_ic.svg";
+  static const String aggrementIc = "assets/images/aggrement_ic.svg";
+
+}
