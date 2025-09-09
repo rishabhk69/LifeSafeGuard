@@ -115,7 +115,8 @@ class _MobileScreenState extends State<MobileScreen> {
             buttonHeight: 50,
             text: StringHelper.send, onTap: (){
           if(formGlobalKey.currentState!.validate()){
-            BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(selectedPhoneCode+mobileController.text.trim()));
+            context.go('/dashboardScreen');
+            // BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(selectedPhoneCode+mobileController.text.trim()));
           }
         }),),
 

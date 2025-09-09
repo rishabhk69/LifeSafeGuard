@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:untitled/bloc/auth/getIncident_bloc.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/screens/dashboard/profile_screen.dart';
 import 'package:untitled/screens/dashboard/setting_screen.dart';
@@ -55,6 +57,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               setState(() {
                 _currentIndex = index;
               });
+              if(index==1){
+               BlocProvider.of<IncidentsBloc>(context,listen: false).add(IncidentsRefreshEvent(10, 0));
+              }
             },
             items: [
               BottomNavigationBarItem(

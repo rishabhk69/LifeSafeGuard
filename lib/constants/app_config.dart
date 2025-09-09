@@ -7,6 +7,7 @@ class AppConfig {
   static const login = "/userSignup/login";
   static const profile = "/get-profile";
   static const requestOtp = "auth/request-otp";
+  static const getIncidents = "incidents";
   static const signup = "signup";
   static const verifyOtp = "auth/verify-otp";
   static const userAgreement = "/user-agreement";

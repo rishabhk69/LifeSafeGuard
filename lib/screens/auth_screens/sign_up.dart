@@ -38,7 +38,7 @@ class SignupScreen extends StatelessWidget {
           }
         });
       },
-      iconName:selectedFile ?? ImageHelper.cameraIc ,
+      iconName:selectedFile ?? ImageHelper.cameraIc,
       title: StringHelper.signUP,
       showBack: true,
       child:  Form(
@@ -83,7 +83,7 @@ class SignupScreen extends StatelessWidget {
                 else if(loginState is SignupSuccessState){
                   locator<DialogService>().hideLoader();
                   AppUtils().setUserLoggedIn();
-                  AppUtils().setUserId(loginState.signupData.userId);
+                  AppUtils().setUserId(loginState.signupData.userId??"");
                   locator<ToastService>().show(loginState.signupData.message??"");
                   context.go('/dashboardScreen');
                 }

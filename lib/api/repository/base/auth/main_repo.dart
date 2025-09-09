@@ -29,6 +29,15 @@ class MainRepository extends BaseRepository {
     ));
   }
 
+  Future<Result<dynamic>> getIncidents(
+      {int? offset, int? size}) async {
+    final service = MainService(await dio);
+    return safeCall(service.getIncidents(
+      offset: offset,
+      size: size
+    ));
+  }
+
     Future<Result<dynamic>> verifyOtp(String phone,String otp) async {
     final service = MainService(await dio);
     return safeCall(service.verifyOtp(phone,otp));

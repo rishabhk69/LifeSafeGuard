@@ -32,6 +32,21 @@ import '../../constants/app_config.dart';
      }
    }
 
+   Future<dynamic> getIncidents({int? offset, int? size}) async {
+     try {
+       final response = await _dio.get(
+         AppConfig.getIncidents,
+         queryParameters: {
+           'offset':offset,
+           'size' :size
+         },
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> getSignUp({
      String? firstName,
      String? lastName,

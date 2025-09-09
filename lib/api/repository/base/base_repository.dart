@@ -24,7 +24,8 @@ abstract class BaseRepository {
     return {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $token"
+      // HttpHeaders.authorizationHeader: "Bearer $token"
+      HttpHeaders.authorizationHeader: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEyMzQiLCJleHAiOjE3NTIyNDc1ODN9.OifTzH016hLbzB0s4IKNrtzJ6QQ4XhwOefKT9xocj0A"
     };
   }
 

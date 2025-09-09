@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/colors_constant.dart';
 
+import '../../constants/app_utils.dart';
 import '../../constants/logo_widget.dart';
 import '../../custom/app_progress_indicator.dart';
 
@@ -17,16 +18,34 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  bool isFirstTime = false;
+
   @override
   void initState() {
     super.initState();
     Timer(
         Duration(seconds: 3),
             (){
-          context.go('/login_screen');
+              if(isFirstTime){
+                context.go('/dashboardScreen');
+              }
+              else{
+                context.go('/login_screen');
+              }
             });
 
   }
+
+  getIsFirstTime(){
+    AppUtils().getUserLoggedIn().then((onValue){
+      if(onValue==true){
+        setState(() {
+          isFirstTime = true;
+        });
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
