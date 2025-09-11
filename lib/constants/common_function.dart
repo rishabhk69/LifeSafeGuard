@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-// import 'package:light_compressor/light_compressor.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:video_compress/video_compress.dart';
 
 import '../common/locator/locator.dart';
 import '../localization/language_constants.dart';
@@ -134,101 +134,56 @@ class CommonFunction{
 
   Future<XFile?> pickImageVideoFile(
       bool isPhoto, bool isFromGallery, BuildContext context) async {
-    if (isPhoto) {
-      if (isFromGallery) {
-        selectedFile = await picker.pickImage(source: ImageSource.gallery);
-        if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
-          var size =
-          getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).replaceAll('mb', '');
-          if (int.parse(size) > 100) {
-            locator<ToastService>().show(getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb')??"");
-          } else {
-            return selectedFile;
-          }
-        }
-        else{
-          return selectedFile;
-        }
+    try {
+      if (isPhoto) {
+        // ---- PHOTO CASE ----
+        selectedFile = await picker.pickImage(
+          source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
+        );
 
-      } else {
-        try{
-          selectedFile = await picker.pickImage(source: ImageSource.camera);
-        }
-        catch(e){
-          if (kDebugMode) {
-            print(e);
+        if (selectedFile != null) {
+          // check size
+          if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
+            var size = getFileSizeString(bytes: File(selectedFile!.path).lengthSync())
+                .replaceAll('mb', '');
+            if (int.parse(size) > 100) {
+              locator<ToastService>().show(
+                  getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb') ?? "");
+              return null;
+            }
           }
-        }
-        if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
-          var size =
-          getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).replaceAll('mb', '');
-          if (int.parse(size) > 100) {
-            locator<ToastService>().show(getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb')??"");
-          } else {
-            return selectedFile;
-          }
-        }
-        else{
           return selectedFile;
+        }
+      } else {
+        // ---- VIDEO CASE ----
+        selectedFile = await picker.pickVideo(
+          source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
+        );
+        if (selectedFile != null) {
+            return selectedFile; // fallback
         }
       }
-    }
-    else {
-      if (isFromGallery) {
-        selectedFile = await picker.pickVideo(source: ImageSource.gallery);
-        if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
-          var size =
-          getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).replaceAll('mb', '');
-          if (int.parse(size) > 100) {
-            locator<ToastService>().show(getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb')??"");
-          } else {
-            return selectedFile;
-          }
-        }
-        else{
-          return selectedFile;
-        }
-      } else {
-        try{
-          selectedFile = await picker.pickVideo(source: ImageSource.camera);
-          locator<DialogService>().showLoader(message: 'Compressing');
-          // final LightCompressor _lightCompressor = LightCompressor();
-          // final dynamic response = await _lightCompressor.compressVideo(
-          //   path: selectedFile!.path,
-          //   videoQuality: VideoQuality.very_low,
-          //   isMinBitrateCheckEnabled: false,
-          //   video: Video(videoName: selectedFile!.name),
-          //   android: AndroidConfig(isSharedStorage: true, saveAt: SaveAt.Movies),
-          //   ios: IOSConfig(saveInGallery: false),
-          // );
-          // if (response is OnSuccess) {
-            locator<DialogService>().hideLoader();
-            XFile file =  XFile(selectedFile!.path);
-            locator<DialogService>().hideLoader();
-            selectedFile = file;
-          // }
-        }
-        catch(e){
-          if (kDebugMode) {
-            requestCameraPermission();
-          }
-        }
-        if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
-          var size =
-          getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).replaceAll('mb', '');
-          if (int.parse(size) > 100) {
-            locator<ToastService>().show(getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb')??"");
-          } else {
-            return selectedFile;
-          }
-        }
-        else{
-          return selectedFile;
-        }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in pickImageVideoFile: $e");
       }
     }
     return null;
   }
+
+
+  compressVideo(XFile file) async {
+    final MediaInfo? response = await VideoCompress.compressVideo(
+      file.path,
+      quality: VideoQuality.DefaultQuality,
+      deleteOrigin: false,
+    );
+    if (response != null && response.path != null) {
+      locator<DialogService>().hideLoader();
+      return XFile(response.path!);
+    }
+  }
+
   Future<void> requestCameraPermission() async {
     // Request the camera permission
     await Permission.camera.request();
@@ -243,6 +198,16 @@ class CommonFunction{
       // Permission is permanently denied
       openAppSettings();
     }
+  }
+
+  Future<File> getThumbnail(XFile file) async {
+    final thumbnailFile = await VideoCompress.getFileThumbnail(
+      file.path,
+      quality: 50, // 0-100 (higher is better quality, bigger file)
+      position: -1, // default is -1 (first frame). You can pass seconds (e.g., 2)
+    );
+    return thumbnailFile;
+
   }
 
 

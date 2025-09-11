@@ -1,16 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:untitled/bloc/file_selection_bloc.dart';
-import 'package:untitled/common/locator/locator.dart';
-import 'package:untitled/common/service/navigation_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:video_compress/video_compress.dart';
 
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction;
@@ -28,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController detailController =TextEditingController();
   bool isAnonymous = false;
   bool isVideo = true;
+  XFile? selectedFile;
 
 
   @override
@@ -55,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 border: Border.all(color: Colors.orange, width: 1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
+              child:
+              selectedFile == null ?Column(
                 children: [
                   Text(
                     isVideo ? StringHelper.uploadVideo : StringHelper.uploadImage,
@@ -78,7 +79,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 18
                     ),),
                     onPressed: () async {
-                      await CommonFunction().pickImageVideoFile(true,false,context).then((value){
+                      await CommonFunction().pickImageVideoFile(!isVideo,false,context).then((value) async {
+                        if (value != null && isVideo) {
+                          selectedFile = XFile(value.path);
+                          CommonFunction().compressVideo(value).then((v) async {
+                            selectedFile = null;
+                            selectedFile = XFile(v!.path);
+                            await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
+                              setState(() {
+                                selectedFile = XFile(onValue.path);
+                              });
+                            });
+
+                          });
+                        }
+                        else if(value != null && !isVideo){
+                          setState(() {
+                            selectedFile = value;
+                          });
+                        }
+                        else{
+                          return null;
+                        }
                         // context.pop();
                         // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
                       });
@@ -100,24 +122,59 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 18
                     ),),
                     onPressed: () async {
-                      if(isVideo) {
-                        await CommonFunction().pickImageVideoFile(
-                            false, true, context).then((value) {
-                          // context.pop();
-                          // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
-                        });
-                      }
-                      else{
-                        await CommonFunction().pickImageVideoFile(
-                            true, true, context).then((value) {
-                          // context.pop();
-                          // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
-                        });
-                      }
+                      await CommonFunction().pickImageVideoFile(!isVideo,true,context).then((value) async {
+                        if (value != null){
+                          FileStat stat = await File(value.path).stat();
+                          print("Created: ${stat.changed}");
+                          print("Modified: ${stat.modified}");
+                          print("Accessed: ${stat.accessed}");
+                        }
+                        if (value != null && isVideo) {
+                          selectedFile = XFile(value.path);
+                          CommonFunction().compressVideo(value).then((v) async {
+                            selectedFile = null;
+                            selectedFile = XFile(v!.path);
+                           await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
+                              setState(() {
+                                selectedFile = XFile(onValue.path);
+                              });
+                            });
+
+                          });
+                        }
+                        else if(value != null && !isVideo){
+                          setState(() {
+                            selectedFile = value;
+                          });
+                        }
+                        else{
+                          return null;
+                        }
+                        // context.pop();
+                        // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
+                      });
                     },
                   ),
                 ],
-              ),
+              ) : Stack(
+                children: [
+                  SizedBox(
+                      height: 150,
+                      width: double.infinity,
+                      child: Image.file(File(selectedFile!.path,),fit: BoxFit.fill,)),
+                  Positioned(
+                    bottom: -10,
+                    right: -10,
+                    child: IconButton(
+                        color: ColorConstant.whiteColor,
+                        onPressed: (){
+                      setState(() {
+                        selectedFile= null;
+                      });
+                    }, icon: Icon(Icons.delete)),
+                  )
+                ],
+              )
             ),
 
             const SizedBox(height: 20),
