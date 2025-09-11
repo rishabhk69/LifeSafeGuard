@@ -23,7 +23,7 @@ import '../../constants/app_config.dart';
          AppConfig.requestOtp,
          data: {
            'phone':phone,
-           'isSignIn':type,
+           'isRegistered':!type,
          },
 
        );
