@@ -8,7 +8,8 @@ class LoginEvent {}
 class LoginRefreshEvent extends LoginEvent {
 
   String phoneNumber;
-  LoginRefreshEvent(this.phoneNumber);
+  bool type;
+  LoginRefreshEvent(this.phoneNumber,this.type);
 }
 
 class LoginState {}
@@ -39,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginRefreshEvent event, Emitter<LoginState> emit) async {
     emit(LoginLoadingState());
     try {
-      final result = await repository.getLogin(event.phoneNumber); // API call
+      final result = await repository.getLogin(event.phoneNumber,event.type); // API call
 
       if (result.isSuccess) {
         LoginModel loginData = LoginModel.fromJson(result.data);

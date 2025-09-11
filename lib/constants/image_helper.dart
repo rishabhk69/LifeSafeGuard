@@ -50,5 +50,6 @@ class ImageHelper{
   static const String locationIc = "assets/images/location_ic.svg";
   static const String timerIc = "assets/images/timer_ic.svg";
   static const String aggrementIc = "assets/images/aggrement_ic.svg";
+  static const String startHereIc = "assets/images/start_here_ic.svg";
 
 }

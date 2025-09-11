@@ -17,12 +17,13 @@ import '../../constants/app_config.dart';
   // @GET(AppConfig.requestOtp)
   // Future<dynamic> getLogin(@Header("Content-Type") String contentType);
 
-   Future<dynamic> getLogin(String phone) async {
+   Future<dynamic> getLogin(String phone,bool type) async {
      try {
        final response = await _dio.post(
          AppConfig.requestOtp,
          data: {
-           'phone':phone
+           'phone':phone,
+           'isSignIn':type,
          },
 
        );

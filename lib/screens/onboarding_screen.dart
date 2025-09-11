@@ -89,7 +89,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     buttonHeight: 50,
                     text: StringHelper.getStarted, onTap: (){
                       AppUtils().setRemember(true);
-                      context.go('/mobileScreen');
+                      context.go('/chooseLogin');
                 }),
               )
                   : Container(

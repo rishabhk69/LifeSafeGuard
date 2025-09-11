@@ -18,7 +18,10 @@ import '../constants/custom_button.dart';
 import '../constants/strings.dart';
 
 class MobileScreen extends StatefulWidget {
-  const MobileScreen({super.key});
+  dynamic isLogin;
+
+
+  MobileScreen(this.isLogin);
 
   @override
   State<MobileScreen> createState() => _MobileScreenState();
@@ -33,6 +36,7 @@ class _MobileScreenState extends State<MobileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("isLogin:${widget.isLogin}");
     return CommonBackground(
         iconName: ImageHelper.mobileIc,
         child: Column(
@@ -116,7 +120,8 @@ class _MobileScreenState extends State<MobileScreen> {
             text: StringHelper.send, onTap: (){
           if(formGlobalKey.currentState!.validate()){
             context.go('/dashboardScreen');
-            // BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(selectedPhoneCode+mobileController.text.trim()));
+            // BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(
+            //     selectedPhoneCode+mobileController.text.trim(),widget.isLogin=="true"?true:false));
           }
         }),),
 

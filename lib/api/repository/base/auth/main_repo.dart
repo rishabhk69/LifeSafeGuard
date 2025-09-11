@@ -13,9 +13,9 @@ class MainRepository extends BaseRepository {
   // Future<Result<LoginModel>> getProfile() async =>
   //     safeCall(MainService(await dio).getProfile("application/json"));
 
-  Future<Result<dynamic>> getLogin(String data) async {
+  Future<Result<dynamic>> getLogin(String data,bool type) async {
     final service = MainService(await dio);
-    return safeCall(service.getLogin(data));
+    return safeCall(service.getLogin(data,type));
   }
 
   Future<Result<dynamic>> getSignUp(

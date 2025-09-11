@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
             context.go('/languageScreen');
           }
           else{
-            context.go('/mobileScreen');
+            context.push('/chooseLogin');
           }
 
         });

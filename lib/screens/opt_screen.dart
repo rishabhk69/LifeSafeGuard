@@ -97,7 +97,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 }
               },child: InkWell(
                 onTap: (){
-                  BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(widget.phone));
+                  BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(widget.phone,false));
                 },
                 child: Text('Resend'))),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/screens/auth_screens/choose_login.dart';
 import 'package:untitled/screens/auth_screens/sign_up.dart';
 import 'package:untitled/screens/mobile_screen.dart';
 import 'package:untitled/screens/other_screens/blocked_incidents.dart';
@@ -42,7 +43,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/mobileScreen',
-      builder: (context, state) => const MobileScreen(),
+      builder: (context, state) {
+        dynamic args = state.extra;
+        return MobileScreen(args['isLogin'].toString());
+      },
     ),
     GoRoute(
       path: '/otpScreen',
@@ -103,6 +107,10 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/termsAndCondition',
       builder: (context, state) => const TermsAndCondition(),
+    ),
+    GoRoute(
+      path: '/chooseLogin',
+      builder: (context, state) => const ChooseLogin(),
     ),
   ],
 );
