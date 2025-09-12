@@ -27,29 +27,29 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 10.0),
-        child:  Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                  buttonColor: Colors.grey,
-                  buttonHeight: 50,
-                  text: StringHelper.decline, onTap: (){
-                context.pop();
-              }),
-            ),
-            addWidth(5),
-            Expanded(
-              child: CustomButton(
-                  buttonHeight: 50,
-                  text: StringHelper.accept, onTap: (){
-                context.push('/signupScreen');
-              }),
-            ),
-          ],
-        ),
-      ),
+      // bottomSheet: Padding(
+      //   padding:  EdgeInsets.symmetric(horizontal: 10.0),
+      //   child:  Row(
+      //     children: [
+      //       Expanded(
+      //         child: CustomButton(
+      //             buttonColor: Colors.grey,
+      //             buttonHeight: 50,
+      //             text: StringHelper.decline, onTap: (){
+      //           context.pop();
+      //         }),
+      //       ),
+      //       addWidth(5),
+      //       Expanded(
+      //         child: CustomButton(
+      //             buttonHeight: 50,
+      //             text: StringHelper.accept, onTap: (){
+      //           context.push('/signupScreen');
+      //         }),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: CommonBackground(
           iconName: ImageHelper.aggrementIc,
           title: StringHelper.agreement,
@@ -65,6 +65,26 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                 children: [
                   addHeight(100),
                   Text(agreementState.agreementModel.agreement??""),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                            buttonColor: Colors.grey,
+                            buttonHeight: 50,
+                            text: StringHelper.decline, onTap: (){
+                          context.pop();
+                        }),
+                      ),
+                      addWidth(5),
+                      Expanded(
+                        child: CustomButton(
+                            buttonHeight: 50,
+                            text: StringHelper.accept, onTap: (){
+                          context.push('/signupScreen');
+                        }),
+                      ),
+                    ],
+                  )
                 ],
               );
             }

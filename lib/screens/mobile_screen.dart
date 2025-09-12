@@ -108,7 +108,8 @@ class _MobileScreenState extends State<MobileScreen> {
               locator<ToastService>().show(loginState.loginData.message??"");
               context.push('/otpScreen',extra: {
                 'phone': selectedPhoneCode+mobileController.text.trim(),
-                'otp': loginState.loginData.otp
+                'otp': loginState.loginData.otp,
+                'isLogin': widget.isLogin
               });
             }
             else if(loginState is LoginErrorState){

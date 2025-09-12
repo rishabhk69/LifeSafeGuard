@@ -21,9 +21,10 @@ class OtpScreen extends StatefulWidget {
 
   String phone;
   String otp;
+  String isLogin;
 
 
-  OtpScreen(this.phone,this.otp);
+  OtpScreen(this.phone,this.otp,this.isLogin);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -104,20 +105,27 @@ class _OtpScreenState extends State<OtpScreen> {
           ],
         ),
         BlocListener<OtpBloc,OtpState>(
-          listener: (context,loginState){
-            if(loginState is OtpLoadingState){
+          listener: (context,otpState){
+            if(otpState is OtpLoadingState){
               locator<DialogService>().showLoader();
             }
-            else if(loginState is OtpSuccessState){
+            else if(otpState is OtpSuccessState){
               locator<DialogService>().hideLoader();
               context.pop();
-              locator<ToastService>().show(loginState.otpData.message??"");
-              AppUtils().setToken(loginState.otpData.token??"");
-              context.push('/termsAndCondition');
+              locator<ToastService>().show(otpState.otpData.message??"");
+              if(widget.isLogin=="true"){
+                AppUtils().setUserLoggedIn();
+                AppUtils().setToken(otpState.otpData.token??"");
+                context.push('/dashboardScreen');
+              }
+              else{
+                AppUtils().setToken(otpState.otpData.token??"");
+                context.push('/termsAndCondition');
+              }
             }
-            else if(loginState is OtpErrorState){
+            else if(otpState is OtpErrorState){
               locator<DialogService>().hideLoader();
-              locator<ToastService>().show(loginState.errorMsg??"");
+              locator<ToastService>().show(otpState.errorMsg??"");
             }
           },child: CustomButton(
             buttonHeight: 50,

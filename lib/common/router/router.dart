@@ -53,7 +53,7 @@ final goRouter = GoRouter(
       builder: (context, state) {
         dynamic args = state.extra;
         return OtpScreen(
-            args['phone'].toString(),args['otp'].toString());
+            args['phone'].toString(),args['otp'].toString(),args['isLogin'].toString(),);
       },
     ),
     GoRoute(

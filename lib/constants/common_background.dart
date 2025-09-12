@@ -28,6 +28,7 @@ class CommonBackground extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return SafeArea(
       top: false,
+      bottom: true,
       child: Scaffold(
         body: SizedBox(
           height: double.infinity,
