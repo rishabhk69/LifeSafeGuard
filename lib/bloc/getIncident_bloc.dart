@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 
-import '../../api/repository/base/auth/main_repo.dart';
+import '../api/repository/base/auth/main_repo.dart';
 
 class IncidentsEvent {}
 

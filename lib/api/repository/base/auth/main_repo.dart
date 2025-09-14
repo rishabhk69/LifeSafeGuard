@@ -43,6 +43,27 @@ class MainRepository extends BaseRepository {
     return safeCall(service.verifyOtp(phone,otp));
   }
 
+    Future<Result<dynamic>> postIncidents({String? title,
+      String? description,
+      String? category,
+      String? latitude,
+      String? longitude,
+      bool? reportAnonymously,
+      bool? isCameraUpload,
+      bool? isVideo,
+      File? files,}) async {
+    final service = MainService(await dio);
+    return safeCall(service.postIncidents(title: title,
+        reportAnonymously: reportAnonymously,
+        longitude: longitude,
+        latitude: latitude,
+        isVideo: isVideo,
+        isCameraUpload: isCameraUpload,
+        files: files,
+        description: description,
+        category: category));
+  }
+
     Future<Result<dynamic>> agreementData() async {
     final service = MainService(await dio);
     return safeCall(service.agreementData());

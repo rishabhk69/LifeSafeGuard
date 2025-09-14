@@ -9,10 +9,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:video_compress/video_compress.dart';
-
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import '../common/locator/locator.dart';
 import '../localization/language_constants.dart';
-
 
 class CommonFunction{
   final ImagePicker picker = ImagePicker();
@@ -210,6 +210,38 @@ class CommonFunction{
 
   }
 
+  Future<String> getAddressFromCurrentLocation() async {
+    // Check permissions
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return "Location permission denied";
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return "Location permission permanently denied";
+    }
+
+    // Get current position
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    // Reverse geocoding
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (placemarks.isNotEmpty) {
+      final place = placemarks.first;
+      return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}";
+    }
+
+    return "Address not found";
+  }
 
 
 }

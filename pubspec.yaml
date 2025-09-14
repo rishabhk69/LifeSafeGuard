@@ -57,6 +57,8 @@ dependencies:
   flutter_localization: ^0.3.3
   permission_handler:
   video_compress: ^3.1.4
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
 
 
 dev_dependencies:

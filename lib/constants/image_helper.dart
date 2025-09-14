@@ -9,6 +9,7 @@ class ImageHelper{
   static const String language_frame = "assets/images/language_frame.svg";
   static const String languageCircle = "assets/images/language-circle.svg";
   static const String imageEnableToggle = "assets/images/enable_toggle.svg";
+  static const String imageDisableToggle = "assets/images/disable_toggle.svg";
   static const String homeUnselected = "assets/images/home_unselected.svg";
   static const String homeSelected = "assets/images/home_sel.svg";
   static const String videoUnselect = "assets/images/video_unselect.svg";

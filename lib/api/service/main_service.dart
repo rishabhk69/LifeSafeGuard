@@ -102,6 +102,52 @@ import '../../constants/app_config.dart';
      }
    }
 
+   Future<dynamic> postIncidents({String? title,
+     String? description,
+     String? category,
+     String? latitude,
+     String? longitude,
+     bool? reportAnonymously,
+     bool? isCameraUpload,
+     bool? isVideo,
+     File? files,}) async {
+     try {
+       String token = await AppUtils().getToken();
+
+       final formData = FormData.fromMap({
+         "title": title,
+         "description": description,
+         "category": category,
+         "latitude": latitude,
+         "longitude": longitude,
+         "reportAnonymously": reportAnonymously,
+         "isCameraUpload": isCameraUpload,
+         "isVideo": isVideo,
+         if (files != null)
+           "files": await MultipartFile.fromFile(
+             files.path,
+             filename: files.path.split('/').last,
+           ),
+       });
+
+       final response = await _dio.post(
+         AppConfig.postIncidents,
+         data: formData,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "multipart/form-data",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> agreementData() async {
      try {
        final response = await _dio.get(

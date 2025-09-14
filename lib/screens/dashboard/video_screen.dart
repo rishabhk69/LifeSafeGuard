@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:untitled/bloc/auth/getIncident_bloc.dart';
+import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';

@@ -1,7 +1,7 @@
 class Validations {
   static String? commonValidation(String? val,String type) {
     if (val == null || val.trim().isEmpty) {
-      return "Enter $type";
+      return type;
     } else {
       return null;
     }

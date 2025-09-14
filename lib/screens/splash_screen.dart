@@ -18,10 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
 
   bool isFirstTime = true;
+  bool isLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    getIsLogin();
     getIsFirstTime();
     Timer(
         Duration(seconds: 3),
@@ -30,7 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
             context.go('/languageScreen');
           }
           else{
+            if(isLoggedIn){
+              context.go('/dashboardScreen');
+            }
+            else{
             context.push('/chooseLogin');
+            }
           }
 
         });
@@ -44,6 +51,15 @@ class _SplashScreenState extends State<SplashScreen> {
           isFirstTime = false;
         });
       }
+    });
+  }
+
+  getIsLogin(){
+    AppUtils().getUserLoggedIn().then((onValue){
+        setState(() {
+          isLoggedIn = onValue;
+        });
+
     });
   }
 

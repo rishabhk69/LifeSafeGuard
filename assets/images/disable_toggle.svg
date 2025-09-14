@@ -1,0 +1,7 @@
+<svg width="38" height="23" viewBox="0 0 38 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background (disabled = grey) -->
+  <rect width="38" height="23" rx="11.5" fill="#BDBDBD"/>
+
+  <!-- Circle knob (left side, off state) -->
+  <circle cx="11.5" cy="11.5" r="9" fill="white"/>
+</svg>

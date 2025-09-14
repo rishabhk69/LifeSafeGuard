@@ -10,5 +10,6 @@ class AppConfig {
   static const getIncidents = "incidents";
   static const signup = "signup";
   static const verifyOtp = "auth/verify-otp";
+  static const postIncidents = "incidents";
   static const userAgreement = "/user-agreement";
 }
