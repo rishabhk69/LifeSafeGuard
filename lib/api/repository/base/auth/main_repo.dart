@@ -48,9 +48,13 @@ class MainRepository extends BaseRepository {
       String? category,
       String? latitude,
       String? longitude,
+      String? city,
+      String? state,
+      String? userId,
       bool? reportAnonymously,
       bool? isCameraUpload,
       bool? isVideo,
+      bool? isEdited,
       File? files,}) async {
     final service = MainService(await dio);
     return safeCall(service.postIncidents(title: title,
@@ -61,6 +65,10 @@ class MainRepository extends BaseRepository {
         isCameraUpload: isCameraUpload,
         files: files,
         description: description,
+        city: city,
+        isEdited: isEdited,
+        state: state,
+        userId: userId,
         category: category));
   }
 

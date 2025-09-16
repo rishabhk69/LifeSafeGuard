@@ -14,16 +14,18 @@ class PostIncidentsRefreshEvent extends PostIncidentsEvent {
   String? category;
   String? latitude;
   String? longitude;
+  String? city;
+  String? state;
+  String? userId;
   bool? reportAnonymously;
   bool? isCameraUpload;
   bool? isVideo;
+  bool? isEdited;
   File? files;
 
   PostIncidentsRefreshEvent({this.title, this.description, this.category,
     this.latitude, this.longitude, this.reportAnonymously,
-    this.isCameraUpload, this.isVideo, this.files});
-
-
+    this.isCameraUpload, this.isVideo, this.files,this.userId,this.state,this.city,this.isEdited});
 }
 
 class PostIncidentsState {}
@@ -63,12 +65,16 @@ class PostIncidentsBloc extends Bloc<PostIncidentsEvent, PostIncidentsState> {
           latitude: event.latitude,
           longitude:  event.longitude,
           reportAnonymously: event.reportAnonymously,
-          title:event.title
+          title:event.title,
+          city: event.city,
+          isEdited: event.isEdited,
+          state: event.state,
+          userId: event.userId
       ); // API call
 
       if (result.isSuccess) {
-        PostIncidentsModel PostIncidentsData = PostIncidentsModel.fromJson(result.data);
-        emit(PostIncidentsSuccessState(PostIncidentsData));
+        PostIncidentsModel postIncidentsData = PostIncidentsModel.fromJson(result.data);
+        emit(PostIncidentsSuccessState(postIncidentsData));
       } else {
         emit(PostIncidentsErrorState(result.data.message ?? "Something went wrong"));
       }

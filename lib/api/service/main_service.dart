@@ -106,10 +106,14 @@ import '../../constants/app_config.dart';
      String? description,
      String? category,
      String? latitude,
+     String? city,
+     String? state,
+     String? userId,
      String? longitude,
      bool? reportAnonymously,
      bool? isCameraUpload,
      bool? isVideo,
+     bool? isEdited,
      File? files,}) async {
      try {
        String token = await AppUtils().getToken();
@@ -118,10 +122,16 @@ import '../../constants/app_config.dart';
          "title": title,
          "description": description,
          "category": category,
-         "latitude": latitude,
-         "longitude": longitude,
-         "reportAnonymously": reportAnonymously,
+         "userLatitude": latitude,
+         "userLongitude": longitude,
+         "incidentLatitude": latitude,
+         "incidentLongitude": longitude,
+         "isReportedAnonymously": reportAnonymously,
          "isCameraUpload": isCameraUpload,
+         "city": city,
+         "state": state,
+         "isEdited": isEdited,
+         "userId": userId,
          "isVideo": isVideo,
          if (files != null)
            "files": await MultipartFile.fromFile(

@@ -20,7 +20,7 @@ import 'package:untitled/constants/strings.dart';
 import 'package:video_compress/video_compress.dart';
 
 import '../../constants/base_appbar.dart';
-import '../../constants/common_function.dart' show CommonFunction;
+import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,19 +37,24 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isVideo = true;
   XFile? selectedFile;
   final formGlobalKey = GlobalKey<FormState>();
+  String? userId;
+  LocationData? data;
 
   @override
     void initState() {
       super.initState();
-      BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent( StringHelper.bomBlast));
-      getAddress();
+     WidgetsBinding.instance.addPostFrameCallback((callback){
+       BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent( StringHelper.bomBlast));
+       getUserId();
+     });
     }
 
-    getAddress()async{
-      String address = await CommonFunction().getAddressFromCurrentLocation();
-      print("Current Address: $address");
-
-    }
+  getUserId() async {
+    setState(() async {
+      userId = await AppUtils().getUserId();
+    });
+    data = await getLocationData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -316,10 +321,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         files: File(selectedFile!.path),
                         isCameraUpload: true,
                         isVideo: false,
-                        latitude: '26.91659519426711',
-                        longitude: '75.77709914116316',
+                        latitude: (data?.latitude??"").toString(),
+                        longitude: (data?.longitude??"").toString(),
                         reportAnonymously: isAnonymous,
-                        title: titleController.text.trim()
+                        title: titleController.text.trim(),
+                        userId: userId,
+                        state: data?.state,
+                        isEdited: false,
+                        city: data?.city
                     ));
                   }
                   else{
