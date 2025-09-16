@@ -7,12 +7,16 @@ import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
 import 'package:untitled/constants/colors_constant.dart';
+import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../constants/common_function.dart';
 
 
 class VideoScreen extends StatefulWidget {
@@ -27,6 +31,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
   int currentIndex = 0;
   late VideoPlayerController _videoController;
+  String? address;
 
   @override
   void initState() {
@@ -97,7 +102,7 @@ class _VideoScreenState extends State<VideoScreen> {
                         onPageChanged: _onPageChanged,
                         itemCount: incidentState.incidentsModel[index].mediaUrls?.length,
                         itemBuilder: (context, mediaIndex) {
-                          return Image.network(incidentState.incidentsModel[index].mediaUrls![mediaIndex]);
+                          return Image.network(AppConfig.IMAGE_BASE_URL+incidentState.incidentsModel[index].mediaUrls![mediaIndex]);
                         },
                       ),
 
@@ -195,13 +200,41 @@ class _VideoScreenState extends State<VideoScreen> {
                               children: [
                                 SvgPicture.asset(ImageHelper.locationIc),
                                 addWidth(5),
-                                Text(
-                                  incidentState.incidentsModel[index].time??"",
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: ColorConstant.whiteColor
+                                FutureBuilder<String>(
+                                  future: CommonFunction().getAddressFromLatLng(
+                                    incidentState.incidentsModel[index].location?.latitude ?? 0.0,
+                                    incidentState.incidentsModel[index].location?.longitude ?? 0.0,
                                   ),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Text(
+                                        "Loading...",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: ColorConstant.whiteColor,
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text(
+                                        "Error",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: ColorConstant.whiteColor,
+                                        ),
+                                      );
+                                    } else {
+                                      return Text(
+                                        snapshot.data ?? "No address available",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: ColorConstant.whiteColor,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),

@@ -20,7 +20,7 @@ abstract class BaseRepository {
 
   Future<Map<String, String>> _getHeaders() async {
     String token = await AppUtils().getToken();
-    log(token,name: 'Token');
+    print("Token:${token}");
     return {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.contentTypeHeader: "application/json",

@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController detailController =TextEditingController();
   bool isAnonymous = false;
   bool isVideo = true;
+  bool? isCameraUpload;
   XFile? selectedFile;
   final formGlobalKey = GlobalKey<FormState>();
   String? userId;
@@ -118,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               selectedFile = XFile(v!.path);
                               await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
+                                  isCameraUpload = true;
                                   selectedFile = XFile(onValue.path);
                                 });
                               });
@@ -126,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                           else if(value != null && !isVideo){
                             setState(() {
+                              isCameraUpload = true;
                               selectedFile = value;
                             });
                           }
@@ -167,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               selectedFile = XFile(v!.path);
                              await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
+                                  isCameraUpload = false;
                                   selectedFile = XFile(onValue.path);
                                 });
                               });
@@ -175,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                           else if(value != null && !isVideo){
                             setState(() {
+                              isCameraUpload = false;
                               selectedFile = value;
                             });
                           }
@@ -225,9 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () {
                       context.push('/incidentTypeScreen').then((onValue){
-                        print("rishabh:$onValue");
                       });
-                      // open bottomsheet or dropdown for selection
                     },
                     child: Row(
                       children: [
@@ -319,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
                         description: detailController.text.trim(),
                         files: File(selectedFile!.path),
-                        isCameraUpload: true,
-                        isVideo: false,
+                        isCameraUpload: isCameraUpload,
+                        isVideo: isVideo,
                         latitude: (data?.latitude??"").toString(),
                         longitude: (data?.longitude??"").toString(),
                         reportAnonymously: isAnonymous,

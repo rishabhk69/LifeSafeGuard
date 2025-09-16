@@ -30,7 +30,7 @@ class IncidentsModel {
     mediaUrls = json['mediaUrls'].cast<String>();
     time = json['time'];
     location = json['location'] != null
-        ? new Location.fromJson(json['location'])
+        ? new Location.fromJson(json['incidentLocation'])
         : null;
   }
 
@@ -45,7 +45,7 @@ class IncidentsModel {
     data['mediaUrls'] = this.mediaUrls;
     data['time'] = this.time;
     if (this.location != null) {
-      data['location'] = this.location!.toJson();
+      data['incidentLocation'] = this.location!.toJson();
     }
     return data;
   }

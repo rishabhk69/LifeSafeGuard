@@ -111,17 +111,6 @@ class CommonFunction{
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  bool isPastDay(String date , String mainDate) {
-    //date.split("-").last+"-"+date.split("-")[1]+"-"+date.split("-").first
-    DateTime a = DateTime.parse(date.split("-").reversed.join("-"));
-    DateTime b = DateTime.parse(mainDate);
-    if (a == null || b == null) {
-      return false;
-    }
-    print(a.isBefore(b!));
-    return a.isBefore(b!);
-
-  }
 
   bool calculateExpire(String date) {
     final now = DateTime.now();
@@ -243,6 +232,20 @@ class CommonFunction{
   }
 
 
+  Future<String> getAddressFromLatLng(double lat, double lng) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        final Placemark place = placemarks.first;
+        return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.postalCode}, ${place.country}";
+      } else {
+        return "No address available";
+      }
+    } catch (e) {
+      return "Error: $e";
+    }
+  }
+
 
 }
 
@@ -286,3 +289,5 @@ Future<LocationData?> getLocationData() async {
 
   return null;
 }
+
+
