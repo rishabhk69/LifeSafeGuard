@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/screens/auth_screens/choose_login.dart';
 import 'package:untitled/screens/auth_screens/sign_up.dart';
 import 'package:untitled/screens/mobile_screen.dart';
@@ -82,7 +83,12 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/incidentDetails',
-      builder: (context, state) => const IncidentDetails(),
+      builder: (context, state) {
+        dynamic incidentData = state.extra as IncidentsModel;
+        return IncidentDetails(
+            incidentData
+        );
+      }
     ),
     GoRoute(
       path: '/filterScreen',

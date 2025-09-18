@@ -116,6 +116,7 @@ class _OtpScreenState extends State<OtpScreen> {
               if(widget.isLogin=="true"){
                 AppUtils().setUserLoggedIn();
                 AppUtils().setToken(otpState.otpData.token??"");
+                AppUtils().setUserId(otpState.otpData.userId??"");
                 context.push('/dashboardScreen');
               }
               else{

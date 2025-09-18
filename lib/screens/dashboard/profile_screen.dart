@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         showAction: true,
         isMainBar: true,
-        widgets: [Icon(Icons.verified, color: Colors.blue),],
+        // widgets: [Icon(Icons.verified, color: Colors.blue),],
         title: 'nisha.mukhi.123',
       ),
       body: SingleChildScrollView(

@@ -111,17 +111,6 @@ class CommonFunction{
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  bool isPastDay(String date , String mainDate) {
-    //date.split("-").last+"-"+date.split("-")[1]+"-"+date.split("-").first
-    DateTime a = DateTime.parse(date.split("-").reversed.join("-"));
-    DateTime b = DateTime.parse(mainDate);
-    if (a == null || b == null) {
-      return false;
-    }
-    print(a.isBefore(b!));
-    return a.isBefore(b!);
-
-  }
 
   bool calculateExpire(String date) {
     final now = DateTime.now();
@@ -210,18 +199,18 @@ class CommonFunction{
 
   }
 
-  Future<String> getAddressFromCurrentLocation() async {
+  Future<Placemark?> getPlacemarkFromCurrentLocation() async {
     // Check permissions
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return "Location permission denied";
+        return null; // permission denied
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return "Location permission permanently denied";
+      return null; // permanently denied
     }
 
     // Get current position
@@ -236,12 +225,69 @@ class CommonFunction{
     );
 
     if (placemarks.isNotEmpty) {
-      final place = placemarks.first;
-      return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}";
+      return placemarks.first;
     }
 
-    return "Address not found";
+    return null; // not found
+  }
+
+
+  Future<String> getAddressFromLatLng(double lat, double lng) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        final Placemark place = placemarks.first;
+        return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.postalCode}, ${place.country}";
+      } else {
+        return "No address available";
+      }
+    } catch (e) {
+      return "Error: $e";
+    }
   }
 
 
 }
+
+class LocationData {
+  final String? city;
+  final String? state;
+  final double latitude;
+  final double longitude;
+
+  LocationData({this.city, this.state, required this.latitude, required this.longitude});
+}
+
+Future<LocationData?> getLocationData() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) return null;
+  }
+  if (permission == LocationPermission.deniedForever) return null;
+
+  // Get current position
+  Position position = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
+
+  // Get address info
+  List<Placemark> placemarks = await placemarkFromCoordinates(
+    position.latitude,
+    position.longitude,
+  );
+
+  if (placemarks.isNotEmpty) {
+    final place = placemarks.first;
+    return LocationData(
+      city: place.locality,
+      state: place.administrativeArea,
+      latitude: position.latitude,
+      longitude: position.longitude,
+    );
+  }
+
+  return null;
+}
+
+

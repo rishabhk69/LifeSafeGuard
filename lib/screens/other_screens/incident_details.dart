@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/constants/colors_constant.dart';
-import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
 
 class IncidentDetails extends StatefulWidget {
-  const IncidentDetails({super.key});
+  dynamic incidentData;
+
+
+  IncidentDetails(this.incidentData);
 
   @override
   State<IncidentDetails> createState() => _IncidentDetailsState();
 }
 
 class _IncidentDetailsState extends State<IncidentDetails> {
+
+
+  IncidentsModel? incidentsModel;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        incidentsModel = widget.incidentData;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,39 +66,42 @@ class _IncidentDetailsState extends State<IncidentDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Map Section
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      ImageHelper.mapImage, // Replace with Google Map widget if required
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 150,
-                      child: Column(
-                        children: [
-                          Text(
-                            StringHelper.incidentLocation,
-                            style: TextStyle(
-                                backgroundColor: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(height: 5),
-                          SvgPicture.asset(
-                            ImageHelper.mapPin, // Replace with your location marker svg
-                            height: 40,
-                          ),
-                        ],
+              SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: incidentsModel?.location?.latitude != null && incidentsModel?.location?.longitude != null
+                    ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        incidentsModel?.location?.latitude??0.0,
+                        incidentsModel?.location?.longitude??0.0,
                       ),
-                    )
-                  ],
+                      zoom: 15,
+                    ),
+                    markers: {
+                      Marker(
+                        markerId: const MarkerId("incident_location"),
+                        position: LatLng(
+                          incidentsModel?.location?.latitude??0.0,
+                          incidentsModel?.location?.longitude??0.0,
+                        ),
+                        infoWindow: InfoWindow(
+                          title: incidentsModel?.title ?? "Incident",
+                          snippet: incidentsModel?.address ?? "",
+                        ),
+                      ),
+                    },
+                    myLocationEnabled: false,
+                    zoomControlsEnabled: false,
+                  ),
+                )
+                    : const Center(
+                  child: Text("Location not available"),
                 ),
               ),
+
 
               const SizedBox(height: 20),
 
@@ -91,8 +111,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                   const Icon(Icons.warning_amber_rounded,
                       color: Colors.orange, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
-                    "Type - Terrorist",
+                   Text(
+                    "${StringHelper.type} - ${incidentsModel?.category??""}",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -102,9 +122,11 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 children: [
                   const Icon(Icons.location_on, color: Colors.red, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
-                    "Manek Chowk",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  Expanded(
+                    child: Text(
+                      incidentsModel?.address??"",
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ],
               ),
@@ -113,8 +135,9 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 children: [
                   const Icon(Icons.access_time, color: Colors.orange, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
-                    "23 JAN, 2025 | 06:23pm",
+                  Text(
+                    incidentsModel?.time??"",
+                    // "23 JAN, 2025 | 06:23pm",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -128,8 +151,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
-              const Text(
-                "Bomb Blast at manek chowk",
+              Text(
+                incidentsModel?.title??"",
                 style: TextStyle(fontSize: 14),
               ),
 
@@ -141,11 +164,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 6),
-              const Text(
-                "The bomb blast incident at Manek Chowk was part of a series of coordinated terrorist attacks "
-                    "that struck Ahmedabad, Gujarat, on July 26, 2008. Within a span of 70 minutes, 21 bombs "
-                    "detonated across various locations in the city, including Manek Chowk, resulting in 56 "
-                    "fatalities and injuring over 200 individuals.",
+              Text(
+                incidentsModel?.description??"",
                 style: TextStyle(fontSize: 14, height: 1.4),
               ),
             ],

@@ -20,7 +20,7 @@ import 'package:untitled/constants/strings.dart';
 import 'package:video_compress/video_compress.dart';
 
 import '../../constants/base_appbar.dart';
-import '../../constants/common_function.dart' show CommonFunction;
+import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,27 +35,39 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController detailController =TextEditingController();
   bool isAnonymous = false;
   bool isVideo = true;
+  bool? isCameraUpload;
   XFile? selectedFile;
   final formGlobalKey = GlobalKey<FormState>();
+  String? userId;
+  LocationData? data;
 
   @override
     void initState() {
       super.initState();
-      BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent( StringHelper.bomBlast));
-      getAddress();
+     WidgetsBinding.instance.addPostFrameCallback((callback){
+       BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent( StringHelper.bomBlast));
+       getUserId();
+     });
     }
 
-    getAddress()async{
-      String address = await CommonFunction().getAddressFromCurrentLocation();
-      print("Current Address: $address");
+  getUserId() async {
+    final id = await AppUtils().getUserId();
+    final loc = await getLocationData();
 
-    }
+    setState(() {
+      userId = id;
+      data = loc;
+    });
+  }
+
+  Future<File> getThumbnail(XFile thumbnailFile) async {
+    final file = await VideoCompress.getFileThumbnail(thumbnailFile.path);
+    return file;
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    AppUtils().getToken().then((onValue){
-      print(onValue);
-    });
     return  Scaffold(
       appBar: BaseAppBar(title: StringHelper.reportIncident,showAction: true,
       isVideo: isVideo,
@@ -111,16 +123,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             CommonFunction().compressVideo(value).then((v) async {
                               selectedFile = null;
                               selectedFile = XFile(v!.path);
-                              await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
-                                  selectedFile = XFile(onValue.path);
+                                  isCameraUpload = true;
+                                  // selectedFile = XFile(onValue.path);
                                 });
-                              });
-
                             });
                           }
                           else if(value != null && !isVideo){
                             setState(() {
+                              isCameraUpload = true;
                               selectedFile = value;
                             });
                           }
@@ -160,16 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             CommonFunction().compressVideo(value).then((v) async {
                               selectedFile = null;
                               selectedFile = XFile(v!.path);
-                             await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
-                                  selectedFile = XFile(onValue.path);
+                                  isCameraUpload = false;
+                                  // selectedFile = XFile(onValue.path);
                                 });
-                              });
-
                             });
                           }
                           else if(value != null && !isVideo){
                             setState(() {
+                              isCameraUpload = false;
                               selectedFile = value;
                             });
                           }
@@ -182,7 +192,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ],
-                ) : Stack(
+                ) : isVideo ?
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 150,
+                      width: double.infinity,
+                      child: FutureBuilder<File>(
+                        future: getThumbnail(selectedFile!), // async call
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(child: Icon(Icons.error, color: Colors.red));
+                          } else if (snapshot.hasData) {
+                            return Image.file(
+                              snapshot.data!,
+                              fit: BoxFit.fill,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: -10,
+                      right: -10,
+                      child: IconButton(
+                          color: ColorConstant.whiteColor,
+                          onPressed: (){
+                            setState(() {
+                              selectedFile= null;
+                            });
+                          }, icon: Icon(Icons.delete)),
+                    ),
+
+                    // Positioned(
+                    //   bottom: 0,
+                    //   right: 0,
+                    //   top: 0,
+                    //   left: 0,
+                    //   child: IconButton(
+                    //       color: ColorConstant.whiteColor,
+                    //       onPressed: (){
+                    //         setState(() {
+                    //           selectedFile= null;
+                    //         });
+                    //       }, icon: Icon(Icons.play_circle,size: 50,blendMode: BlendMode.lighten,)),
+                    // )
+                  ],
+                ) :
+                Stack(
                   children: [
                     SizedBox(
                         height: 150,
@@ -220,9 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   InkWell(
                     onTap: () {
                       context.push('/incidentTypeScreen').then((onValue){
-                        print("rishabh:$onValue");
                       });
-                      // open bottomsheet or dropdown for selection
                     },
                     child: Row(
                       children: [
@@ -296,14 +356,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 else if(blocListener is PostIncidentsSuccessState){
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show(blocListener.postIncidentsData.message??"");
-                  titleController.clear();
-                  detailController.clear();
-                  selectedFile = null;
+                  clearSelected();
                 }
                 else if(blocListener is PostIncidentsErrorState){
-                  titleController.clear();
-                  detailController.clear();
-                  selectedFile = null;
+                  clearSelected();
                   locator<ToastService>().show(blocListener.errorMsg??"");
                   locator<DialogService>().hideLoader();
                 }
@@ -314,12 +370,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
                         description: detailController.text.trim(),
                         files: File(selectedFile!.path),
-                        isCameraUpload: true,
-                        isVideo: false,
-                        latitude: '26.91659519426711',
-                        longitude: '75.77709914116316',
+                        isCameraUpload: isCameraUpload,
+                        isVideo: isVideo,
+                        latitude: data?.latitude.toString() ?? "0.0",
+                        longitude: data?.longitude.toString() ?? "0.0",
                         reportAnonymously: isAnonymous,
-                        title: titleController.text.trim()
+                        title: titleController.text.trim(),
+                        userId: userId,
+                        state: data?.state,
+                        isEdited: false,
+                        city: data?.city,
                     ));
                   }
                   else{
@@ -333,5 +393,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+
+  clearSelected(){
+    setState(() {
+      titleController.clear();
+      detailController.clear();
+      selectedFile = null;
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
