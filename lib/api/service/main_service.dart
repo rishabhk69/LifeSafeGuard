@@ -48,6 +48,21 @@ import '../../constants/app_config.dart';
      }
    }
 
+   Future<dynamic> getComments({int? offset, int? size,String? incidentId}) async {
+     try {
+       final response = await _dio.get(
+         "${AppConfig.getIncidents}/$incidentId/comments",
+         queryParameters: {
+           'offset':offset,
+           'size' :size
+         },
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> getSignUp({
      String? firstName,
      String? lastName,

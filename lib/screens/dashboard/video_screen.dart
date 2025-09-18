@@ -4,19 +4,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
+import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
 import 'package:untitled/constants/colors_constant.dart';
-import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/screens/dashboard/comments_bottomsheet.dart';
 import 'package:video_player/video_player.dart';
-
-import '../../constants/common_function.dart';
 
 
 class VideoScreen extends StatefulWidget {
@@ -30,36 +29,47 @@ class _VideoScreenState extends State<VideoScreen> {
   final PageController _pageController = PageController();
 
   int currentIndex = 0;
-  late VideoPlayerController _videoController;
+  VideoPlayerController? _videoController;
   String? address;
+  int _currentPage = 0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  void _initializeVideo(String? originUrl) async {
+    if (originUrl == null || originUrl.isEmpty) {
+      return;
+    }
 
-  void _initializeVideo(String originUrl) {
+    await _videoController?.pause();
+    await _videoController?.dispose();
+
     _videoController = VideoPlayerController.network(originUrl)
       ..initialize().then((_) {
-        setState(() {});
-        _videoController.play();
-        _videoController.setLooping(true);
+        if (mounted) {
+          setState(() {});
+          _videoController?.play();
+          _videoController?.setLooping(true);
+        }
       });
   }
 
-  void _onPageChanged(int index) {
+  void _onPageChanged(int index, List incidents) {
     setState(() {
       currentIndex = index;
+      _currentPage = index;
     });
-    _videoController.pause();
-    _videoController.dispose();
-    _initializeVideo('');
+
+    final current = incidents[index];
+    if (current.isVideo == true && current.mediaUrls!.isNotEmpty) {
+      _initializeVideo(AppConfig.VIDEO_BASE_URL + current.mediaUrls![0]);
+    } else {
+      _videoController?.pause();
+      _videoController?.dispose();
+      _videoController = null;
+    }
   }
 
   @override
   void dispose() {
-    _videoController.pause();
-    _videoController.dispose();
+    _videoController?.dispose();
     super.dispose();
   }
 
@@ -74,37 +84,74 @@ class _VideoScreenState extends State<VideoScreen> {
             return BuilderDialog();
           }
             else if(incidentState is IncidentsSuccessState){
+            final incidents = incidentState.incidentsModel;
+
+            if (incidents.isNotEmpty) {
+              final first = incidents[0];
+              if (first.isVideo == true && first.mediaUrls!.isNotEmpty) {
+                _initializeVideo(AppConfig.VIDEO_BASE_URL + first.mediaUrls![0]);
+              }
+            }
 
               return  PageView.builder(
                 scrollDirection: Axis.vertical,
                 controller: _pageController,
-                onPageChanged: _onPageChanged,
+                onPageChanged: (index) => _onPageChanged(index, incidents),
                 itemCount: incidentState.incidentsModel.length,
                 itemBuilder: (context, index) {
-                  _initializeVideo(incidentState.incidentsModel[index].mediaUrls?[0]??"");
                   return Stack(
-                    alignment: Alignment.bottomLeft,
                     children: [
-                      // Video Player
                       incidentState.incidentsModel[index].isVideo??false ?
                       Center(
-                        child: _videoController.value.isInitialized && currentIndex == index
+                        child: _videoController!.value.isInitialized && currentIndex == index
                             ? AspectRatio(
-                          aspectRatio: _videoController.value.aspectRatio,
-                          child: VideoPlayer(_videoController),
+                          aspectRatio: _videoController!.value.aspectRatio,
+                          child: VideoPlayer(_videoController!),
                         )
                             : const Center(
                           child: CircularProgressIndicator(color: Colors.white),
                         ),
-                      ) : PageView.builder(
-                        scrollDirection: Axis.vertical,
-                        controller: _pageController,
-                        onPageChanged: _onPageChanged,
-                        itemCount: incidentState.incidentsModel[index].mediaUrls?.length,
-                        itemBuilder: (context, mediaIndex) {
-                          return Image.network(AppConfig.IMAGE_BASE_URL+incidentState.incidentsModel[index].mediaUrls![mediaIndex]);
-                        },
+                      ) : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              child: PageView.builder(
+                                controller: _pageController,
+                                scrollDirection: Axis.horizontal,
+                                physics: const PageScrollPhysics(),
+                                // onPageChanged: _onPageChanged,
+                                itemCount: incidentState.incidentsModel[index].mediaUrls?.length ?? 0,
+                                itemBuilder: (context, mediaIndex) {
+                                  return Image.network(
+                                    AppConfig.IMAGE_BASE_URL +
+                                        incidentState.incidentsModel[index].mediaUrls![mediaIndex],
+                                    fit: BoxFit.fitWidth,
+                                    // width: double.infinity,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate((incidentState.incidentsModel[index].mediaUrls??[]).length, (dotIndex) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                                  width: _currentPage == dotIndex ? 10 : 8,
+                                  height: _currentPage == dotIndex ? 10 : 8,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _currentPage == dotIndex ? Colors.white : Colors.grey,
+                                  ),
+                                );
+                              }),
+                            ),
+                          ],
+                        ),
                       ),
+
 
                       // Overlay (Like TikTok UI)
                       Positioned(
@@ -131,7 +178,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                   child: Text(StringHelper.incidentDetails,style: MyTextStyleBase.headingStyleLight,),
                                   onPressed: (){
                                     context.pop();
-                                    context.push('/incidentDetails');
+                                    context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                                   },
                                 ),
                               ],
@@ -144,14 +191,24 @@ class _VideoScreenState extends State<VideoScreen> {
                         right: 16,
                         child: Column(
                           children: [
-                            SvgPicture.asset(ImageHelper.messageIc,
-                              fit: BoxFit.scaleDown,
-                              height: 35,
-                              width: 35,),
-                            Text('20.3k',style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w400,
-                                color: ColorConstant.whiteColor
-                            ),),
+                           InkWell(
+                             onTap: (){
+                               BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentState.incidentsModel[index].incidentId));
+                               showCommentsBottomSheet(context);
+                             },
+                             child: Column(
+                               children: [
+                                 SvgPicture.asset(ImageHelper.messageIc,
+                                   fit: BoxFit.scaleDown,
+                                   height: 35,
+                                   width: 35,),
+                                 Text(incidentState.incidentsModel[index].commentCount.toString(),style: GoogleFonts.poppins(
+                                     fontWeight: FontWeight.w400,
+                                     color: ColorConstant.whiteColor
+                                 ),),
+                               ],
+                             ),
+                           ),
                             SizedBox(height: 20),
                             SvgPicture.asset(ImageHelper.sendIc,
                               fit: BoxFit.scaleDown,
@@ -200,41 +257,13 @@ class _VideoScreenState extends State<VideoScreen> {
                               children: [
                                 SvgPicture.asset(ImageHelper.locationIc),
                                 addWidth(5),
-                                FutureBuilder<String>(
-                                  future: CommonFunction().getAddressFromLatLng(
-                                    incidentState.incidentsModel[index].location?.latitude ?? 0.0,
-                                    incidentState.incidentsModel[index].location?.longitude ?? 0.0,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Text(
-                                        "Loading...",
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: ColorConstant.whiteColor,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Text(
-                                        "Error",
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: ColorConstant.whiteColor,
-                                        ),
-                                      );
-                                    } else {
-                                      return Text(
-                                        snapshot.data ?? "No address available",
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: ColorConstant.whiteColor,
-                                        ),
-                                      );
-                                    }
-                                  },
+                                Text(
+                                incidentState.incidentsModel[index].address??"",
+                                style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: ColorConstant.whiteColor,
+                                 ),
                                 ),
                               ],
                             ),

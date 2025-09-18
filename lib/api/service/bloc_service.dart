@@ -10,6 +10,7 @@ import 'package:untitled/bloc/auth/aggrement_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/auth/otp_bloc.dart';
 import 'package:untitled/bloc/auth/signup_bloc.dart';
+import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 
@@ -54,6 +55,9 @@ class BlocServices {
           ),
           BlocProvider<SetIncidentsBloc>(
             create: (context) => SetIncidentsBloc(),
+          ),
+          BlocProvider<CommentsBloc>(
+            create: (context) => CommentsBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

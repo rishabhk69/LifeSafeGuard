@@ -7,6 +7,10 @@ class IncidentsModel {
   String? profilePic;
   List<String>? mediaUrls;
   String? time;
+  String? address;
+  String? description;
+  String? title;
+  dynamic commentCount;
   Location? location;
 
   IncidentsModel(
@@ -18,6 +22,10 @@ class IncidentsModel {
         this.profilePic,
         this.mediaUrls,
         this.time,
+        this.address,
+        this.title,
+        this.commentCount,
+        this.description,
         this.location});
 
   IncidentsModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +37,10 @@ class IncidentsModel {
     profilePic = json['profilePic'];
     mediaUrls = json['mediaUrls'].cast<String>();
     time = json['time'];
+    address = json['address'];
+    title = json['title'];
+    commentCount = json['commentCount'];
+    description = json['description'];
     location = json['location'] != null
         ? new Location.fromJson(json['incidentLocation'])
         : null;
@@ -44,6 +56,10 @@ class IncidentsModel {
     data['profilePic'] = this.profilePic;
     data['mediaUrls'] = this.mediaUrls;
     data['time'] = this.time;
+    data['commentCount'] = this.commentCount;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['address'] = this.address;
     if (this.location != null) {
       data['incidentLocation'] = this.location!.toJson();
     }

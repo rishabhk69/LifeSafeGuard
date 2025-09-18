@@ -51,17 +51,23 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
   getUserId() async {
-    setState(() async {
-      userId = await AppUtils().getUserId();
+    final id = await AppUtils().getUserId();
+    final loc = await getLocationData();
+
+    setState(() {
+      userId = id;
+      data = loc;
     });
-    data = await getLocationData();
   }
+
+  Future<File> getThumbnail(XFile thumbnailFile) async {
+    final file = await VideoCompress.getFileThumbnail(thumbnailFile.path);
+    return file;
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    AppUtils().getToken().then((onValue){
-      print(onValue);
-    });
     return  Scaffold(
       appBar: BaseAppBar(title: StringHelper.reportIncident,showAction: true,
       isVideo: isVideo,
@@ -117,13 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             CommonFunction().compressVideo(value).then((v) async {
                               selectedFile = null;
                               selectedFile = XFile(v!.path);
-                              await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
                                   isCameraUpload = true;
-                                  selectedFile = XFile(onValue.path);
+                                  // selectedFile = XFile(onValue.path);
                                 });
-                              });
-
                             });
                           }
                           else if(value != null && !isVideo){
@@ -168,13 +171,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             CommonFunction().compressVideo(value).then((v) async {
                               selectedFile = null;
                               selectedFile = XFile(v!.path);
-                             await VideoCompress.getFileThumbnail(selectedFile!.path).then((onValue){
                                 setState(() {
                                   isCameraUpload = false;
-                                  selectedFile = XFile(onValue.path);
+                                  // selectedFile = XFile(onValue.path);
                                 });
-                              });
-
                             });
                           }
                           else if(value != null && !isVideo){
@@ -192,7 +192,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ],
-                ) : Stack(
+                ) : isVideo ?
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 150,
+                      width: double.infinity,
+                      child: FutureBuilder<File>(
+                        future: getThumbnail(selectedFile!), // async call
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(child: Icon(Icons.error, color: Colors.red));
+                          } else if (snapshot.hasData) {
+                            return Image.file(
+                              snapshot.data!,
+                              fit: BoxFit.fill,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: -10,
+                      right: -10,
+                      child: IconButton(
+                          color: ColorConstant.whiteColor,
+                          onPressed: (){
+                            setState(() {
+                              selectedFile= null;
+                            });
+                          }, icon: Icon(Icons.delete)),
+                    ),
+
+                    // Positioned(
+                    //   bottom: 0,
+                    //   right: 0,
+                    //   top: 0,
+                    //   left: 0,
+                    //   child: IconButton(
+                    //       color: ColorConstant.whiteColor,
+                    //       onPressed: (){
+                    //         setState(() {
+                    //           selectedFile= null;
+                    //         });
+                    //       }, icon: Icon(Icons.play_circle,size: 50,blendMode: BlendMode.lighten,)),
+                    // )
+                  ],
+                ) :
+                Stack(
                   children: [
                     SizedBox(
                         height: 150,
@@ -304,14 +356,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 else if(blocListener is PostIncidentsSuccessState){
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show(blocListener.postIncidentsData.message??"");
-                  titleController.clear();
-                  detailController.clear();
-                  selectedFile = null;
+                  clearSelected();
                 }
                 else if(blocListener is PostIncidentsErrorState){
-                  titleController.clear();
-                  detailController.clear();
-                  selectedFile = null;
+                  clearSelected();
                   locator<ToastService>().show(blocListener.errorMsg??"");
                   locator<DialogService>().hideLoader();
                 }
@@ -324,14 +372,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         files: File(selectedFile!.path),
                         isCameraUpload: isCameraUpload,
                         isVideo: isVideo,
-                        latitude: (data?.latitude??"").toString(),
-                        longitude: (data?.longitude??"").toString(),
+                        latitude: data?.latitude.toString() ?? "0.0",
+                        longitude: data?.longitude.toString() ?? "0.0",
                         reportAnonymously: isAnonymous,
                         title: titleController.text.trim(),
                         userId: userId,
                         state: data?.state,
                         isEdited: false,
-                        city: data?.city
+                        city: data?.city,
                     ));
                   }
                   else{
@@ -345,5 +393,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+
+  clearSelected(){
+    setState(() {
+      titleController.clear();
+      detailController.clear();
+      selectedFile = null;
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

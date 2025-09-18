@@ -12,7 +12,7 @@ class OtpVerifyModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data =  <String, dynamic>{};
     data['message'] = this.message;
     data['token'] = this.token;
     data['userId'] = this.userId;

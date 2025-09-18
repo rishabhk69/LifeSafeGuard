@@ -338,4 +338,5 @@ class StringHelper {
   static String signUP = "Signup";
   static String accept = "Accept";
   static String decline = "Decline";
+  static String type = "Type";
 }
