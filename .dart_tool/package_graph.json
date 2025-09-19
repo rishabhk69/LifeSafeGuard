@@ -24,7 +24,6 @@
         "get_it",
         "go_router",
         "google_fonts",
-        "google_maps_flutter",
         "image_picker",
         "injectable",
         "intl",
@@ -88,17 +87,6 @@
         "test_api",
         "vector_math",
         "vm_service"
-      ]
-    },
-    {
-      "name": "google_maps_flutter",
-      "version": "2.13.1",
-      "dependencies": [
-        "flutter",
-        "google_maps_flutter_android",
-        "google_maps_flutter_ios",
-        "google_maps_flutter_platform_interface",
-        "google_maps_flutter_web"
       ]
     },
     {
@@ -574,49 +562,6 @@
       ]
     },
     {
-      "name": "google_maps_flutter_web",
-      "version": "0.5.14+2",
-      "dependencies": [
-        "collection",
-        "flutter",
-        "flutter_web_plugins",
-        "google_maps",
-        "google_maps_flutter_platform_interface",
-        "sanitize_html",
-        "stream_transform",
-        "web"
-      ]
-    },
-    {
-      "name": "google_maps_flutter_platform_interface",
-      "version": "2.14.0",
-      "dependencies": [
-        "collection",
-        "flutter",
-        "plugin_platform_interface",
-        "stream_transform"
-      ]
-    },
-    {
-      "name": "google_maps_flutter_ios",
-      "version": "2.15.5",
-      "dependencies": [
-        "flutter",
-        "google_maps_flutter_platform_interface",
-        "stream_transform"
-      ]
-    },
-    {
-      "name": "google_maps_flutter_android",
-      "version": "2.18.2",
-      "dependencies": [
-        "flutter",
-        "flutter_plugin_android_lifecycle",
-        "google_maps_flutter_platform_interface",
-        "stream_transform"
-      ]
-    },
-    {
       "name": "geocoding_ios",
       "version": "3.1.0",
       "dependencies": [
@@ -1089,34 +1034,6 @@
       ]
     },
     {
-      "name": "stream_transform",
-      "version": "2.1.1",
-      "dependencies": []
-    },
-    {
-      "name": "sanitize_html",
-      "version": "2.1.0",
-      "dependencies": [
-        "html",
-        "meta"
-      ]
-    },
-    {
-      "name": "google_maps",
-      "version": "8.1.1",
-      "dependencies": [
-        "meta",
-        "web"
-      ]
-    },
-    {
-      "name": "flutter_plugin_android_lifecycle",
-      "version": "2.0.29",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
       "name": "uuid",
       "version": "4.5.1",
       "dependencies": [
@@ -1250,6 +1167,13 @@
       "dependencies": [
         "cross_file",
         "file_selector_platform_interface",
+        "flutter"
+      ]
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "version": "2.0.29",
+      "dependencies": [
         "flutter"
       ]
     },
