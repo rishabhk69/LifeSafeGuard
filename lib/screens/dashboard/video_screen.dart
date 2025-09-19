@@ -32,6 +32,7 @@ class _VideoScreenState extends State<VideoScreen> {
   VideoPlayerController? _videoController;
   String? address;
   int _currentPage = 0;
+  bool isInitialized = false;
 
   void _initializeVideo(String? originUrl) async {
     if (originUrl == null || originUrl.isEmpty) {
@@ -88,11 +89,13 @@ class _VideoScreenState extends State<VideoScreen> {
 
             if (incidents.isNotEmpty) {
               final first = incidents[0];
-              if (first.isVideo == true && first.mediaUrls!.isNotEmpty) {
+              if (first.isVideo == true && first.mediaUrls!.isNotEmpty && isInitialized==false) {
                 _initializeVideo(AppConfig.VIDEO_BASE_URL + first.mediaUrls![0]);
+                setState(() {
+                  isInitialized = true;
+                });
               }
             }
-
               return  PageView.builder(
                 scrollDirection: Axis.vertical,
                 controller: _pageController,

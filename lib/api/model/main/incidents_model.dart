@@ -41,7 +41,7 @@ class IncidentsModel {
     title = json['title'];
     commentCount = json['commentCount'];
     description = json['description'];
-    location = json['location'] != null
+    location = json['incidentLocation'] != null
         ? new Location.fromJson(json['incidentLocation'])
         : null;
   }
@@ -68,8 +68,8 @@ class IncidentsModel {
 }
 
 class Location {
-  double? latitude;
-  double? longitude;
+  dynamic latitude;
+  dynamic longitude;
 
   Location({this.latitude, this.longitude});
 

@@ -5,13 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/Utils/validations.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
-import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
@@ -49,16 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
        getUserId();
      });
     }
+  Future<void> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getString("userId");
 
-  getUserId() async {
-    final id = await AppUtils().getUserId();
-    final loc = await getLocationData();
-
+    if (!mounted) return;
     setState(() {
       userId = id;
-      data = loc;
     });
   }
+
 
   Future<File> getThumbnail(XFile thumbnailFile) async {
     final file = await VideoCompress.getFileThumbnail(thumbnailFile.path);

@@ -13,6 +13,13 @@ class IncidentsRefreshEvent extends IncidentsEvent {
   IncidentsRefreshEvent(this.size,this.offset);
 }
 
+class InitializeRefreshEvent extends IncidentsEvent {
+
+  bool? isInitialized;
+
+  InitializeRefreshEvent(this.isInitialized);
+}
+
 class IncidentsState {}
 
 class IncidentsInitialState extends IncidentsState {}
@@ -25,6 +32,13 @@ class IncidentsSuccessState extends IncidentsState {
   IncidentsSuccessState(this.incidentsModel);
 }
 
+
+class InitializeSuccessState extends IncidentsState {
+  bool? isInitialized;
+
+  InitializeSuccessState(this.isInitialized);
+}
+
 class IncidentsErrorState extends IncidentsState {
   String errorMsg;
 
@@ -33,16 +47,16 @@ class IncidentsErrorState extends IncidentsState {
 
 class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
   final MainRepository repository;
-
+  bool isInitialize = false;
   IncidentsBloc(this.repository) : super(IncidentsInitialState()) {
     on<IncidentsRefreshEvent>(_onIncidentsRefresh);
+    on<InitializeRefreshEvent>(_onInitializeRefresh);
   }
-
   Future<void> _onIncidentsRefresh(
       IncidentsRefreshEvent event, Emitter<IncidentsState> emit) async {
     emit(IncidentsLoadingState());
     try {
-      final result = await repository.getIncidents(size: event.size, offset :event.offset); // API call
+      final result = await repository.getIncidents(size: event.size, offset: event.offset);
 
       if (result.isSuccess) {
         List<IncidentsModel> incidents = (result.data as List)
@@ -55,5 +69,14 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
     } catch (e) {
       emit(IncidentsErrorState(e.toString()));
     }
+  }
+
+  Future<void> _onInitializeRefresh(
+      InitializeRefreshEvent event, Emitter<IncidentsState> emit) async {
+    if(event.isInitialized==true)
+   {
+     isInitialize = true;
+   }
+    emit(InitializeSuccessState(event.isInitialized ?? false));
   }
 }

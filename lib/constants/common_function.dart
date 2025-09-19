@@ -164,7 +164,7 @@ class CommonFunction{
   compressVideo(XFile file) async {
     final MediaInfo? response = await VideoCompress.compressVideo(
       file.path,
-      quality: VideoQuality.DefaultQuality,
+      quality: VideoQuality.MediumQuality,
       deleteOrigin: false,
     );
     if (response != null && response.path != null) {
