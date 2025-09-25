@@ -9,6 +9,7 @@ class AppConfig {
   static const profile = "/get-profile";
   static const requestOtp = "auth/request-otp";
   static const getIncidents = "incidents";
+  static const getProfile = "incidents/by-user";
   static const signup = "signup";
   static const verifyOtp = "auth/verify-otp";
   static const postIncidents = "incidents";

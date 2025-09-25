@@ -23,7 +23,7 @@ import '../../constants/app_config.dart';
          AppConfig.requestOtp,
          data: {
            'phone':phone,
-           'isRegistered':!type,
+           'isRegistering':!type,
          },
 
        );
@@ -37,6 +37,21 @@ import '../../constants/app_config.dart';
      try {
        final response = await _dio.get(
          AppConfig.getIncidents,
+         queryParameters: {
+           'offset':offset,
+           'size' :size
+         },
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+   Future<dynamic> getProfile({int? offset, int? size, String? userId}) async {
+     try {
+       final response = await _dio.get(
+         "${AppConfig.getProfile}/${userId}",
          queryParameters: {
            'offset':offset,
            'size' :size
@@ -125,11 +140,14 @@ import '../../constants/app_config.dart';
      String? state,
      String? userId,
      String? longitude,
+     String? address,
+     String? pincode,
+     String? time,
      bool? reportAnonymously,
      bool? isCameraUpload,
      bool? isVideo,
      bool? isEdited,
-     File? files,}) async {
+     List<File>? files}) async {
      try {
        String token = await AppUtils().getToken();
 
@@ -148,12 +166,18 @@ import '../../constants/app_config.dart';
          "isEdited": isEdited,
          "userId": userId,
          "isVideo": isVideo,
-         if (files != null)
-           "files": await MultipartFile.fromFile(
-             files.path,
-             filename: files.path.split('/').last,
-           ),
-       });
+         "address": address,
+         "pincode": pincode,
+         "time": time,
+         "isMediaDeleted": false,
+         if (files != null && files.isNotEmpty)
+           "files": await Future.wait(
+             files.map((file) async => await MultipartFile.fromFile(
+               file.path,
+               filename: file.path.split('/').last,
+             )),
+           ),});
+
 
        final response = await _dio.post(
          AppConfig.postIncidents,

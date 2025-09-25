@@ -3,9 +3,9 @@ class IncidentsModel {
   String? userId;
   String? userName;
   String? category;
-  bool? isVideo;
+  dynamic isVideo;
   String? profilePic;
-  List<String>? mediaUrls;
+  List<Media>? media;
   String? time;
   String? address;
   String? description;
@@ -20,7 +20,7 @@ class IncidentsModel {
         this.category,
         this.isVideo,
         this.profilePic,
-        this.mediaUrls,
+        this.media,
         this.time,
         this.address,
         this.title,
@@ -35,7 +35,12 @@ class IncidentsModel {
     category = json['category'];
     isVideo = json['isVideo'];
     profilePic = json['profilePic'];
-    mediaUrls = json['mediaUrls'].cast<String>();
+    if (json['media'] != null) {
+      media = <Media>[];
+      json['media'].forEach((v) {
+        media!.add(new Media.fromJson(v));
+      });
+    }
     time = json['time'];
     address = json['address'];
     title = json['title'];
@@ -54,7 +59,9 @@ class IncidentsModel {
     data['category'] = this.category;
     data['isVideo'] = this.isVideo;
     data['profilePic'] = this.profilePic;
-    data['mediaUrls'] = this.mediaUrls;
+    if (this.media != null) {
+      data['media'] = this.media!.map((v) => v.toJson()).toList();
+    }
     data['time'] = this.time;
     data['commentCount'] = this.commentCount;
     data['title'] = this.title;
@@ -63,6 +70,25 @@ class IncidentsModel {
     if (this.location != null) {
       data['incidentLocation'] = this.location!.toJson();
     }
+    return data;
+  }
+}
+
+class Media {
+  bool? isMediaDeleted;
+  String? name;
+
+  Media({this.isMediaDeleted, this.name});
+
+  Media.fromJson(Map<String, dynamic> json) {
+    isMediaDeleted = json['isMediaDeleted'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isMediaDeleted'] = this.isMediaDeleted;
+    data['name'] = this.name;
     return data;
   }
 }

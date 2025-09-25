@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,7 @@ import 'package:untitled/common/Utils/validations.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
@@ -21,6 +23,7 @@ import 'package:video_compress/video_compress.dart';
 
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
+import '../../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,10 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isAnonymous = false;
   bool isVideo = true;
   bool? isCameraUpload;
-  XFile? selectedFile;
+  List<XFile> selectedFiles = [];
   final formGlobalKey = GlobalKey<FormState>();
   String? userId;
   LocationData? data;
+  String? createdDate;
 
   @override
     void initState() {
@@ -50,12 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
      });
     }
   Future<void> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString("userId");
+    final id = await AppUtils().getUserId();
+    final loc = await getLocationData();
+
 
     if (!mounted) return;
     setState(() {
       userId = id;
+      data = loc;
     });
   }
 
@@ -94,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child:
-                selectedFile == null ?Column(
+                selectedFiles.isEmpty ?Column(
                   children: [
                     Text(
                       isVideo ? StringHelper.uploadVideo : StringHelper.uploadImage,
@@ -117,30 +123,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 18
                       ),),
                       onPressed: () async {
-                        await CommonFunction().pickImageVideoFile(!isVideo,false,context).then((value) async {
-                          if (value != null && isVideo) {
-                            selectedFile = XFile(value.path);
-                            CommonFunction().compressVideo(value).then((v) async {
-                              selectedFile = null;
-                              selectedFile = XFile(v!.path);
-                                setState(() {
-                                  isCameraUpload = true;
-                                  // selectedFile = XFile(onValue.path);
-                                });
-                            });
-                          }
-                          else if(value != null && !isVideo){
-                            setState(() {
-                              isCameraUpload = true;
-                              selectedFile = value;
-                            });
-                          }
-                          else{
+                        await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
+                          if (files != null && files.isNotEmpty) {
+                            if (isVideo) {
+                              // ---- VIDEO (only 1 file expected) ----
+                              XFile videoFile = files.first;
+
+                              selectedFiles = []; // clear old selection
+                              selectedFiles.add(videoFile);
+
+                              CommonFunction().compressVideo(videoFile).then((compressed) async {
+                                if (compressed != null) {
+                                  setState(() {
+                                    selectedFiles = [XFile(compressed.path)];
+                                    createdDate = currentDate;
+                                    isCameraUpload = true;
+                                  });
+                                }
+                              });
+                            } else {
+                              // ---- MULTIPLE IMAGES ----
+                              setState(() {
+                                selectedFiles = files; // directly assign all picked images
+                                createdDate = currentDate;
+                                isCameraUpload = true;
+                              });
+                            }
+                          } else {
                             return null;
                           }
-                          // context.pop();
-                          // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
                         });
+
                       },
                     ),
                     const SizedBox(height: 10),
@@ -159,36 +172,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18
                       ),),
                       onPressed: () async {
-                        await CommonFunction().pickImageVideoFile(!isVideo,true,context).then((value) async {
-                          if (value != null){
-                            FileStat stat = await File(value.path).stat();
-                            print("Created: ${stat.changed}");
-                            print("Modified: ${stat.modified}");
-                            print("Accessed: ${stat.accessed}");
-                          }
-                          if (value != null && isVideo) {
-                            selectedFile = XFile(value.path);
-                            CommonFunction().compressVideo(value).then((v) async {
-                              selectedFile = null;
-                              selectedFile = XFile(v!.path);
-                                setState(() {
-                                  isCameraUpload = false;
-                                  // selectedFile = XFile(onValue.path);
-                                });
-                            });
-                          }
-                          else if(value != null && !isVideo){
-                            setState(() {
-                              isCameraUpload = false;
-                              selectedFile = value;
-                            });
-                          }
-                          else{
+                        await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
+                          if (files != null && files.isNotEmpty) {
+                            if (isVideo) {
+                              // ---- VIDEO (only 1 file expected) ----
+                              XFile videoFile = files.first;
+
+                              FileStat stat = await File(videoFile.path).stat();
+                              createdDate = stat.accessed.toString();
+
+                              CommonFunction().compressVideo(videoFile).then((v) async {
+                                if (v != null) {
+                                  setState(() {
+                                    selectedFiles = [XFile(v.path)];
+                                    createdDate = stat.accessed.toString();
+                                    isCameraUpload = false;
+                                  });
+                                }
+                              });
+                            } else {
+                              // ---- MULTIPLE IMAGES ----
+                              List<FileStat> stats = await Future.wait(
+                                files.map((file) => File(file.path).stat()),
+                              );
+
+                              setState(() {
+                                selectedFiles = files;
+                                createdDate = stats.first.accessed.toString(); // take first image’s timestamp
+                                isCameraUpload = false;
+                              });
+                            }
+                          } else {
                             return null;
                           }
-                          // context.pop();
-                          // BlocProvider.of<FileSelectionBloc>(context).add(FileSelectionRefreshEvent((value),isPhoto:0));
                         });
+
                       },
                     ),
                   ],
@@ -199,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 150,
                       width: double.infinity,
                       child: FutureBuilder<File>(
-                        future: getThumbnail(selectedFile!), // async call
+                        future: getThumbnail(selectedFiles[0]), // async call
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const Center(child: CircularProgressIndicator());
@@ -224,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: ColorConstant.whiteColor,
                           onPressed: (){
                             setState(() {
-                              selectedFile= null;
+                              selectedFiles.clear();
                             });
                           }, icon: Icon(Icons.delete)),
                     ),
@@ -249,7 +267,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                         height: 150,
                         width: double.infinity,
-                        child: Image.file(File(selectedFile!.path,),fit: BoxFit.fill,)),
+                        child: CarouselSlider.builder(
+                          itemCount: selectedFiles.length,
+                          itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                              Image.file(File(selectedFiles[itemIndex].path,),fit: BoxFit.fitWidth,),
+                          options: CarouselOptions(
+                            height: 400,
+                            // aspectRatio: 16/9,
+                            viewportFraction: 1,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayAnimationDuration: Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: false,
+                            enlargeFactor: 0.3,
+                            scrollDirection: Axis.horizontal,
+                          ),
+                        ),
+                        // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
+                    ),
                     Positioned(
                       bottom: -10,
                       right: -10,
@@ -257,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: ColorConstant.whiteColor,
                           onPressed: (){
                         setState(() {
-                          selectedFile= null;
+                          selectedFiles.clear();
                         });
                       }, icon: Icon(Icons.delete)),
                     )
@@ -365,11 +404,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },child: CustomButton(text: StringHelper.post, onTap: (){
                 if(formGlobalKey.currentState!.validate()){
-                  if(selectedFile!=null){
+                  if(selectedFiles.isNotEmpty){
                     BlocProvider.of<PostIncidentsBloc>(context).add(PostIncidentsRefreshEvent(
                         category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
                         description: detailController.text.trim(),
-                        files: File(selectedFile!.path),
+                        files: selectedFiles.map((f) => File(f.path)).toList(),
                         isCameraUpload: isCameraUpload,
                         isVideo: isVideo,
                         latitude: data?.latitude.toString() ?? "0.0",
@@ -380,6 +419,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         state: data?.state,
                         isEdited: false,
                         city: data?.city,
+                        address: data?.address,
+                        pinCode:data?.postCode,
+                        time:createdDate
                     ));
                   }
                   else{
@@ -400,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       titleController.clear();
       detailController.clear();
-      selectedFile = null;
+      selectedFiles.clear();
     });
     FocusManager.instance.primaryFocus?.unfocus();
   }

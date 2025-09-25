@@ -17,15 +17,18 @@ class PostIncidentsRefreshEvent extends PostIncidentsEvent {
   String? city;
   String? state;
   String? userId;
+  String? address;
+  String? pinCode;
+  String? time;
   bool? reportAnonymously;
   bool? isCameraUpload;
   bool? isVideo;
   bool? isEdited;
-  File? files;
+  List<File>? files;
 
-  PostIncidentsRefreshEvent({this.title, this.description, this.category,
+  PostIncidentsRefreshEvent({this.title, this.address,this.pinCode,this.description, this.category,
     this.latitude, this.longitude, this.reportAnonymously,
-    this.isCameraUpload, this.isVideo, this.files,this.userId,this.state,this.city,this.isEdited});
+    this.isCameraUpload, this.isVideo, this.files,this.userId,this.state,this.city,this.isEdited,this.time});
 }
 
 class PostIncidentsState {}
@@ -69,7 +72,10 @@ class PostIncidentsBloc extends Bloc<PostIncidentsEvent, PostIncidentsState> {
           city: event.city,
           isEdited: event.isEdited,
           state: event.state,
-          userId: event.userId
+          userId: event.userId,
+          address: event.address,
+          pincode: event.pinCode,
+          time: event.time,
       ); // API call
 
       if (result.isSuccess) {

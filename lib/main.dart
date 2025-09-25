@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
 import 'api/service/bloc_service.dart';
 import 'common/locator/locator.dart';
@@ -11,6 +12,9 @@ import 'constants/colors_constant.dart';
 
 
 Future<void> main() async {
+  var now = DateTime.now();
+  var formatter = DateFormat('yyyy-MM-dd');
+  currentDate = formatter.format(now);
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -28,6 +32,7 @@ Future<void> main() async {
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
+String? currentDate;
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -44,7 +49,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Locale _locale = const Locale("en", "US");
 
   setLocale(Locale locale) {

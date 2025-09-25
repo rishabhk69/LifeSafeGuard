@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
+import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/screens/dashboard/profile_screen.dart';
 import 'package:untitled/screens/dashboard/setting_screen.dart';
@@ -21,12 +23,28 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
+  String? userId;
   final List<Widget> _screens = [
     HomeScreen(),
     VideoScreen(),
     ProfileScreen(),
     SettingScreen(),
   ];
+
+  getUserId() async {
+    await AppUtils().getUserId().then((onValue){
+      setState(() {
+        userId = onValue;
+        print("userId:${userId}");
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserId();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +69,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             selectedItemColor: ColorConstant.primaryColor,
             unselectedItemColor: ColorConstant.textColor,
             backgroundColor: Colors.white,
-
             currentIndex: _currentIndex,
             onTap: (index) {
               setState(() {
@@ -59,6 +76,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               });
               if(index==1){
                BlocProvider.of<IncidentsBloc>(context,listen: false).add(IncidentsRefreshEvent(10, 0));
+              }
+              else if(index==2){
+               BlocProvider.of<ProfileBloc>(context,listen: false).add(ProfileRefreshEvent(10, 0,userId));
               }
             },
             items: [

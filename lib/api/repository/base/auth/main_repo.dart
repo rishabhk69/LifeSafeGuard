@@ -38,6 +38,17 @@ class MainRepository extends BaseRepository {
     ));
   }
 
+
+  Future<Result<dynamic>> getProfile(
+      {int? offset, int? size,String? userId}) async {
+    final service = MainService(await dio);
+    return safeCall(service.getProfile(
+      userId: userId,
+      offset: offset,
+      size: size
+    ));
+  }
+
   Future<Result<dynamic>> getComments(
       {int? offset, int? size,String? incidentId}) async {
     final service = MainService(await dio);
@@ -61,11 +72,14 @@ class MainRepository extends BaseRepository {
       String? city,
       String? state,
       String? userId,
+      String? address,
+      String? time,
+      String? pincode,
       bool? reportAnonymously,
       bool? isCameraUpload,
       bool? isVideo,
       bool? isEdited,
-      File? files,}) async {
+      List<File>? files}) async {
     final service = MainService(await dio);
     return safeCall(service.postIncidents(title: title,
         reportAnonymously: reportAnonymously,
@@ -79,6 +93,9 @@ class MainRepository extends BaseRepository {
         isEdited: isEdited,
         state: state,
         userId: userId,
+        address: address,
+        pincode: pincode,
+        time: time,
         category: category));
   }
 

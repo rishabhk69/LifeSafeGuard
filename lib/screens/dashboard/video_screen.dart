@@ -59,7 +59,7 @@ class _VideoScreenState extends State<VideoScreen> {
     });
 
     final current = incidents[index];
-    if (current.isVideo == true && current.mediaUrls!.isNotEmpty) {
+    if (current.isVideo == 'true' && current.mediaUrls!.isNotEmpty) {
       _initializeVideo(AppConfig.VIDEO_BASE_URL + current.mediaUrls![0]);
     } else {
       _videoController?.pause();
@@ -89,8 +89,8 @@ class _VideoScreenState extends State<VideoScreen> {
 
             if (incidents.isNotEmpty) {
               final first = incidents[0];
-              if (first.isVideo == true && first.mediaUrls!.isNotEmpty && isInitialized==false) {
-                _initializeVideo(AppConfig.VIDEO_BASE_URL + first.mediaUrls![0]);
+              if (first.isVideo == 'true' && first.media!.isNotEmpty && isInitialized==false) {
+                _initializeVideo(AppConfig.VIDEO_BASE_URL + first.media![0].name!);
                 setState(() {
                   isInitialized = true;
                 });
@@ -104,7 +104,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      incidentState.incidentsModel[index].isVideo??false ?
+                      incidentState.incidentsModel[index].isVideo=='true' ?
                       Center(
                         child: _videoController!.value.isInitialized && currentIndex == index
                             ? AspectRatio(
@@ -125,11 +125,11 @@ class _VideoScreenState extends State<VideoScreen> {
                                 scrollDirection: Axis.horizontal,
                                 physics: const PageScrollPhysics(),
                                 // onPageChanged: _onPageChanged,
-                                itemCount: incidentState.incidentsModel[index].mediaUrls?.length ?? 0,
+                                itemCount: incidentState.incidentsModel[index].media?.length ?? 0,
                                 itemBuilder: (context, mediaIndex) {
                                   return Image.network(
                                     AppConfig.IMAGE_BASE_URL +
-                                        incidentState.incidentsModel[index].mediaUrls![mediaIndex],
+                                        incidentState.incidentsModel[index].media![mediaIndex].name!,
                                     fit: BoxFit.fitWidth,
                                     // width: double.infinity,
                                   );
@@ -139,7 +139,7 @@ class _VideoScreenState extends State<VideoScreen> {
                             const SizedBox(height: 8),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate((incidentState.incidentsModel[index].mediaUrls??[]).length, (dotIndex) {
+                              children: List.generate((incidentState.incidentsModel[index].media??[]).length, (dotIndex) {
                                 return Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 4),
                                   width: _currentPage == dotIndex ? 10 : 8,

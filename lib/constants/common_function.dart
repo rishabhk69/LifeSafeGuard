@@ -121,35 +121,35 @@ class CommonFunction{
 
   }
 
-  Future<XFile?> pickImageVideoFile(
+  Future<List<XFile>?> pickImageVideoFile(
       bool isPhoto, bool isFromGallery, BuildContext context) async {
+    final picker = ImagePicker();
     try {
       if (isPhoto) {
-        // ---- PHOTO CASE ----
-        selectedFile = await picker.pickImage(
-          source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
-        );
-
-        if (selectedFile != null) {
-          // check size
-          if (getFileSizeString(bytes: File(selectedFile!.path).lengthSync()).contains('mb')) {
-            var size = getFileSizeString(bytes: File(selectedFile!.path).lengthSync())
-                .replaceAll('mb', '');
-            if (int.parse(size) > 100) {
-              locator<ToastService>().show(
-                  getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb') ?? "");
-              return null;
+        if (isFromGallery) {
+          final pickedFiles = await picker.pickMultiImage();
+          if (pickedFiles.isNotEmpty) {
+            for (final file in pickedFiles) {
+              if (_isFileTooLarge(file, context)) {
+                return null;
+              }
             }
+            return pickedFiles;
           }
-          return selectedFile;
+        } else {
+          // only one photo from camera
+          final pickedFile = await picker.pickImage(source: ImageSource.camera);
+          if (pickedFile != null) {
+            if (_isFileTooLarge(pickedFile, context)) return null;
+            return [pickedFile];
+          }
         }
       } else {
-        // ---- VIDEO CASE ----
-        selectedFile = await picker.pickVideo(
+        final pickedFile = await picker.pickVideo(
           source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
         );
-        if (selectedFile != null) {
-            return selectedFile; // fallback
+        if (pickedFile != null) {
+          return [pickedFile];
         }
       }
     } catch (e) {
@@ -159,6 +159,22 @@ class CommonFunction{
     }
     return null;
   }
+
+  bool _isFileTooLarge(XFile file, BuildContext context) {
+    final sizeString =
+    getFileSizeString(bytes: File(file.path).lengthSync()).toLowerCase();
+    if (sizeString.contains('mb')) {
+      final size = double.tryParse(sizeString.replaceAll('mb', '').trim()) ?? 0;
+      if (size > 100) {
+        locator<ToastService>().show(
+          getTranslated(context, 'imageSizeShouldNotBeMoreThan100Mb') ?? "",
+        );
+        return true;
+      }
+    }
+    return false;
+  }
+
 
 
   compressVideo(XFile file) async {
@@ -252,10 +268,12 @@ class CommonFunction{
 class LocationData {
   final String? city;
   final String? state;
+  final String? postCode;
+  final String? address;
   final double latitude;
   final double longitude;
 
-  LocationData({this.city, this.state, required this.latitude, required this.longitude});
+  LocationData({this.city,this.postCode,this.address, this.state, required this.latitude, required this.longitude});
 }
 
 Future<LocationData?> getLocationData() async {
@@ -266,12 +284,10 @@ Future<LocationData?> getLocationData() async {
   }
   if (permission == LocationPermission.deniedForever) return null;
 
-  // Get current position
   Position position = await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.high,
   );
 
-  // Get address info
   List<Placemark> placemarks = await placemarkFromCoordinates(
     position.latitude,
     position.longitude,
@@ -279,7 +295,14 @@ Future<LocationData?> getLocationData() async {
 
   if (placemarks.isNotEmpty) {
     final place = placemarks.first;
+    final fullAddress =
+        "${place.subLocality}, "
+        "${place.locality}, ${place.subAdministrativeArea}, "
+        "${place.administrativeArea}, ${place.country}, "
+        "${place.postalCode}";
     return LocationData(
+      address: fullAddress,
+      postCode: place.postalCode,
       city: place.locality,
       state: place.administrativeArea,
       latitude: position.latitude,
