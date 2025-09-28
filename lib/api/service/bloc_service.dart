@@ -16,6 +16,8 @@ import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 
 import '../../bloc/auth/login_bloc.dart';
+import '../../bloc/block_incident_bloc.dart';
+import '../../bloc/dashboard_bloc.dart';
 import '../../bloc/file_selection_bloc.dart';
 import '../../common/locator/locator.dart';
 import '../../common/router/router.dart';
@@ -62,6 +64,12 @@ class BlocServices {
           ),
           BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc(_mainRepository),
+          ),
+          BlocProvider<BlockIncidentBloc>(
+            create: (context) => BlockIncidentBloc(_mainRepository),
+          ),
+          BlocProvider<DashboardBloc>(
+            create: (context) => DashboardBloc(),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

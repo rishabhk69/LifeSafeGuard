@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
 
 class TakeAction extends StatefulWidget {
-  const TakeAction({super.key});
+  dynamic incidentData;
+  TakeAction(this.incidentData);
 
   @override
   State<TakeAction> createState() => _TakeActionState();
 }
 
 class _TakeActionState extends State<TakeAction> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,11 +50,12 @@ class _TakeActionState extends State<TakeAction> {
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
-                  // Handle block incident action
+                 context.push('/reportIssueScreen',extra: widget.incidentData);
                 },
               ),
             ),
-            const SizedBox(height: 4),
+
+             SizedBox(height: 4),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Text(

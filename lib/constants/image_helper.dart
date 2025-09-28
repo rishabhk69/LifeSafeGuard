@@ -52,5 +52,7 @@ class ImageHelper{
   static const String timerIc = "assets/images/timer_ic.svg";
   static const String aggrementIc = "assets/images/aggrement_ic.svg";
   static const String startHereIc = "assets/images/start_here_ic.svg";
+  static const String photoIcWhite = "assets/images/photo_ic_white.svg";
+  static const String playCircle = "assets/images/play_circle.svg";
 
 }

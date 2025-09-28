@@ -311,7 +311,7 @@ class DialogService {
                   titlePadding: const EdgeInsets.only(top: 12, left: 24, right: 24),
                   contentPadding: const EdgeInsets.only(top: 12, left: 24, bottom: 20,right: 24),
                   insetPadding: const EdgeInsets.symmetric(horizontal: 15),
-                  title:Padding(
+                  title:image==null? SizedBox():Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(image??"",height: 100,width: 100),
                   ),

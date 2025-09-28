@@ -5,6 +5,7 @@ import 'package:retrofit/http.dart';
 import 'package:untitled/constants/app_utils.dart';
 
 import '../../constants/app_config.dart';
+import '../../main.dart';
 
  class MainService {
    final Dio _dio;
@@ -187,6 +188,40 @@ import '../../constants/app_config.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "multipart/form-data",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+
+   Future<dynamic> blockIncident({String? title,
+     String? incidentId,
+      List<String>? urls,
+     String? userId,
+     String? description,}) async {
+     try {
+       String token = await AppUtils().getToken();
+
+       final response = await _dio.post(
+         "${AppConfig.postIncidents}/$incidentId/block",
+         data:{
+           "incidentId": incidentId,
+           "incidentBlockerId": userId,
+           "title": title,
+           "description": description,
+           "mediaUrls": urls,
+           "blockAt": currentDate
+         },
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             // HttpHeaders.contentTypeHeader: "multipart/form-data",
            },
          ),
        );

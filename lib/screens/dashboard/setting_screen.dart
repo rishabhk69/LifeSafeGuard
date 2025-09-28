@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/common/locator/locator.dart';
+import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 
+import '../../constants/app_utils.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/colors_constant.dart';
 import '../../constants/strings.dart';
@@ -49,7 +53,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     context.push('/donateScreen');
                   }),
                   _buildListTile(StringHelper.reportAnIssue, "", true,(){
-                    context.push('/reportIssueScreen');
+                    locator<ToastService> ().show('In Process');
+                    // context.push('/reportIssueScreen');
                   }),
                   _buildListTile(StringHelper.feedback, "", true,(){}),
                   _buildListTile(StringHelper.deleteYourAccount, "", true,(){}),
@@ -96,7 +101,24 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  locator<DialogService>().showLogoutDialog(
+                      title: StringHelper.areYouSure,
+                      subTitle: StringHelper.youWantToLogOut,
+                      negativeButtonText: "No",
+                      positiveButtonText: "Yes",
+                      negativeTap: () {
+                        context.pop();
+                      },
+                      positiveTap: () {
+                        context.pop();
+                        AppUtils().logoutUser().then((onValue){
+                          context.push('/chooseLogin');
+                        });
+                      }
+                  );
+
+                },
                 child: const Text(
                   "Sign Out",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

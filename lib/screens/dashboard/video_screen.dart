@@ -87,16 +87,21 @@ class _VideoScreenState extends State<VideoScreen> {
             else if(incidentState is IncidentsSuccessState){
             final incidents = incidentState.incidentsModel;
 
-            if (incidents.isNotEmpty) {
-              final first = incidents[0];
-              if (first.isVideo == 'true' && first.media!.isNotEmpty && isInitialized==false) {
-                _initializeVideo(AppConfig.VIDEO_BASE_URL + first.media![0].name!);
+            if (incidents.isNotEmpty && isInitialized == false) {
+              // find the first video in the list
+              final firstVideo = incidents.firstWhere(
+                    (e) => e.isVideo == 'true' && e.media!.isNotEmpty,
+              );
+
+              if (firstVideo != null) {
+                _initializeVideo(AppConfig.VIDEO_BASE_URL + firstVideo.media![0].name!);
                 setState(() {
                   isInitialized = true;
                 });
               }
             }
-              return  PageView.builder(
+
+            return  PageView.builder(
                 scrollDirection: Axis.vertical,
                 controller: _pageController,
                 onPageChanged: (index) => _onPageChanged(index, incidents),

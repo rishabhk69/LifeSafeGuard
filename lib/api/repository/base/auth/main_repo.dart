@@ -99,6 +99,20 @@ class MainRepository extends BaseRepository {
         category: category));
   }
 
+    Future<Result<dynamic>> blockIncident({String? title,
+      String? description,
+      String? incidentId,
+      String? userId,
+      List<String>? urls}) async {
+    final service = MainService(await dio);
+    return safeCall(service.blockIncident(title: title,
+        incidentId: incidentId,
+        urls: urls,
+        description: description,
+        userId: userId,
+       ));
+  }
+
     Future<Result<dynamic>> agreementData() async {
     final service = MainService(await dio);
     return safeCall(service.agreementData());

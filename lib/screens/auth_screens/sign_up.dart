@@ -93,7 +93,7 @@ class SignupScreen extends StatelessWidget {
                 }
               },child:  CustomButton(
                 buttonHeight: 50,
-                text: StringHelper.send, onTap: (){
+                text: StringHelper.submit, onTap: (){
               if(formGlobalKey.currentState!.validate()){
                 if(selectedFile==null){
                   locator<ToastService>().show('Please Select Image');

@@ -36,8 +36,9 @@ abstract class BaseRepository {
     final headers = await _getHeaders();
     dio.options = BaseOptions(
       baseUrl: _apiEndpoint,
-      connectTimeout: Duration(seconds: 40),
-      receiveTimeout: Duration(seconds: 40),
+      connectTimeout: Duration(seconds: 60),
+      receiveTimeout: Duration(seconds: 60),
+      sendTimeout: Duration(seconds: 60),
       headers: headers,
       followRedirects: true,
     );

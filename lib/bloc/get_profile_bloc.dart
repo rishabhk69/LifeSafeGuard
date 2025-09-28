@@ -34,7 +34,7 @@ class ProfileErrorState extends ProfileState {
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final MainRepository repository;
-
+  String? userName;
   ProfileBloc(this.repository) : super(ProfileInitialState()) {
     on<ProfileRefreshEvent>(_onProfileRefresh);
   }
@@ -47,6 +47,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       if (result.isSuccess) {
         ProfileModel profileModel = ProfileModel.fromJson(result.data);
+        userName = profileModel.userName;
         emit(ProfileSuccessState(profileModel));
       } else {
         emit(ProfileErrorState(result.data.message ?? "Something went wrong"));

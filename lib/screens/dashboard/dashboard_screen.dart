@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/constants/app_utils.dart';
@@ -22,8 +23,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _currentIndex = 0;
   String? userId;
+  String? userName;
   final List<Widget> _screens = [
     HomeScreen(),
     VideoScreen(),
@@ -44,63 +45,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     getUserId();
+    BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-      child: Scaffold(
-        backgroundColor: ColorConstant.scaffoldColor,
-        body: _screens[_currentIndex],
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 6,
-                offset: Offset(0, -2), // shadow above the nav bar
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context,dashboardState) {
+          if (dashboardState is DashboardSuccessState) {
+            return Scaffold(
+              backgroundColor: ColorConstant.scaffoldColor,
+              body: _screens[dashboardState.selectedIndex],
+              bottomNavigationBar: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, -2), // shadow above the nav bar
+                    ),
+                  ],
+                ),
+                child: BottomNavigationBar(
+                  useLegacyColorScheme: true,
+                  selectedItemColor: ColorConstant.primaryColor,
+                  unselectedItemColor: ColorConstant.textColor,
+                  backgroundColor: Colors.white,
+                  currentIndex: dashboardState.selectedIndex,
+                  onTap: (index) {
+                    BlocProvider.of<DashboardBloc>(
+                      context,
+                    ).add(DashboardRefreshEvent(index));
+                    if (index == 1) {
+                      BlocProvider.of<IncidentsBloc>(context, listen: false)
+                          .add(IncidentsRefreshEvent(10, 0));
+                    }
+                    else if (index == 2) {
+                      BlocProvider.of<ProfileBloc>(context, listen: false).add(
+                          ProfileRefreshEvent(10, 0, userId));
+                    }
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(dashboardState.selectedIndex == 0
+                          ? ImageHelper.homeSelected
+                          : ImageHelper.homeUnselected),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(dashboardState.selectedIndex == 1
+                          ? ImageHelper.videoSelect
+                          : ImageHelper.videoUnselect),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(dashboardState.selectedIndex == 2
+                          ? ImageHelper.profileSelected
+                          : ImageHelper.profileUnselect),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(dashboardState.selectedIndex == 3
+                          ? ImageHelper.settingSelected
+                          : ImageHelper.settingUnselected),
+                      label: '',
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-          child: BottomNavigationBar(
-            useLegacyColorScheme: true,
-            selectedItemColor: ColorConstant.primaryColor,
-            unselectedItemColor: ColorConstant.textColor,
-            backgroundColor: Colors.white,
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-              if(index==1){
-               BlocProvider.of<IncidentsBloc>(context,listen: false).add(IncidentsRefreshEvent(10, 0));
-              }
-              else if(index==2){
-               BlocProvider.of<ProfileBloc>(context,listen: false).add(ProfileRefreshEvent(10, 0,userId));
-              }
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon:SvgPicture.asset(_currentIndex ==0 ? ImageHelper.homeSelected:ImageHelper.homeUnselected),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(_currentIndex ==1 ? ImageHelper.videoSelect:ImageHelper.videoUnselect),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(_currentIndex ==2 ? ImageHelper.profileSelected:ImageHelper.profileUnselect),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(_currentIndex ==3 ? ImageHelper.settingSelected: ImageHelper.settingUnselected),
-                label: '',
-              ),
-            ],
-          ),
-        ),
+            );
+          }
+          return Container();
+        }
       ),
     );
   }

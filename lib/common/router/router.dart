@@ -63,7 +63,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/reportIssueScreen',
-      builder: (context, state) => const ReportIssueScreen(),
+      builder: (context, state) {
+    dynamic incidentData = state.extra as IncidentsModel;
+    return ReportIssueScreen(incidentData);
+    }
     ),
     GoRoute(
       path: '/contactUsScreen',
@@ -104,7 +107,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/takeAction',
-      builder: (context, state) => const TakeAction(),
+      builder: (context, state){
+        dynamic incidentData = state.extra as IncidentsModel;
+        return TakeAction(incidentData);
+      },
     ),
     GoRoute(
       path: '/signupScreen',

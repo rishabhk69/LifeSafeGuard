@@ -140,11 +140,13 @@ class IncidentLocation {
 class Media {
   bool? isMediaDeleted;
   String? name;
+  String? thumbnail;
 
-  Media({this.isMediaDeleted, this.name});
+  Media({this.isMediaDeleted, this.name, this.thumbnail});
 
   Media.fromJson(Map<String, dynamic> json) {
     isMediaDeleted = json['isMediaDeleted'];
+    thumbnail = json['thumbnail'];
     name = json['name'];
   }
 
@@ -152,6 +154,7 @@ class Media {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isMediaDeleted'] = this.isMediaDeleted;
     data['name'] = this.name;
+    data['thumbnail'] = this.thumbnail;
     return data;
   }
 }

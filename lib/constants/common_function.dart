@@ -127,24 +127,37 @@ class CommonFunction{
     try {
       if (isPhoto) {
         if (isFromGallery) {
-          final pickedFiles = await picker.pickMultiImage();
+          final pickedFiles = await picker.pickMultiImage(imageQuality: 70);
+
           if (pickedFiles.isNotEmpty) {
-            for (final file in pickedFiles) {
+            if (pickedFiles.length > 4) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("You can select a maximum of 4 images."),
+                ),
+              );
+            }
+
+            final limitedFiles = pickedFiles.take(4).toList();
+
+            for (final file in limitedFiles) {
               if (_isFileTooLarge(file, context)) {
                 return null;
               }
             }
-            return pickedFiles;
+            return limitedFiles;
           }
         } else {
           // only one photo from camera
-          final pickedFile = await picker.pickImage(source: ImageSource.camera);
+          final pickedFile =
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 70);
           if (pickedFile != null) {
             if (_isFileTooLarge(pickedFile, context)) return null;
             return [pickedFile];
           }
         }
       } else {
+        // video (gallery or camera)
         final pickedFile = await picker.pickVideo(
           source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
         );
@@ -159,6 +172,7 @@ class CommonFunction{
     }
     return null;
   }
+
 
   bool _isFileTooLarge(XFile file, BuildContext context) {
     final sizeString =

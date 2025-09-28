@@ -245,7 +245,6 @@ class AppUtils {
   Future<bool> logoutUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('user_logged_in', false);
-    prefs.setBool('first_time', false);
     prefs.setString('user_token', '');
     prefs.setString('user_data', '');
     prefs.setString('userName', '');
@@ -389,7 +388,6 @@ class AppUtils {
   logout() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.remove(token);
-    await preferences.remove(firstTime);
     await preferences.remove(email);
     await preferences.remove(name);
     await preferences.remove(dob);
