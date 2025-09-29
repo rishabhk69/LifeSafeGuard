@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
               context.go('/dashboardScreen');
             }
             else{
-            context.push('/chooseLogin');
+            context.go('/chooseLogin');
             }
           }
 

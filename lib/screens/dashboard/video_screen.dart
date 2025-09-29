@@ -52,6 +52,22 @@ class _VideoScreenState extends State<VideoScreen> {
       });
   }
 
+  void _initializeFirst() async {
+    await _videoController?.pause();
+    await _videoController?.dispose();
+
+    _videoController = VideoPlayerController.asset('assets/video/processed_video.mp4')
+      ..initialize().then((_) {
+        if (mounted) {
+          setState(() {
+            _videoController?.setLooping(true);
+            _videoController?.play();
+            isInitialized = true;
+          });
+        }
+      });
+  }
+
   void _onPageChanged(int index, List incidents) {
     setState(() {
       currentIndex = index;
@@ -66,6 +82,12 @@ class _VideoScreenState extends State<VideoScreen> {
       _videoController?.dispose();
       _videoController = null;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirst();
   }
 
   @override
@@ -110,7 +132,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   return Stack(
                     children: [
                       incidentState.incidentsModel[index].isVideo=='true' ?
-                      Center(
+                      isInitialized ? Center(
                         child: _videoController!.value.isInitialized && currentIndex == index
                             ? AspectRatio(
                           aspectRatio: _videoController!.value.aspectRatio,
@@ -119,7 +141,7 @@ class _VideoScreenState extends State<VideoScreen> {
                             : const Center(
                           child: CircularProgressIndicator(color: Colors.white),
                         ),
-                      ) : Center(
+                      ):BuilderDialog() : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

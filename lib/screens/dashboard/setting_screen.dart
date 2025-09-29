@@ -113,7 +113,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       positiveTap: () {
                         context.pop();
                         AppUtils().logoutUser().then((onValue){
-                          context.push('/chooseLogin');
+                          context.go('/chooseLogin');
                         });
                       }
                   );
