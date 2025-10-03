@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
@@ -52,31 +53,15 @@ class _VideoScreenState extends State<VideoScreen> {
       });
   }
 
-  void _initializeFirst() async {
-    await _videoController?.pause();
-    await _videoController?.dispose();
-
-    _videoController = VideoPlayerController.asset('assets/video/processed_video.mp4')
-      ..initialize().then((_) {
-        if (mounted) {
-          setState(() {
-            _videoController?.setLooping(true);
-            _videoController?.play();
-            isInitialized = true;
-          });
-        }
-      });
-  }
-
-  void _onPageChanged(int index, List incidents) {
+  void _onPageChanged(int index, List<IncidentsModel> incidents) {
     setState(() {
       currentIndex = index;
       _currentPage = index;
     });
 
     final current = incidents[index];
-    if (current.isVideo == 'true' && current.mediaUrls!.isNotEmpty) {
-      _initializeVideo(AppConfig.VIDEO_BASE_URL + current.mediaUrls![0]);
+    if (current.isVideo == 'true' && current.media!.isNotEmpty) {
+      _initializeVideo(AppConfig.VIDEO_BASE_URL + current.media![0].name!);
     } else {
       _videoController?.pause();
       _videoController?.dispose();
@@ -87,7 +72,7 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeFirst();
+    // _initializeFirst();
   }
 
   @override
@@ -115,13 +100,13 @@ class _VideoScreenState extends State<VideoScreen> {
                     (e) => e.isVideo == 'true' && e.media!.isNotEmpty,
               );
 
-              if (firstVideo != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 _initializeVideo(AppConfig.VIDEO_BASE_URL + firstVideo.media![0].name!);
                 setState(() {
                   isInitialized = true;
                 });
-              }
-            }
+              });
+                        }
 
             return  PageView.builder(
                 scrollDirection: Axis.vertical,
@@ -131,17 +116,17 @@ class _VideoScreenState extends State<VideoScreen> {
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      incidentState.incidentsModel[index].isVideo=='true' ?
-                      isInitialized ? Center(
-                        child: _videoController!.value.isInitialized && currentIndex == index
-                            ? AspectRatio(
-                          aspectRatio: _videoController!.value.aspectRatio,
-                          child: VideoPlayer(_videoController!),
-                        )
-                            : const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
-                        ),
-                      ):BuilderDialog() : Center(
+                      incidentState.incidentsModel[index].isVideo == 'true'?
+                        Center(
+                          child: (_videoController != null &&
+                              _videoController!.value.isInitialized &&
+                              currentIndex == index)
+                              ? AspectRatio(
+                            aspectRatio: _videoController!.value.aspectRatio,
+                            child: VideoPlayer(_videoController!),
+                          )
+                              : const CircularProgressIndicator(color: Colors.white),
+                        ) : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -205,10 +190,10 @@ class _VideoScreenState extends State<VideoScreen> {
                                 ),
                                 Divider(),
                                 TextButton(
-                                  child: Text(StringHelper.incidentDetails,style: MyTextStyleBase.headingStyleLight,),
+                                  child: Text(StringHelper.allText,style: MyTextStyleBase.headingStyleLight,),
                                   onPressed: (){
                                     context.pop();
-                                    context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                                    // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                                   },
                                 ),
                               ],
@@ -261,7 +246,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 SizedBox(
                                   width: 40,
                                   height: 40,
-                                  child: CircleAvatar(
+                                  child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
                                     backgroundImage:
                                     NetworkImage(incidentState.incidentsModel[index].profilePic??""), // User profile
                                     radius: 25,
@@ -310,6 +295,18 @@ class _VideoScreenState extends State<VideoScreen> {
                                   ),
                                 ),
                               ],
+                            ),
+
+                            InkWell(
+                              onTap: (){
+                                context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                              },
+                              child: Text(StringHelper.seeMore,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: ColorConstant.whiteColor
+                                ),),
                             ),
                           ],
                         ),
