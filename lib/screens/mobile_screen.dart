@@ -106,6 +106,7 @@ class _MobileScreenState extends State<MobileScreen> {
             else if(loginState is LoginSuccessState){
               locator<DialogService>().hideLoader();
               locator<ToastService>().show(loginState.loginData.message??"");
+              locator<ToastService>().show(loginState.loginData.otp??"");
               context.push('/otpScreen',extra: {
                 'phone': selectedPhoneCode+mobileController.text.trim(),
                 'otp': loginState.loginData.otp,
@@ -114,7 +115,7 @@ class _MobileScreenState extends State<MobileScreen> {
             }
             else if(loginState is LoginErrorState){
               locator<DialogService>().hideLoader();
-              locator<ToastService>().show(loginState.errorMsg??"");
+              locator<ToastService>().show(loginState.errorMsg);
             }
           },child:  CustomButton(
             buttonHeight: 50,

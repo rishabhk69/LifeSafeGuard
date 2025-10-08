@@ -341,4 +341,5 @@ class StringHelper {
   static String type = "Type";
   static String seeMore = "See More..";
   static String allText = "All";
+  static String addComments = "Add Comments";
 }

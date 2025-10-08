@@ -58,7 +58,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   }),
                   _buildListTile(StringHelper.feedback, "", true,(){}),
                   _buildListTile(StringHelper.deleteYourAccount, "", true,(){}),
-                  _buildListTile(StringHelper.agreement, "", true,(){}),
+                  _buildListTile(StringHelper.agreement, "", true,(){
+                    context.push('/termsAndCondition');
+                  }),
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(

@@ -1,18 +1,26 @@
+import 'dart:convert';
+
 class AgreementModel {
-  String? agreement;
+  Map<String, dynamic>? agreement;
   String? version;
 
   AgreementModel({this.agreement, this.version});
 
   AgreementModel.fromJson(Map<String, dynamic> json) {
-    agreement = json['agreement'];
+    // Decode if it's a string
+    if (json['agreement'] is String) {
+      agreement = jsonDecode(json['agreement']);
+    } else {
+      agreement = json['agreement'];
+    }
     version = json['version'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['agreement'] = this.agreement;
-    data['version'] = this.version;
+    final data = <String, dynamic>{};
+    // Encode back to String if needed
+    data['agreement'] = jsonEncode(agreement);
+    data['version'] = version;
     return data;
   }
 }

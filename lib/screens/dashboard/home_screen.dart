@@ -126,14 +126,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
                           if (files != null && files.isNotEmpty) {
                             if (isVideo) {
-                              // ---- VIDEO (only 1 file expected) ----
                               XFile videoFile = files.first;
 
                               selectedFiles = []; // clear old selection
                               selectedFiles.add(videoFile);
-
                               CommonFunction().compressVideo(videoFile).then((compressed) async {
                                 if (compressed != null) {
+                                  locator<DialogService>().hideLoader();
                                   setState(() {
                                     selectedFiles = [XFile(compressed.path)];
                                     createdDate = currentDate;
@@ -183,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               CommonFunction().compressVideo(videoFile).then((v) async {
                                 if (v != null) {
+                                  locator<DialogService>().hideLoader();
                                   setState(() {
                                     selectedFiles = [XFile(v.path)];
                                     createdDate = stat.accessed.toString();
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (snapshot.hasData) {
                             return Image.file(
                               snapshot.data!,
-                              fit: BoxFit.fill,
+                              // fit: BoxFit.fill,
                             );
                           } else {
                             return const SizedBox();
@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             setState(() {
                               selectedFiles.clear();
                             });
-                          }, icon: Icon(Icons.delete)),
+                          }, icon: Icon(Icons.delete,color: Colors.grey,)),
                     ),
 
                     // Positioned(
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {
                           selectedFiles.clear();
                         });
-                      }, icon: Icon(Icons.delete)),
+                      }, icon: Icon(Icons.delete,color: Colors.grey,)),
                     )
                   ],
                 )
@@ -364,9 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(StringHelper.addTitle, style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
               CommonTextFieldWidget(
                 maxLength: 50,
-                validator: (v){
-                  return Validations.commonValidation(v,StringHelper.enterTitle);
-                },
+                // validator: (v){
+                //   return Validations.commonValidation(v,StringHelper.enterTitle);
+                // },
                 hintText: StringHelper.enterTitle, isPassword: false, textController: titleController,
 
               ),
@@ -377,9 +377,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Text("Details", style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
               CommonTextFieldWidget(
                 maxLines: 2,
-                validator: (v){
-                  return Validations.commonValidation(v,StringHelper.enterIncidentDetails);
-                },
+                // validator: (v){
+                //   return Validations.commonValidation(v,StringHelper.enterIncidentDetails);
+                // },
                 hintText: StringHelper.enterIncidentDetails, isPassword: false, textController: detailController,
 
               ),
@@ -403,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   locator<DialogService>().hideLoader();
                 }
               },child: CustomButton(text: StringHelper.post, onTap: (){
-                if(formGlobalKey.currentState!.validate()){
+                // if(formGlobalKey.currentState!.validate()){
                   if(selectedFiles.isNotEmpty){
                     BlocProvider.of<PostIncidentsBloc>(context).add(PostIncidentsRefreshEvent(
                         category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
@@ -427,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   else{
                     locator<ToastService>().show(StringHelper.uploadImage);
                   }
-                }
+                // }
               }),)
 
             ],

@@ -6,6 +6,7 @@ import 'package:untitled/constants/app_utils.dart';
 
 import '../../constants/app_config.dart';
 import '../../main.dart';
+import '../repository/base/base_repository.dart';
 
  class MainService {
    final Dio _dio;
@@ -236,6 +237,37 @@ import '../../main.dart';
      try {
        final response = await _dio.get(
          AppConfig.userAgreement,
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+   Future<dynamic> getBlockedIncidents(int? offset, int? size) async {
+     String token = await AppUtils().getToken();
+     String userId = await AppUtils().getUserId();
+     try {
+       final response = await _dio.get(
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.contentTypeHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             'App-Version': '1.0.0',
+             'OS-Version': '18.3',
+             'Device-Type': 'Android',
+           },
+         ),
+         AppConfig.getBlockedIncidents,
+         queryParameters: {
+           'offset':offset,
+           'size' :size
+         },
+         data: {
+           "userId": userId,
+           "blockedBy": "user"
+         }
        );
        return response.data;
      } catch (e) {

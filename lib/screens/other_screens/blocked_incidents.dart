@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/bloc/blocked_list_bloc.dart';
+import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
 
@@ -37,6 +40,15 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
     }
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((callback){
+      BlocProvider.of<BlockedIncidentsBloc>(context).add(BlockedIncidentsRefreshEvent(size: 10,offset: 0));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,63 +68,75 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            itemCount: incidents.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 8,
-              mainAxisExtent: 200,
-            ),
-            itemBuilder: (context, index) {
-              final incident = incidents[index];
-              return Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      incident["image"]!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 8,
-                    left: 8,
-                    right: 8,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: getStatusColor(incident["status"]!),
+        body: BlocBuilder<BlockedIncidentsBloc,BlockedIncidentsState>(
+          builder: (context,incidentState){
+          if(incidentState is BlockedIncidentsLoadingState){
+            return BuilderDialog();
+          }
+          else if(incidentState is BlockedIncidentsSuccessState){
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                itemCount: incidents.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 8,
+                  mainAxisExtent: 200,
+                ),
+                itemBuilder: (context, index) {
+                  final incident = incidents[index];
+                  return Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          incident["image"]!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
-                        color: getStatusColor(
-                          incident["status"]!,
-                        ).withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Center(
-                        child: FittedBox(
-                          child: Text(
-                            incident["status"]!,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                      Positioned(
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: getStatusColor(incident["status"]!),
+                            ),
+                            color: getStatusColor(
+                              incident["status"]!,
+                            ).withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: FittedBox(
+                              child: Text(
+                                incident["status"]!,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                    ],
+                  );
+                },
+              ),
+            );
+          }
+          else if(incidentState is BlockedIncidentsErrorState){
+            return Center(child: Text(incidentState.errorMsg));
+          }
+          return SizedBox();
+        })
       ),
     );
   }

@@ -162,6 +162,7 @@ class CommonFunction{
           source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
         );
         if (pickedFile != null) {
+          locator<DialogService>().showLoader(message: 'Compressing..');
           return [pickedFile];
         }
       }

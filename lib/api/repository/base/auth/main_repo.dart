@@ -118,4 +118,9 @@ class MainRepository extends BaseRepository {
     return safeCall(service.agreementData());
   }
 
+    Future<Result<dynamic>> getBlockedIncidents(int? offset, int? size) async {
+    final service = MainService(await dio);
+    return safeCall(service.getBlockedIncidents(offset,size));
+  }
+
 }

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:untitled/api/repository/base/auth/main_repo.dart';
 import 'package:untitled/bloc/auth/aggrement_bloc.dart';
+import 'package:untitled/bloc/blocked_list_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/auth/otp_bloc.dart';
 import 'package:untitled/bloc/auth/signup_bloc.dart';
@@ -67,6 +68,9 @@ class BlocServices {
           ),
           BlocProvider<BlockIncidentBloc>(
             create: (context) => BlockIncidentBloc(_mainRepository),
+          ),
+          BlocProvider<BlockedIncidentsBloc>(
+            create: (context) => BlockedIncidentsBloc(_mainRepository),
           ),
           BlocProvider<DashboardBloc>(
             create: (context) => DashboardBloc(),

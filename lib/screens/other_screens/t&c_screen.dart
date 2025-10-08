@@ -27,6 +27,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       bottom: true,
       child: Scaffold(
         bottomSheet: Padding(
@@ -66,7 +67,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     addHeight(100),
-                    Text(agreementState.agreementModel.agreement??""),
+                    Text(agreementState.agreementModel.toString()),
                     Row(
                       children: [
                         Expanded(

@@ -17,7 +17,7 @@ class AgreementInitialState extends AgreementState {}
 class AgreementLoadingState extends AgreementState {}
 
 class AgreementSuccessState extends AgreementState {
-  final AgreementModel agreementModel;
+   dynamic agreementModel;
 
   AgreementSuccessState(this.agreementModel);
 }
@@ -41,8 +41,7 @@ class AgreementBloc extends Bloc<AgreementEvent, AgreementState> {
       final result = await repository.agreementData(); // API call
 
       if (result.isSuccess) {
-        AgreementModel agreementModel = AgreementModel.fromJson(result.data);
-        emit(AgreementSuccessState(agreementModel));
+        emit(AgreementSuccessState(result.data));
       } else {
         emit(AgreementErrorState(result.data.message ?? "Something went wrong"));
       }
