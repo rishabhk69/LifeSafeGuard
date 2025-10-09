@@ -118,7 +118,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/termsAndCondition',
-      builder: (context, state) => const TermsAndCondition(),
+      builder: (context, state) {
+        dynamic args = state.extra;
+        return  TermsAndCondition(args['isLogin'].toString());
+      },
     ),
     GoRoute(
       path: '/chooseLogin',

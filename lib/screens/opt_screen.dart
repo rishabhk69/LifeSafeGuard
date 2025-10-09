@@ -121,7 +121,9 @@ class _OtpScreenState extends State<OtpScreen> {
               }
               else{
                 AppUtils().setToken(otpState.otpData.token??"");
-                context.push('/termsAndCondition');
+                context.push('/termsAndCondition',extra: {
+                  'isLogin': 'true',
+                });
               }
             }
             else if(otpState is OtpErrorState){

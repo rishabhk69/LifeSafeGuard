@@ -50,6 +50,7 @@ class CommonBackground extends StatelessWidget {
               // White content area
               Positioned(
                 top: size.height * 0.20,
+                bottom: size.height * 0.12,
                 child: Container(
                   alignment: Alignment.center,
                   height: size.height,
