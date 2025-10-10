@@ -144,7 +144,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                       else if(blockState is BlockIncidentSuccessState){
                         locator<DialogService>().hideLoader();
                         context.pop();
-                        locator<ToastService>().show(blockState.blockIncidentData.message??"");
+                        locator<ToastService>().show(blockState.blockIncidentData.status??"");
                         context.go('/dashboardScreen');
                         BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                       }

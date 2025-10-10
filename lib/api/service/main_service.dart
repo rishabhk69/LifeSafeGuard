@@ -207,22 +207,21 @@ import '../repository/base/base_repository.dart';
      String? description,}) async {
      try {
        String token = await AppUtils().getToken();
-
+       final formData = FormData.fromMap({
+         "incidentId": incidentId,
+         "incidentBlockerId": userId,
+         "title": title,
+         "description": description,
+         "attachments": urls ?? [],
+       });
        final response = await _dio.post(
          "${AppConfig.postIncidents}/$incidentId/block",
-         data:{
-           "incidentId": incidentId,
-           "incidentBlockerId": userId,
-           "title": title,
-           "description": description,
-           "mediaUrls": urls,
-           "blockAt": currentDate
-         },
+         data:formData,
          options: Options(
            headers: {
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
-             // HttpHeaders.contentTypeHeader: "multipart/form-data",
+             HttpHeaders.contentTypeHeader: "multipart/form-data",
            },
          ),
        );
@@ -259,14 +258,15 @@ import '../repository/base/base_repository.dart';
              'Device-Type': 'Android',
            },
          ),
-         AppConfig.getBlockedIncidents,
+         "${AppConfig.getBlockedIncidents}/$userId",
          queryParameters: {
            'offset':offset,
-           'size' :size
+           'size' :size,
+           "blockedBy": "User"
          },
          data: {
            "userId": userId,
-           "blockedBy": "user"
+
          }
        );
        return response.data;

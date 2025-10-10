@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/api/model/common_model.dart';
-import 'package:untitled/api/model/main/post_incidents_model.dart';
 
 import '../../api/repository/base/auth/main_repo.dart';
+import '../api/model/main/block_incident_model.dart';
 
 class BlockIncidentEvent {}
 
@@ -29,7 +28,7 @@ class BlockIncidentInitialState extends BlockIncidentState {}
 class BlockIncidentLoadingState extends BlockIncidentState {}
 
 class BlockIncidentSuccessState extends BlockIncidentState {
-  final CommonModel blockIncidentData;
+  final BlockIncidentModel blockIncidentData;
 
   BlockIncidentSuccessState(this.blockIncidentData);
 }
@@ -60,7 +59,7 @@ class BlockIncidentBloc extends Bloc<BlockIncidentEvent, BlockIncidentState> {
       ); // API call
 
       if (result.isSuccess) {
-        CommonModel blockIncidentData = CommonModel.fromJson(result.data);
+        BlockIncidentModel blockIncidentData = BlockIncidentModel.fromJson(result.data);
         emit(BlockIncidentSuccessState(blockIncidentData));
       } else {
         emit(BlockIncidentErrorState(result.data.message ?? "Something went wrong"));

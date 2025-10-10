@@ -6,6 +6,9 @@ import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
 
+import '../../api/model/main/blocked_list_model.dart';
+import '../../constants/app_config.dart';
+
 class BlockedIncidents extends StatefulWidget {
   const BlockedIncidents({super.key});
 
@@ -14,18 +17,6 @@ class BlockedIncidents extends StatefulWidget {
 }
 
 class _BlockedIncidentsState extends State<BlockedIncidents> {
-  final List<Map<String, String>> incidents = [
-    {"image": "https://picsum.photos/200/300", "status": "Under Review"},
-    {"image": "https://picsum.photos/200/301", "status": "Blocked"},
-    {"image": "https://picsum.photos/200/302", "status": "Need Info"},
-    {"image": "https://picsum.photos/200/303", "status": "Blocked"},
-    {"image": "https://picsum.photos/200/304", "status": "Under Review"},
-    {"image": "https://picsum.photos/200/305", "status": "Under Review"},
-    {"image": "https://picsum.photos/200/306", "status": "Blocked"},
-    {"image": "https://picsum.photos/200/307", "status": "Blocked"},
-    {"image": "https://picsum.photos/200/309", "status": "Under Review"},
-    {"image": "https://picsum.photos/200/310", "status": "Under Review"},
-  ];
 
   Color getStatusColor(String status) {
     switch (status) {
@@ -77,7 +68,7 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
-                itemCount: incidents.length,
+                itemCount: incidentState.blockedListModel.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 10,
@@ -85,13 +76,14 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
                   mainAxisExtent: 200,
                 ),
                 itemBuilder: (context, index) {
-                  final incident = incidents[index];
+                  BlockedListModel incident = incidentState.blockedListModel[index];
                   return Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          incident["image"]!,
+                          incident.isVideo =='true'? AppConfig.HOST +incident.media![0].thumbnail.toString():
+                          AppConfig.HOST + incident.media![0].name.toString(),
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
@@ -105,17 +97,17 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
                           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: getStatusColor(incident["status"]!),
+                              color: getStatusColor(incident.status??""),
                             ),
                             color: getStatusColor(
-                              incident["status"]!,
+                              incident.status??"",
                             ).withOpacity(0.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Center(
                             child: FittedBox(
                               child: Text(
-                                incident["status"]!,
+                                incident.status??"",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,

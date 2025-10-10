@@ -20,7 +20,7 @@ class BlockedIncidentsInitialState extends BlockedIncidentsState {}
 class BlockedIncidentsLoadingState extends BlockedIncidentsState {}
 
 class BlockedIncidentsSuccessState extends BlockedIncidentsState {
-  BlockedListModel blockedListModel;
+  List<BlockedListModel> blockedListModel;
 
   BlockedIncidentsSuccessState(this.blockedListModel);
 }
@@ -44,7 +44,10 @@ class BlockedIncidentsBloc extends Bloc<BlockedIncidentsEvent, BlockedIncidentsS
       final result = await repository.getBlockedIncidents(event.offset, event.size); // API call
 
       if (result.isSuccess) {
-        BlockedListModel blockedListModel = BlockedListModel.fromJson(result.data);
+        List<BlockedListModel> blockedListModel = (result.data as List)
+            .map((e) => BlockedListModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+        // BlockedListModel blockedListModel = BlockedListModel.fromJson(result.data);
         emit(BlockedIncidentsSuccessState(blockedListModel));
       } else {
         emit(BlockedIncidentsErrorState(result.data.message ?? "Something went wrong"));
