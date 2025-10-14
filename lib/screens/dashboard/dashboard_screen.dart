@@ -36,7 +36,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     await AppUtils().getUserId().then((onValue){
       setState(() {
         userId = onValue;
-        print("userId:${userId}");
+        BlocProvider.of<ProfileBloc>(context, listen: false).add(
+            ProfileRefreshEvent(10, 0, userId));
       });
     });
   }

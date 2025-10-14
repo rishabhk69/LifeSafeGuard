@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
+import 'package:untitled/constants/app_utils.dart';
 
 import '../api/repository/base/auth/main_repo.dart';
 
@@ -48,6 +51,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (result.isSuccess) {
         ProfileModel profileModel = ProfileModel.fromJson(result.data);
         userName = profileModel.userName;
+        await AppUtils().setUserData(jsonEncode(profileModel));
         emit(ProfileSuccessState(profileModel));
       } else {
         emit(ProfileErrorState(result.data.message ?? "Something went wrong"));

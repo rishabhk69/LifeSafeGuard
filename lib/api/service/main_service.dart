@@ -232,6 +232,41 @@ import '../repository/base/base_repository.dart';
      }
    }
 
+   Future<dynamic> postComment({String? comment,
+     String? incidentId,
+     String? userId,
+     String? lastName,
+     String? userName,
+     String? firstName,}) async {
+     try {
+       String token = await AppUtils().getToken();
+      Map<String,dynamic> request = {
+        "incidentId": incidentId,
+        "userId": userId,
+        "firstName": firstName,
+        "lastName": lastName,
+        "userName": userName,
+        "comment": comment,
+        "timestamp": currentDate
+      };
+       final response = await _dio.post(
+         "${AppConfig.postComments}",
+         data:request,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             // HttpHeaders.contentTypeHeader: "multipart/form-data",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> agreementData() async {
      try {
        final response = await _dio.get(

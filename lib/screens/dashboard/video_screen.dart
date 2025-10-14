@@ -209,7 +209,7 @@ class _VideoScreenState extends State<VideoScreen> {
                            InkWell(
                              onTap: (){
                                BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentState.incidentsModel[index].incidentId));
-                               showCommentsBottomSheet(context);
+                               showCommentsBottomSheet(context,incidentState.incidentsModel[index]);
                              },
                              child: Column(
                                children: [

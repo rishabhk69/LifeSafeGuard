@@ -16,4 +16,5 @@ class AppConfig {
   static const userAgreement = "/user-agreement";
   static const getBlockedIncidents = "/blocked-incidents";
   static const getComments = "/incidents";
+  static const postComments = "/comment";
 }

@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
+import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
+import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/strings.dart';
 
-void showCommentsBottomSheet(BuildContext context) {
+import '../../bloc/post_comment_bloc.dart';
+import '../../constants/app_utils.dart';
+
+void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -110,22 +119,95 @@ void showCommentsBottomSheet(BuildContext context) {
                     ),
 
                     Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: CommonTextFieldWidget(
-                                isPassword: false,
-                                hintText: StringHelper.addComments,
-                                textController: commentsController),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 6,
+                            offset: const Offset(0, -2),
                           ),
-                          SizedBox(width: 5,),
-                          ElevatedButton(onPressed: (){}, child: Text('Post'))
+                        ],
+                      ),
+                      margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundImage: NetworkImage(
+                              "https://randomuser.me/api/portraits/men/1.jpg",
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2C2C2C),
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(color: Colors.grey.shade800),
+                              ),
+                              child: TextField(
+                                controller: commentsController,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  hintText: StringHelper.addComments,
+                                  hintStyle: const TextStyle(color: Colors.white54),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+                          BlocListener<PostCommentBloc,PostCommentState>(
+                          listener: (context,postListener){
+                            if(postListener is PostCommentLoadingState){
+                              locator<DialogService>().showLoader();
+                            }
+                            else if(postListener is PostCommentSuccessState){
+                              commentsController.clear();
+                              context.pop();
+                              locator<DialogService>().hideLoader();
+                              locator<ToastService>().show(postListener.postCommentData.message??"");
+                            }
+                            else if(postListener is PostCommentErrorState){
+                              commentsController.clear();
+                              locator<DialogService>().hideLoader();
+                            }
+                          },child:  GestureDetector(
+                            onTap: () {
+                              if(commentsController.text.trim().isNotEmpty){
+                                AppUtils().getUserData().then((onValue){
+                                  var profileData = ProfileModel.fromJson(onValue);
+                                  BlocProvider.of<PostCommentBloc>(context).add(PostCommentRefreshEvent(
+                                      comment: commentsController.text.trim(),
+                                      firstName:profileData.fisrtName,
+                                      lastName: profileData.lastName,
+                                      userId: profileData.userId,
+                                      userName: profileData.userName,
+                                      incidentId:incidentsModel.incidentId
+                                  ));
+                                });
+
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFFF9E30),
+                              ),
+                              child: const Icon(Icons.send, color: Colors.white, size: 20),
+                            ),
+                          ),)
+                         
                         ],
                       ),
                     )
+
                   ],
                 );
               }

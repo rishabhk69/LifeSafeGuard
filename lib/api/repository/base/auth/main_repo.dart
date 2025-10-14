@@ -113,6 +113,24 @@ class MainRepository extends BaseRepository {
        ));
   }
 
+    Future<Result<dynamic>> postComment({String? firstName,
+      String? userName,
+      String? lastName,
+      String? comment,
+      String? incidentId,
+      String? userId,
+     }) async {
+    final service = MainService(await dio);
+    return safeCall(service.postComment(
+         userName: userName,
+        incidentId: incidentId,
+        userId: userId,
+        firstName: firstName,
+        lastName: lastName,
+      comment: comment
+       ));
+  }
+
     Future<Result<dynamic>> agreementData() async {
     final service = MainService(await dio);
     return safeCall(service.agreementData());

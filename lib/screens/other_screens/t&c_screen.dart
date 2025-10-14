@@ -53,7 +53,12 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                   buttonHeight: 50,
                   text: StringHelper.accept,
                   onTap: () {
-                    context.push('/signupScreen');
+                    if(widget.isLogin=='true'){
+                      context.push('/signupScreen');
+                    }
+                    else {
+                      context.pop();
+                    }
                   },
                 ),
               ),
@@ -96,36 +101,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                           ),
                         },
                       ),
-                      Text(agreementState.agreementModel.toString()),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomButton(
-                              buttonColor: Colors.grey,
-                              buttonHeight: 50,
-                              text: StringHelper.decline,
-                              onTap: () {
-                                context.pop();
-                              },
-                            ),
-                          ),
-                          addWidth(5),
-                          Expanded(
-                            child: CustomButton(
-                              buttonHeight: 50,
-                              text: StringHelper.accept,
-                              onTap: () {
-                                if(widget.isLogin=='true'){
-                                  context.push('/signupScreen');
-                                }
-                                else {
-                                  context.pop();
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+
                     ],
                   ),
                 );

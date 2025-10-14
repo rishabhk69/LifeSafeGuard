@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:demoSetup/api/repository/base/auth/main_repo.dart';
-// import 'package:demoSetup/bloc/auth/increment_bloc.dart';
-// import 'package:demoSetup/bloc/upload_licence.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:untitled/api/repository/base/auth/main_repo.dart';
 import 'package:untitled/bloc/auth/aggrement_bloc.dart';
@@ -13,6 +10,7 @@ import 'package:untitled/bloc/auth/otp_bloc.dart';
 import 'package:untitled/bloc/auth/signup_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/bloc/post_comment_bloc.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 
@@ -74,6 +72,9 @@ class BlocServices {
           ),
           BlocProvider<DashboardBloc>(
             create: (context) => DashboardBloc(),
+          ),
+          BlocProvider<PostCommentBloc>(
+            create: (context) => PostCommentBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

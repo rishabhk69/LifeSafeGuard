@@ -82,8 +82,8 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          incident.isVideo =='true'? AppConfig.HOST +incident.media![0].thumbnail.toString():
-                          AppConfig.HOST + incident.media![0].name.toString(),
+                          incident.isVideo =='true'? AppConfig.IMAGE_BASE_URL +incident.media![0].thumbnail.toString():
+                          AppConfig.IMAGE_BASE_URL + incident.media![0].name.toString(),
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
