@@ -10,9 +10,7 @@ import 'package:untitled/screens/dashboard/profile_screen.dart';
 import 'package:untitled/screens/dashboard/setting_screen.dart';
 import 'package:untitled/screens/dashboard/video_screen.dart';
 
-import '../../constants/base_appbar.dart';
 import '../../constants/colors_constant.dart';
-import '../../constants/strings.dart';
 import 'home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -37,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         userId = onValue;
         BlocProvider.of<ProfileBloc>(context, listen: false).add(
-            ProfileRefreshEvent(10, 0, userId));
+            ProfileRefreshEvent(12, 0, userId));
       });
     });
   }

@@ -46,7 +46,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         OtpVerifyModel otpData = OtpVerifyModel.fromJson(result.data);
         emit(OtpSuccessState(otpData));
       } else {
-        emit(OtpErrorState(result.data.message ?? "Something went wrong"));
+        emit(OtpErrorState(result.error ?? "Something went wrong"));
       }
     } catch (e) {
       emit(OtpErrorState(e.toString()));

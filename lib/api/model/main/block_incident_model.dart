@@ -33,7 +33,7 @@ class BlockIncidentModel {
 class Media {
   bool? isDeleted;
   String? name;
-  Null? thumbnail;
+  String? thumbnail;
 
   Media({this.isDeleted, this.name, this.thumbnail});
 

@@ -59,6 +59,7 @@ class _VideoScreenState extends State<VideoScreen> {
       _currentPage = index;
     });
 
+    // Initialize video
     final current = incidents[index];
     if (current.isVideo == 'true' && current.media!.isNotEmpty) {
       _initializeVideo(AppConfig.VIDEO_BASE_URL + current.media![0].name!);
@@ -67,11 +68,21 @@ class _VideoScreenState extends State<VideoScreen> {
       _videoController?.dispose();
       _videoController = null;
     }
+
+    // ✅ Load next page if reached near the end
+    if (index == incidents.length - 1) {
+      final bloc = BlocProvider.of<IncidentsBloc>(context, listen: false);
+      final nextOffset = bloc.allIncidents.length;
+      bloc.add(IncidentsLoadMoreEvent(10, nextOffset));
+    }
   }
+
 
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<IncidentsBloc>(context, listen: false)
+        .add(IncidentsRefreshEvent(10, 0));
     // _initializeFirst();
   }
 
@@ -114,6 +125,9 @@ class _VideoScreenState extends State<VideoScreen> {
                 onPageChanged: (index) => _onPageChanged(index, incidents),
                 itemCount: incidentState.incidentsModel.length,
                 itemBuilder: (context, index) {
+                  if (index == incidents.length) {
+                    return const Center(child: CircularProgressIndicator(color: Colors.white));
+                  }
                   return Stack(
                     children: [
                       incidentState.incidentsModel[index].isVideo == 'true'?

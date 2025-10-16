@@ -342,4 +342,6 @@ class StringHelper {
   static String seeMore = "See More..";
   static String allText = "All";
   static String addComments = "Add Comments";
+  static String fileAlreadySelectedYouWantToReplace = "File already selected, you want to replace?";
+  static String areYouSureYouWantToDelete = 'Are you sure you want to delete?';
 }

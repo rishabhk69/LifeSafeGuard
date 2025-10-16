@@ -6,10 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
-import 'package:untitled/common/Utils/validations.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
@@ -18,9 +16,11 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
+import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:video_compress/video_compress.dart';
 
+import '../../constants/app_styles.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
 import '../../main.dart';
@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     void initState() {
       super.initState();
      WidgetsBinding.instance.addPostFrameCallback((callback){
-       BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent( StringHelper.bomBlast));
        getUserId();
      });
     }
@@ -78,9 +77,51 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: BaseAppBar(title: StringHelper.reportIncident,showAction: true,
       isVideo: isVideo,
       onActionTap: (){
-        setState(() {
-          isVideo = !isVideo;
-        });
+       if(selectedFiles.isNotEmpty){
+         locator<DialogService>().showCommonDialog(context, Padding(
+           padding: const EdgeInsets.all(10),
+           child: Column(
+             mainAxisSize: MainAxisSize.min,
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               addHeight(10),
+               Text(
+                 StringHelper.fileAlreadySelectedYouWantToReplace,
+                 style: MyTextStyleBase.headingStyleLight,
+                 textAlign: TextAlign.center,),
+               addHeight(20),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 children: [
+                   ElevatedButton(
+                     child: Text(StringHelper.yes,style: MyTextStyleBase.headingStyleLight,),
+                     onPressed: (){
+                       context.pop();
+                       selectedFiles=[];
+                       setState(() {
+                         isVideo = !isVideo;
+                       });
+                       // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                     },
+                   ),
+                   ElevatedButton(
+                     child: Text(StringHelper.no,style: MyTextStyleBase.headingStyleLight,),
+                     onPressed: (){
+                       context.pop();
+                       // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                     },
+                   ),
+                 ],
+               ),
+             ],
+           ),
+         ));
+       }
+       else {
+         setState(() {
+           isVideo = !isVideo;
+         });
+       }
       },
       ),
       backgroundColor: ColorConstant.scaffoldColor,
@@ -127,8 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (files != null && files.isNotEmpty) {
                             if (isVideo) {
                               XFile videoFile = files.first;
-
-                              selectedFiles = []; // clear old selection
+                              selectedFiles = [];
                               selectedFiles.add(videoFile);
                               CommonFunction().compressVideo(videoFile).then((compressed) async {
                                 if (compressed != null) {
@@ -224,9 +264,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (snapshot.hasError) {
                             return const Center(child: Icon(Icons.error, color: Colors.red));
                           } else if (snapshot.hasData) {
-                            return Image.file(
-                              snapshot.data!,
-                              // fit: BoxFit.fill,
+                            return Center(
+                              child: Stack(
+                                children: [
+                                  Image.file(
+                                    snapshot.data!,
+                                    // fit: BoxFit.fill,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                      top: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: Icon(Icons.play_circle,size: 50,color: ColorConstant.whiteColor,))
+                                ],
+                              ),
                             );
                           } else {
                             return const SizedBox();
@@ -241,9 +293,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: IconButton(
                           color: ColorConstant.whiteColor,
                           onPressed: (){
-                            setState(() {
-                              selectedFiles.clear();
-                            });
+                            locator<DialogService>().showLogoutDialog(
+                              negativeButtonText: StringHelper.no,
+                              subTitle: StringHelper.areYouSureYouWantToDelete,
+                              positiveButtonText: StringHelper.yes,
+                              negativeTap: (){
+                                context.pop();
+                              },
+                              positiveTap: (){
+                                context.pop();
+                                setState(() {
+                                  selectedFiles.clear();
+                                });
+                              }
+                            );
+
                           }, icon: Icon(Icons.delete,color: Colors.grey,)),
                     ),
 
@@ -295,9 +359,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: IconButton(
                           color: ColorConstant.whiteColor,
                           onPressed: (){
-                        setState(() {
-                          selectedFiles.clear();
-                        });
+                            locator<DialogService>().showLogoutDialog(
+                                negativeButtonText: StringHelper.no,
+                                subTitle: StringHelper.areYouSureYouWantToDelete,
+                                positiveButtonText: StringHelper.yes,
+                                negativeTap: (){
+                                  context.pop();
+                                },
+                                positiveTap: (){
+                                  context.pop();
+                                  setState(() {
+                                    selectedFiles.clear();
+                                  });
+                                }
+                            );
                       }, icon: Icon(Icons.delete,color: Colors.grey,)),
                     )
                   ],
@@ -325,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: Row(
                       children: [
-                        Text(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
+                        Text(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
                             style:GoogleFonts.poppins(fontSize: 13,fontWeight: FontWeight.w400,color: Color(0xff191919))),
                         const Icon(Icons.arrow_forward_ios, size: 14),
                       ],
@@ -405,24 +480,34 @@ class _HomeScreenState extends State<HomeScreen> {
               },child: CustomButton(text: StringHelper.post, onTap: (){
                 // if(formGlobalKey.currentState!.validate()){
                   if(selectedFiles.isNotEmpty){
-                    BlocProvider.of<PostIncidentsBloc>(context).add(PostIncidentsRefreshEvent(
-                        category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident??"",
-                        description: detailController.text.trim(),
-                        files: selectedFiles.map((f) => File(f.path)).toList(),
-                        isCameraUpload: isCameraUpload,
-                        isVideo: isVideo,
-                        latitude: data?.latitude.toString() ?? "0.0",
-                        longitude: data?.longitude.toString() ?? "0.0",
-                        reportAnonymously: isAnonymous,
-                        title: titleController.text.trim(),
-                        userId: userId,
-                        state: data?.state,
-                        isEdited: false,
-                        city: data?.city,
-                        address: data?.address,
-                        pinCode:data?.postCode,
-                        time:createdDate
-                    ));
+                    if(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident == 'Select Type'){
+                      locator<ToastService>().show('Please select incident type');
+                    }
+                    else {
+                      BlocProvider.of<PostIncidentsBloc>(context).add(
+                          PostIncidentsRefreshEvent(
+                              category: BlocProvider
+                                  .of<SetIncidentsBloc>(context)
+                                  .selectedIncident ?? "",
+                              description: detailController.text.trim(),
+                              files: selectedFiles
+                                  .map((f) => File(f.path))
+                                  .toList(),
+                              isCameraUpload: isCameraUpload,
+                              isVideo: isVideo,
+                              latitude: data?.latitude.toString() ?? "0.0",
+                              longitude: data?.longitude.toString() ?? "0.0",
+                              reportAnonymously: isAnonymous,
+                              title: titleController.text.trim(),
+                              userId: userId,
+                              state: data?.state,
+                              isEdited: false,
+                              city: data?.city,
+                              address: data?.address,
+                              pinCode: data?.postCode,
+                              time: createdDate
+                          ));
+                    }
                   }
                   else{
                     locator<ToastService>().show(StringHelper.uploadImage);

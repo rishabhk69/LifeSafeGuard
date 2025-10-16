@@ -45,26 +45,62 @@ class IncidentsErrorState extends IncidentsState {
   IncidentsErrorState(this.errorMsg);
 }
 
+class IncidentsLoadMoreEvent extends IncidentsEvent {
+  final int size;
+  final int offset;
+  IncidentsLoadMoreEvent(this.size, this.offset);
+}
+
 class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
   final MainRepository repository;
   bool isInitialize = false;
+  List<IncidentsModel> allIncidents = []; // ✅ cache list
+
   IncidentsBloc(this.repository) : super(IncidentsInitialState()) {
     on<IncidentsRefreshEvent>(_onIncidentsRefresh);
+    on<IncidentsLoadMoreEvent>(_onLoadMore);
     on<InitializeRefreshEvent>(_onInitializeRefresh);
   }
+
   Future<void> _onIncidentsRefresh(
       IncidentsRefreshEvent event, Emitter<IncidentsState> emit) async {
     emit(IncidentsLoadingState());
     try {
-      final result = await repository.getIncidents(size: event.size, offset: event.offset);
+      final result = await repository.getIncidents(
+        size: event.size,
+        offset: event.offset,
+      );
 
       if (result.isSuccess) {
-        List<IncidentsModel> incidents = (result.data as List)
+        allIncidents = (result.data as List)
             .map((e) => IncidentsModel.fromJson(e as Map<String, dynamic>))
             .toList();
-        emit(IncidentsSuccessState(incidents));
+        emit(IncidentsSuccessState(allIncidents));
       } else {
-        emit(IncidentsErrorState(result.data.message ?? "Something went wrong"));
+        emit(IncidentsErrorState("Something went wrong"));
+      }
+    } catch (e) {
+      emit(IncidentsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadMore(
+      IncidentsLoadMoreEvent event, Emitter<IncidentsState> emit) async {
+    try {
+      final result = await repository.getIncidents(
+        size: event.size,
+        offset: event.offset,
+      );
+
+      if (result.isSuccess) {
+        final newData = (result.data as List)
+            .map((e) => IncidentsModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        if (newData.isNotEmpty) {
+          allIncidents.addAll(newData);
+          emit(IncidentsSuccessState(List.from(allIncidents))); // ✅ update UI
+        }
       }
     } catch (e) {
       emit(IncidentsErrorState(e.toString()));
@@ -73,10 +109,7 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
 
   Future<void> _onInitializeRefresh(
       InitializeRefreshEvent event, Emitter<IncidentsState> emit) async {
-    if(event.isInitialized==true)
-   {
-     isInitialize = true;
-   }
+    if (event.isInitialized == true) isInitialize = true;
     emit(InitializeSuccessState(event.isInitialized ?? false));
   }
 }

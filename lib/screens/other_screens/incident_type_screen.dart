@@ -18,6 +18,13 @@ class IncidentTypeScreen extends StatefulWidget {
 }
 
 class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
+
+
+  @override
+  void initState() {
+    BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,52 +54,52 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
                   children: [
                     _buildListTile(StringHelper.bomBlast,'',ImageHelper.bombIc,
                         StringHelper.bomBlast==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.bomBlast));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.bomBlast));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.planeCrash,'',ImageHelper.missileIc,
                         StringHelper.planeCrash==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.planeCrash));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.planeCrash));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.missileAttack,'',ImageHelper.attackIc,
                         StringHelper.missileAttack==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.missileAttack));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.missileAttack));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.droneAttack,'',ImageHelper.planeIc,
                         StringHelper.droneAttack==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.droneAttack));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.droneAttack));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.animalAbuse,'',ImageHelper.dogIc,
                         StringHelper.animalAbuse==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.animalAbuse));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.animalAbuse));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.humanAbuse,'',ImageHelper.humanIc,
                         StringHelper.humanAbuse==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.humanAbuse));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.humanAbuse));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.roadCloser,'',ImageHelper.roadIc,
                         StringHelper.roadCloser==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.roadCloser));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.roadCloser));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.landslide,'',ImageHelper.landIc,
                         StringHelper.landslide==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.landslide));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.landslide));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.fight,'',ImageHelper.fightIc,
                         StringHelper.fight==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.fight));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.fight));
                           context.pop();
                         }),
                     _buildListTile(StringHelper.others,'',ImageHelper.otherIc,
                         StringHelper.others==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(StringHelper.others));
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.others));
                           context.pop();
                         }),
 

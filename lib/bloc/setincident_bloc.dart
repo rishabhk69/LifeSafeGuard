@@ -7,7 +7,7 @@ class SetIncidentsRefreshEvent extends SetIncidentsEvent {
 
   String? incidentName;
 
-  SetIncidentsRefreshEvent( this.incidentName);
+  SetIncidentsRefreshEvent({this.incidentName});
 
 
 }
@@ -30,7 +30,7 @@ class SetIncidentsErrorState extends SetIncidentsState {
 }
 
 class SetIncidentsBloc extends Bloc<SetIncidentsEvent, SetIncidentsState> {
-  String? selectedIncident;
+  String selectedIncident = 'Select Type';
   SetIncidentsBloc() : super(SetIncidentsInitialState()) {
     on<SetIncidentsRefreshEvent>(_onSetIncidentsRefresh);
   }

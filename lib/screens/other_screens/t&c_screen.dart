@@ -39,15 +39,16 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
           padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             children: [
-              // Expanded(
-              //   child: CustomButton(
-              //       buttonColor: Colors.grey,
-              //       buttonHeight: 50,
-              //       text: StringHelper.decline, onTap: (){
-              //     context.pop();
-              //   }),
-              // ),
-              // addWidth(5),
+              if(widget.isLogin=='true')
+              Expanded(
+                child: CustomButton(
+                    buttonColor: Colors.grey,
+                    buttonHeight: 50,
+                    text: StringHelper.decline, onTap: (){
+                  context.go('/mobileScreen');
+                }),
+              ),
+              addWidth(5),
               Expanded(
                 child: CustomButton(
                   buttonHeight: 50,

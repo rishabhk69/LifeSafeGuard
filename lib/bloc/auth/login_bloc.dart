@@ -46,7 +46,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         LoginModel loginData = LoginModel.fromJson(result.data);
         emit(LoginSuccessState(loginData));
       } else {
-        emit(LoginErrorState(result.data.message ?? "Something went wrong"));
+        emit(LoginErrorState(result.error ?? "Something went wrong"));
       }
     } catch (e) {
       emit(LoginErrorState(e.toString()));

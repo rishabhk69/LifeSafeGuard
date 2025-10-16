@@ -65,7 +65,7 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
             return BuilderDialog();
           }
           else if(incidentState is BlockedIncidentsSuccessState){
-            return Padding(
+            return incidentState.blockedListModel.isEmpty ? Center(child: Text('No data found')): Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 itemCount: incidentState.blockedListModel.length,
