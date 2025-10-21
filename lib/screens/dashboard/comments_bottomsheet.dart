@@ -13,6 +13,8 @@ import 'package:untitled/constants/strings.dart';
 
 import '../../bloc/post_comment_bloc.dart';
 import '../../constants/app_utils.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel) {
   showModalBottomSheet(
@@ -153,7 +155,7 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                                 controller: commentsController,
                                 style: const TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
-                                  hintText: StringHelper.addComments,
+                                  hintText: GuardLocalizations.of(context)!.translate("addComments") ?? "",
                                   hintStyle: const TextStyle(color: Colors.white54),
                                   border: InputBorder.none,
                                 ),

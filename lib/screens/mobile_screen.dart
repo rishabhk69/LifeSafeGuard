@@ -16,6 +16,8 @@ import 'package:untitled/constants/sizes.dart';
 import '../common/Utils/validations.dart';
 import '../constants/custom_button.dart';
 import '../constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class MobileScreen extends StatefulWidget {
   dynamic isLogin;
@@ -47,7 +49,7 @@ class _MobileScreenState extends State<MobileScreen> {
           child: Column(
             children: [
               Text(
-                StringHelper.verifyYourPhoneNumber,
+                GuardLocalizations.of(context)!.translate("verifyYourPhoneNumber") ?? "",
                 style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
@@ -56,7 +58,7 @@ class _MobileScreenState extends State<MobileScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                StringHelper.pleaseEnterYourPhoneNumber,
+                GuardLocalizations.of(context)!.translate("pleaseEnterYourPhoneNumber") ?? "",
                 style: GoogleFonts.poppins(fontSize: 14, color: ColorConstant.blackColor,fontWeight: FontWeight.w400),
                 textAlign: TextAlign.center,
               ),
@@ -85,12 +87,12 @@ class _MobileScreenState extends State<MobileScreen> {
                   addWidth(5),
                   Expanded(child: CommonTextFieldWidget(
                       validator: (v){
-                        return Validations.phoneValidation(v,StringHelper.mobileNo);
+                        return Validations.phoneValidation(v,GuardLocalizations.of(context)!.translate("mobileNo") ?? "");
                       },
                       isPassword: false,
                       maxLength: 10,
                       keyboardType: TextInputType.phone,
-                      hintText: StringHelper.mobileNo,
+                      hintText: GuardLocalizations.of(context)!.translate("mobileNo") ?? "",
                       textController: mobileController)),
                 ],
               ),
@@ -119,7 +121,7 @@ class _MobileScreenState extends State<MobileScreen> {
             }
           },child:  CustomButton(
             buttonHeight: 50,
-            text: StringHelper.send, onTap: (){
+            text: GuardLocalizations.of(context)!.translate("send") ?? "", onTap: (){
           if(formGlobalKey.currentState!.validate()){
             // context.go('/dashboardScreen');
             BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(

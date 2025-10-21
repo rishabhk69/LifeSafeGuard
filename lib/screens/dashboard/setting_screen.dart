@@ -6,11 +6,16 @@ import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_utils.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/colors_constant.dart';
 import '../../constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
+import '../../main.dart';
+
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -26,7 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseAppBar(title: StringHelper.setting,showAction: false,),
+      appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("setting") ?? "",showAction: false,),
       backgroundColor: ColorConstant.scaffoldColor,
       body: Column(
         children: [
@@ -40,25 +45,25 @@ class _SettingScreenState extends State<SettingScreen> {
 
               child: ListView(
                 children: [
-                  _buildListTile("Language", "English", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("language") ?? "", "English", true,(){
                     _showLanguageBottomSheet();
                   }),
-                  _buildListTile(StringHelper.contactUs, "", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("contactUs") ?? "", "", true,(){
                     context.push('/contactUsScreen');
                   }),
-                  _buildListTile(StringHelper.aboutUS, "", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("aboutUS") ?? "", "", true,(){
                     context.push('/aboutUs');
                   }),
-                  _buildListTile(StringHelper.donation, "", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("donation") ?? "", "", true,(){
                     context.push('/donateScreen');
                   }),
-                  _buildListTile(StringHelper.reportAnIssue, "", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "", "", true,(){
                     locator<ToastService> ().show('In Process');
                     // context.push('/reportIssueScreen');
                   }),
-                  _buildListTile(StringHelper.feedback, "", true,(){}),
-                  _buildListTile(StringHelper.deleteYourAccount, "", true,(){}),
-                  _buildListTile(StringHelper.agreement, "", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){}),
+                  _buildListTile(GuardLocalizations.of(context)!.translate("deleteYourAccount") ?? "", "", true,(){}),
+                  _buildListTile(GuardLocalizations.of(context)!.translate("agreement") ?? "", "", true,(){
                     context.push('/termsAndCondition',extra: {
                     'isLogin': 'false',
                     });
@@ -81,11 +86,23 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:  [
-                SvgPicture.asset(ImageHelper.fbIc),
+                InkWell(
+                    onTap: (){
+                      launchUrl(Uri.parse('https://flutter.dev'));
+                    },
+                    child: SvgPicture.asset(ImageHelper.fbIc)),
                 SizedBox(width: 30),
-                SvgPicture.asset(ImageHelper.instaIc),
+                InkWell(
+                    onTap: (){
+                      launchUrl(Uri.parse('https://flutter.dev'));
+                    },
+                    child: SvgPicture.asset(ImageHelper.instaIc)),
                 SizedBox(width: 30),
-                SvgPicture.asset(ImageHelper.twitterIc),
+                InkWell(
+                    onTap: (){
+                      launchUrl(Uri.parse('https://flutter.dev'));
+                    },
+                    child: SvgPicture.asset(ImageHelper.twitterIc)),
               ],
             ),
           ),
@@ -107,8 +124,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 onPressed: () {
                   locator<DialogService>().showLogoutDialog(
-                      title: StringHelper.areYouSure,
-                      subTitle: StringHelper.youWantToLogOut,
+                      title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
+                      subTitle: GuardLocalizations.of(context)!.translate("youWantToLogOut") ?? "",
                       negativeButtonText: "No",
                       positiveButtonText: "Yes",
                       negativeTap: () {
@@ -123,8 +140,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   );
 
                 },
-                child: const Text(
-                  "Sign Out",
+                child: Text(
+                  GuardLocalizations.of(context)!.translate("signOut") ?? "",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -173,7 +190,7 @@ class _SettingScreenState extends State<SettingScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Language",
+                  GuardLocalizations.of(context)!.translate("language") ?? "",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -183,7 +200,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   trailing: selectedLanguage == "English"
                       ? Icon(Icons.check, color: Colors.black)
                       : null,
-                  onTap: () {
+                  onTap: () async {
+                    await AppUtils().setLanguage('en');
                     setState(() {
                       selectedLanguage = "English";
                     });
@@ -197,7 +215,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   trailing: selectedLanguage == "हिंदी"
                       ? Icon(Icons.check, color: Colors.black)
                       : null,
-                  onTap: () {
+                  onTap: () async {
+                    await AppUtils().setLanguage('hi');
                     setState(() {
                       selectedLanguage = "हिंदी";
                     });
@@ -220,6 +239,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
+                      updateLang();
                     },
                     child: Text(
                       "Done",
@@ -235,4 +255,16 @@ class _SettingScreenState extends State<SettingScreen> {
       },
     );
   }
+
+  updateLang() async {
+    final currentLang = await AppUtils().getSelectedLanguage();
+    if (currentLang == 'hi') {
+      MyApp.setLocale(context, const Locale('hi', 'IN'));
+      await AppUtils().setLanguage("hi");
+    } else {
+      MyApp.setLocale(context, const Locale("en", "US"));
+      await AppUtils().setLanguage("en");
+    }
+  }
+
 }

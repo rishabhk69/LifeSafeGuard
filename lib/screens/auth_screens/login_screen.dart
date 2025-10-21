@@ -8,6 +8,8 @@ import 'package:untitled/constants/strings.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/custom_text_field.dart';
 import '../../constants/logo_widget.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstant.scaffoldColor,
-      appBar: BaseAppBar(title: StringHelper.login,hideBack: true),
+      appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("login") ?? "",hideBack: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -37,23 +39,23 @@ class _LoginScreenState extends State<LoginScreen> {
               CommonTextFieldWidget(
                 maxLength: 20,
                 isPassword: false,
-                hintText: StringHelper.userName,
+                hintText: GuardLocalizations.of(context)!.translate("userName") ?? "",
                 textController: loginController,),
               CommonTextFieldWidget(
                 maxLength: 20,
                 isPassword: true,
-                hintText: StringHelper.password,
+                hintText: GuardLocalizations.of(context)!.translate("password") ?? "",
                 textController: passwordController,),
               addHeight(50.h),
-              CustomButton(text: StringHelper.submit, onTap: (){
+              CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
                 context.go('/usertype_screen');
               }),
               TextButton(onPressed: (){
                 context.push('/signup');
-              }, child: Text(StringHelper.register)),
+              }, child: Text(GuardLocalizations.of(context)!.translate("register") ?? "")),
               TextButton(onPressed: (){
                 context.push('/forgot_password');
-              }, child: Text(StringHelper.forgotPassword))
+              }, child: Text(GuardLocalizations.of(context)!.translate("forgotPassword") ?? ""))
 
             ],
           ),

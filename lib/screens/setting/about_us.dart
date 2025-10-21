@@ -6,6 +6,8 @@ import 'package:untitled/constants/image_helper.dart';
 
 import '../../constants/colors_constant.dart';
 import '../../constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
@@ -31,7 +33,7 @@ class _AboutUsState extends State<AboutUs> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            StringHelper.aboutUS,
+            GuardLocalizations.of(context)!.translate("aboutUS") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           centerTitle: false,

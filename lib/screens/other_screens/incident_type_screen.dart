@@ -9,6 +9,10 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class IncidentTypeScreen extends StatefulWidget {
   const IncidentTypeScreen({super.key});
@@ -40,7 +44,7 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            StringHelper.typeOfIncident,
+            GuardLocalizations.of(context)!.translate("typeOfIncident") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
@@ -103,7 +107,7 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
                           context.pop();
                         }),
 
-                    CustomButton(text: StringHelper.select, onTap: (){})
+                    CustomButton(text: GuardLocalizations.of(context)!.translate("select") ?? "", onTap: (){})
                   ],
                 );
               }

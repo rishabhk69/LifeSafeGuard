@@ -8,10 +8,14 @@ import 'package:intl/intl.dart';
 import 'api/service/bloc_service.dart';
 import 'common/locator/locator.dart';
 import 'common/router/router.dart';
+import 'constants/app_utils.dart';
 import 'constants/colors_constant.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterLocalization.instance.ensureInitialized();
   var now = DateTime.now();
   var formatter = DateFormat('yyyy-MM-dd');
   currentDate = formatter.format(now);
@@ -49,6 +53,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FlutterLocalization localization = FlutterLocalization.instance;
   Locale _locale = const Locale("en", "US");
 
   setLocale(Locale locale) {
@@ -61,7 +66,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // checkDevMode();
+    setInitialLang();
+  }
 
+
+  setInitialLang() async {
+    await AppUtils().setLanguage('en');
   }
 
   // This widget is the root of your application.

@@ -37,5 +37,5 @@ Locale _locale(String languageCode) {
 }
 
 String? getTranslated(BuildContext context, String key) {
-  return FitnessLocalizations.of(context)!.translate(key);
+  return GuardLocalizations.of(context)!.translate(key);
 }

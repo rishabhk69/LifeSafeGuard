@@ -5,6 +5,7 @@ import 'package:untitled/bloc/blocked_list_bloc.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
 
 import '../../api/model/main/blocked_list_model.dart';
 import '../../constants/app_config.dart';
@@ -55,7 +56,7 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            StringHelper.blockedIncidents,
+            GuardLocalizations.of(context)!.translate("blockedIncidents") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),

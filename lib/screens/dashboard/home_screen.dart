@@ -24,6 +24,8 @@ import '../../constants/app_styles.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
 import '../../main.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: BaseAppBar(title: StringHelper.reportIncident,showAction: true,
+      appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("reportIncident") ?? "",showAction: true,
       isVideo: isVideo,
       onActionTap: (){
        if(selectedFiles.isNotEmpty){
@@ -86,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
              children: [
                addHeight(10),
                Text(
-                 StringHelper.fileAlreadySelectedYouWantToReplace,
+                 GuardLocalizations.of(context)!.translate("fileAlreadySelectedYouWantToReplace") ?? "",
                  style: MyTextStyleBase.headingStyleLight,
                  textAlign: TextAlign.center,),
                addHeight(20),
@@ -94,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                  children: [
                    ElevatedButton(
-                     child: Text(StringHelper.yes,style: MyTextStyleBase.headingStyleLight,),
+                     child: Text(GuardLocalizations.of(context)!.translate("yes") ?? "",style: MyTextStyleBase.headingStyleLight,),
                      onPressed: (){
                        context.pop();
                        selectedFiles=[];
@@ -105,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                      },
                    ),
                    ElevatedButton(
-                     child: Text(StringHelper.no,style: MyTextStyleBase.headingStyleLight,),
+                     child: Text(GuardLocalizations.of(context)!.translate("no") ?? "",style: MyTextStyleBase.headingStyleLight,),
                      onPressed: (){
                        context.pop();
                        // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
@@ -144,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 selectedFiles.isEmpty ?Column(
                   children: [
                     Text(
-                      isVideo ? StringHelper.uploadVideo : StringHelper.uploadImage,
+                      isVideo ? GuardLocalizations.of(context)!.translate("uploadVideo") ?? "" : GuardLocalizations.of(context)!.translate("uploadImage") ?? "",
                       style: GoogleFonts.poppins(
                           fontSize: 20, fontWeight: FontWeight.w400),
                     ),
@@ -158,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       icon: Icon(Icons.camera_alt_outlined, color: Colors.white),
-                      label: Text( isVideo ? StringHelper.shootVideo: StringHelper.shootImage,style: GoogleFonts.poppins(
+                      label: Text( isVideo ? GuardLocalizations.of(context)!.translate("shootVideo") ?? "": GuardLocalizations.of(context)!.translate("shootImage") ?? "",style: GoogleFonts.poppins(
                         color: ColorConstant.whiteColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 18
@@ -205,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       icon: Icon(Icons.photo_library_outlined, color: Colors.white),
-                      label: Text(StringHelper.chooseFromGallery,style: GoogleFonts.poppins(
+                      label: Text(GuardLocalizations.of(context)!.translate("chooseFromGallery") ?? "",style: GoogleFonts.poppins(
                           color: ColorConstant.whiteColor,
                           fontWeight: FontWeight.w500,
                           fontSize: 18
@@ -294,9 +296,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: ColorConstant.whiteColor,
                           onPressed: (){
                             locator<DialogService>().showLogoutDialog(
-                              negativeButtonText: StringHelper.no,
-                              subTitle: StringHelper.areYouSureYouWantToDelete,
-                              positiveButtonText: StringHelper.yes,
+                              negativeButtonText: GuardLocalizations.of(context)!.translate("no") ?? "",
+                              subTitle: GuardLocalizations.of(context)!.translate("areYouSureYouWantToDelete") ?? "",
+                              positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
                               negativeTap: (){
                                 context.pop();
                               },
@@ -360,9 +362,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: ColorConstant.whiteColor,
                           onPressed: (){
                             locator<DialogService>().showLogoutDialog(
-                                negativeButtonText: StringHelper.no,
-                                subTitle: StringHelper.areYouSureYouWantToDelete,
-                                positiveButtonText: StringHelper.yes,
+                                negativeButtonText: GuardLocalizations.of(context)!.translate("no") ?? "",
+                                subTitle: GuardLocalizations.of(context)!.translate("areYouSureYouWantToDelete") ?? "",
+                                positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
                                 negativeTap: (){
                                   context.pop();
                                 },
@@ -389,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.category, color: Colors.orange),
                       const SizedBox(width: 8),
-                      Text(StringHelper.typeOfIncident,
+                      Text(GuardLocalizations.of(context)!.translate("typeOfIncident") ?? "",
                           style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
                     ],
                   ),
@@ -419,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.person_outline, color: Colors.orange),
                       const SizedBox(width: 8),
-                      Text(StringHelper.anonymous,
+                      Text(GuardLocalizations.of(context)!.translate("anonymous") ?? "",
                           style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
                     ],
                   ),
@@ -436,13 +438,13 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
 
               // Add Title
-              Text(StringHelper.addTitle, style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
+              Text(GuardLocalizations.of(context)!.translate("addTitle") ?? "", style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
               CommonTextFieldWidget(
                 maxLength: 50,
                 // validator: (v){
-                //   return Validations.commonValidation(v,StringHelper.enterTitle);
+                //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterTitle") ?? "");
                 // },
-                hintText: StringHelper.enterTitle, isPassword: false, textController: titleController,
+                hintText: GuardLocalizations.of(context)!.translate("enterTitle") ?? "", isPassword: false, textController: titleController,
 
               ),
 
@@ -453,9 +455,9 @@ class _HomeScreenState extends State<HomeScreen> {
               CommonTextFieldWidget(
                 maxLines: 2,
                 // validator: (v){
-                //   return Validations.commonValidation(v,StringHelper.enterIncidentDetails);
+                //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterIncidentDetails") ?? "");
                 // },
-                hintText: StringHelper.enterIncidentDetails, isPassword: false, textController: detailController,
+                hintText: GuardLocalizations.of(context)!.translate("enterIncidentDetails") ?? "", isPassword: false, textController: detailController,
 
               ),
 
@@ -477,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   locator<ToastService>().show(blocListener.errorMsg??"");
                   locator<DialogService>().hideLoader();
                 }
-              },child: CustomButton(text: StringHelper.post, onTap: (){
+              },child: CustomButton(text: GuardLocalizations.of(context)!.translate("post") ?? "", onTap: (){
                 // if(formGlobalKey.currentState!.validate()){
                   if(selectedFiles.isNotEmpty){
                     if(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident == 'Select Type'){
@@ -510,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                   }
                   else{
-                    locator<ToastService>().show(StringHelper.uploadImage);
+                    locator<ToastService>().show(GuardLocalizations.of(context)!.translate("uploadImage") ?? "");
                   }
                 // }
               }),)

@@ -4,6 +4,8 @@ import 'package:untitled/constants/common_background.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class ChooseLogin extends StatefulWidget {
   const ChooseLogin({super.key});
@@ -25,7 +27,7 @@ class _ChooseLoginState extends State<ChooseLogin> {
              children: [
                CustomButton(
                    buttonHeight: 50,
-                   text: StringHelper.login, onTap: (){
+                   text: GuardLocalizations.of(context)!.translate("login") ?? "", onTap: (){
                  context.go('/mobileScreen',extra: {
                    'isLogin': 'true',
                  });
@@ -39,7 +41,7 @@ class _ChooseLoginState extends State<ChooseLogin> {
                ),
                CustomButton(
                    buttonHeight: 50,
-                   text: StringHelper.signUP, onTap: (){
+                   text: GuardLocalizations.of(context)!.translate("signUP") ?? "", onTap: (){
                  context.go('/mobileScreen',extra: {
                    'isLogin': 'false',
                  });

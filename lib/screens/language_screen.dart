@@ -8,6 +8,8 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
@@ -26,7 +28,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
       top: false,
       child: Scaffold(
         backgroundColor: ColorConstant.scaffoldColor,
-        appBar: BaseAppBar(title: StringHelper.selectLanguage),
+        appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("selectLanguage") ?? ""),
         body: SizedBox(
           width: double.infinity,
           height: double.infinity,
@@ -45,13 +47,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     children: [
                       SvgPicture.asset(ImageHelper.languageCircle),
                       addWidth(5),
-                      Text(StringHelper.language,style: GoogleFonts.poppins(
+                      Text(GuardLocalizations.of(context)!.translate("language") ?? "",style: GoogleFonts.poppins(
                         color: ColorConstant.blackColor,
                         fontSize: 17,
                         fontWeight: FontWeight.w500
                       ),),
                       Spacer(),
-                      Text(StringHelper.english,style: GoogleFonts.poppins(
+                      Text(GuardLocalizations.of(context)!.translate("english") ?? "",style: GoogleFonts.poppins(
                           color: Color(0xff191919),
                           fontSize: 15,
                           fontWeight: FontWeight.w400
@@ -64,7 +66,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
               Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20),
-                child: CustomButton(text: StringHelper.done, onTap: (){
+                child: CustomButton(text: GuardLocalizations.of(context)!.translate("done") ?? "", onTap: (){
+                  // updateLang();
                   context.push('/onboardingScreen');
                 }),
               )

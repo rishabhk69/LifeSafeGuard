@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -28,7 +30,7 @@ class _FilterScreenState extends State<FilterScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            StringHelper.filter,
+            GuardLocalizations.of(context)!.translate("filter") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
@@ -36,10 +38,10 @@ class _FilterScreenState extends State<FilterScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              _buildListTile(StringHelper.selectCity, "Mumbai", true,(){
+              _buildListTile(GuardLocalizations.of(context)!.translate("selectCity") ?? "", "Mumbai", true,(){
                 context.push('/selectCity');
               }),
-              _buildListTile(StringHelper.typeOfIncidents, "Bom Blast", true,(){
+              _buildListTile(GuardLocalizations.of(context)!.translate("typeOfIncidents") ?? "", "Bom Blast", true,(){
                 context.push('/incidentTypeScreen');
               }),
             ],

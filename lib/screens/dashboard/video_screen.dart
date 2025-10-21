@@ -17,6 +17,8 @@ import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:untitled/screens/dashboard/comments_bottomsheet.dart';
 import 'package:video_player/video_player.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 
 class VideoScreen extends StatefulWidget {
@@ -195,7 +197,7 @@ class _VideoScreenState extends State<VideoScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextButton(
-                                  child: Text(StringHelper.filter,style: MyTextStyleBase.headingStyleLight,),
+                                  child: Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
                                   onPressed: (){
                                     context.pop();
                                     context.pop();
@@ -204,7 +206,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 ),
                                 Divider(),
                                 TextButton(
-                                  child: Text(StringHelper.allText,style: MyTextStyleBase.headingStyleLight,),
+                                  child: Text(GuardLocalizations.of(context)!.translate("allText") ?? "",style: MyTextStyleBase.headingStyleLight,),
                                   onPressed: (){
                                     context.pop();
                                     // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
@@ -315,7 +317,7 @@ class _VideoScreenState extends State<VideoScreen> {
                               onTap: (){
                                 context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                               },
-                              child: Text(StringHelper.seeMore,
+                              child: Text(GuardLocalizations.of(context)!.translate("seeMore") ?? "",
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 12,

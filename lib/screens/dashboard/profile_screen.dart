@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/constants/base_appbar.dart';
@@ -20,6 +21,37 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+  int offset = 0;
+  final int size = 10;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Fetch first page
+    _scrollController.addListener(() async {
+      final bloc = context.read<ProfileBloc>();
+
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200 &&
+          bloc.hasMore &&
+          !bloc.isLoadingMore) {
+
+        String userId = await AppUtils().getUserId();
+        offset += size;
+        bloc.add(ProfileRefreshEvent(size, offset, userId));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: BlocProvider.of<ProfileBloc>(context).userName,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, profileState) {
             if (profileState is ProfileLoadingState) {
@@ -56,11 +89,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ""),
                             ), // Replace with actual image
                           ),
-                          Positioned(
-                            top: 3,
-                            right: 1,
-                            child: SvgPicture.asset(ImageHelper.editOrange),
-                          ),
+                          // Positioned(
+                          //   top: 3,
+                          //   right: 1,
+                          //   child: SvgPicture.asset(ImageHelper.editOrange),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -106,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3, // 3 images per row
+                                crossAxisCount: 3,
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
                               ),
@@ -114,67 +147,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               profileState.profileModel.incidents?.length,
                           // Number of posts
                           itemBuilder: (context, index) {
-                            return profileState
-                                        .profileModel
-                                        .incidents?[index]
-                                        .isVideo ==
-                                    "true"
-                                ? Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              AppConfig.IMAGE_BASE_URL +
-                                                  (profileState
-                                                              .profileModel
-                                                              .incidents?[index]
-                                                              .media![0]
-                                                              .thumbnail ??
-                                                          "")
-                                                      .toString(),
-                                            ),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                          right: 5,
-                                          top: 5,
-                                          child: SvgPicture.asset(ImageHelper.playCircle)),
-                                    ],
-                                  )
-                                : Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              AppConfig.IMAGE_BASE_URL +
-                                                  (profileState
-                                                              .profileModel
-                                                              .incidents?[index]
-                                                              .media![0]
-                                                              .name ??
-                                                          "")
-                                                      .toString(),
-                                            ),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                          right: 5,
-                                          top: 5,
-                                          child: SvgPicture.asset(ImageHelper.photoIcWhite)),
-                                    ],
-                                  );
+                            final item = profileState.profileModel.incidents![index];
+                            return buildItem(item);
                           },
                         ),
                 ],
@@ -188,4 +162,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  buildItem(Incidents item){
+    return item
+        .isVideo ==
+        "true"
+        ? Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                AppConfig.IMAGE_BASE_URL +
+                    (item
+                        .media![0]
+                        .thumbnail ??
+                        "")
+                        .toString(),
+              ),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(
+              4,
+            ),
+          ),
+        ),
+        Positioned(
+            right: 5,
+            top: 5,
+            child: SvgPicture.asset(ImageHelper.playCircle)),
+      ],
+    )
+        : Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                AppConfig.IMAGE_BASE_URL +
+                    (item
+                        .media![0]
+                        .name ??
+                        "")
+                        .toString(),
+              ),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(
+              4,
+            ),
+          ),
+        ),
+        Positioned(
+            right: 5,
+            top: 5,
+            child: SvgPicture.asset(ImageHelper.photoIcWhite)),
+      ],
+    );
+  }
+
 }

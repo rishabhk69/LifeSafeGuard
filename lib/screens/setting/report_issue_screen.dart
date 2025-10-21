@@ -14,6 +14,8 @@ import 'package:untitled/constants/strings.dart';
 
 import '../../common/Utils/validations.dart';
 import '../../common/service/dialog_service.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class ReportIssueScreen extends StatefulWidget {
   dynamic incidentData;
@@ -59,7 +61,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title:  Text(
-            StringHelper.block,
+            GuardLocalizations.of(context)!.translate("block") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           centerTitle: false,
@@ -72,13 +74,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title field
-                 Text(StringHelper.addTitle,
+                 Text(GuardLocalizations.of(context)!.translate("addTitle") ?? "",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 CommonTextFieldWidget(
-                  hintText: StringHelper.enterTitle,
+                  hintText: GuardLocalizations.of(context)!.translate("enterTitle") ?? "",
                   isPassword: false,
                   validator: (v){
-                    return Validations.commonValidation(v,StringHelper.enterTitle);
+                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterTitle") ?? "");
                   },
                   textController: titleController,
                 ),
@@ -86,14 +88,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 const SizedBox(height: 16),
 
                 // Details field
-                 Text(StringHelper.details,
+                 Text(GuardLocalizations.of(context)!.translate("details") ?? "",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
 
                 CommonTextFieldWidget(
-                  hintText: StringHelper.whyAreYouBlockTheIncident,
+                  hintText: GuardLocalizations.of(context)!.translate("whyAreYouBlockTheIncident") ?? "",
                   isPassword: false,
                   validator: (v){
-                    return Validations.commonValidation(v,StringHelper.details);
+                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("details") ?? "");
                   },
                   textController: detailController,
                 ),
@@ -153,7 +155,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         locator<ToastService>().show(blockState.errorMsg??"");
                       }
                     },
-                    child: CustomButton(text: StringHelper.submit, onTap: (){
+                    child: CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
                       if(formGlobalKey.currentState!.validate()) {
                         locator<DialogService>().showLogoutDialog(
                             title: 'Confirm ?',

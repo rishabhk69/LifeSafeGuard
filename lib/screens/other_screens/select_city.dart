@@ -4,6 +4,8 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class SelectCity extends StatefulWidget {
   const SelectCity({super.key});
@@ -49,7 +51,7 @@ class _SelectCityState extends State<SelectCity> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            StringHelper.selectCity,
+            GuardLocalizations.of(context)!.translate("selectCity") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
@@ -61,7 +63,7 @@ class _SelectCityState extends State<SelectCity> {
               TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
-                  hintText: StringHelper.searchCity,
+                  hintText: GuardLocalizations.of(context)!.translate("searchCity") ?? "",
                   filled: true,
                   fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
@@ -120,7 +122,7 @@ class _SelectCityState extends State<SelectCity> {
                 ),
               ),
 
-              CustomButton(text: StringHelper.select, onTap: (){})
+              CustomButton(text: GuardLocalizations.of(context)!.translate("select") ?? "", onTap: (){})
             ],
           ),
         ),

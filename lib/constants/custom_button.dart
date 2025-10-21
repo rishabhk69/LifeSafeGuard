@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
             color: isEnable==true? buttonColor : ColorConstant.blackLightColor.withOpacity(0.30), borderRadius: BorderRadius.circular(25)),
         child: Text(
-          // StringHelper.save,
+          // GuardLocalizations.of(context)!.translate("save") ?? "",
           text!,
           style: GoogleFonts.poppins(
             color: ColorConstant.whiteColor,

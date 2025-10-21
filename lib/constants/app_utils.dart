@@ -140,7 +140,7 @@ class AppUtils {
     prefs.setBool('user_logged_in', true);
   }
 
-  void setLanguage(String selectedLanguage) async {
+   setLanguage(String selectedLanguage) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('selected_language', selectedLanguage);
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class TakeAction extends StatefulWidget {
   dynamic incidentData;
@@ -24,7 +26,7 @@ class _TakeActionState extends State<TakeAction> {
           onPressed: () => Navigator.pop(context),
         ),
         title:  Text(
-          StringHelper.takeAction,
+          GuardLocalizations.of(context)!.translate("takeAction") ?? "",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,
@@ -45,7 +47,7 @@ class _TakeActionState extends State<TakeAction> {
               ),
               child: ListTile(
                 title:  Text(
-                  StringHelper.blockedIncidents,
+                  GuardLocalizations.of(context)!.translate("blockedIncidents") ?? "",
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -75,7 +77,7 @@ class _TakeActionState extends State<TakeAction> {
               ),
               child: ListTile(
                 title: Text(
-                  StringHelper.spamIncident,
+                  GuardLocalizations.of(context)!.translate("spamIncident") ?? "",
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),

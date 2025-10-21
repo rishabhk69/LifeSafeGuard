@@ -38,19 +38,45 @@ class ProfileErrorState extends ProfileState {
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final MainRepository repository;
   String? userName;
+  List<Incidents> allIncidents = [];
+  bool hasMore = true;
+  bool isLoadingMore = false;
+
   ProfileBloc(this.repository) : super(ProfileInitialState()) {
     on<ProfileRefreshEvent>(_onProfileRefresh);
   }
 
   Future<void> _onProfileRefresh(
       ProfileRefreshEvent event, Emitter<ProfileState> emit) async {
-    emit(ProfileLoadingState());
+
+    // Avoid duplicate load calls
+    if (isLoadingMore) return;
+    isLoadingMore = true;
+
+    // If offset == 0 → it's a fresh load
+    if (event.offset == 0) {
+      emit(ProfileLoadingState());
+      allIncidents.clear();
+      hasMore = true;
+    }
+
     try {
-      final result = await repository.getProfile(size: event.size, offset :event.offset,userId: event.userId);
+      final result = await repository.getProfile(
+          size: event.size, offset: event.offset, userId: event.userId);
 
       if (result.isSuccess) {
         ProfileModel profileModel = ProfileModel.fromJson(result.data);
+
         userName = profileModel.userName;
+
+        if ((profileModel.incidents ?? []).isNotEmpty) {
+          allIncidents.addAll(profileModel.incidents!);
+        } else {
+          hasMore = false; // No more data
+        }
+
+        profileModel.incidents = allIncidents;
+
         await AppUtils().setUserData(jsonEncode(profileModel));
         emit(ProfileSuccessState(profileModel));
       } else {
@@ -58,6 +84,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     } catch (e) {
       emit(ProfileErrorState(e.toString()));
+    } finally {
+      isLoadingMore = false;
     }
   }
 }
+

@@ -16,6 +16,8 @@ import '../constants/colors_constant.dart';
 import '../constants/custom_button.dart';
 import '../constants/sizes.dart';
 import '../constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class OtpScreen extends StatefulWidget {
 
@@ -45,7 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
         Column(
           children: [
             Text(
-              StringHelper.verificationCode,
+              GuardLocalizations.of(context)!.translate("verificationCode") ?? "",
               style: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
@@ -54,7 +56,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              StringHelper.pleaseEnterCodeSentToYourNumber,
+              GuardLocalizations.of(context)!.translate("pleaseEnterCodeSentToYourNumber") ?? "",
               style: GoogleFonts.poppins(fontSize: 17, color: ColorConstant.blackColor,fontWeight: FontWeight.w400),
               textAlign: TextAlign.center,
             ),
@@ -132,7 +134,7 @@ class _OtpScreenState extends State<OtpScreen> {
             }
           },child: CustomButton(
             buttonHeight: 50,
-            text: StringHelper.verify, onTap: (){
+            text: GuardLocalizations.of(context)!.translate("verify") ?? "", onTap: (){
           // context.push('/termsAndCondition');
         if((otpCode?.length)==6){
           BlocProvider.of<OtpBloc>(context).add(OtpRefreshEvent(otp: otpCode,phoneNumber: widget.phone));

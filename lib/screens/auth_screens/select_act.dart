@@ -7,6 +7,8 @@ import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 
 import '../../constants/logo_widget.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class SelectAct extends StatefulWidget {
   const SelectAct({super.key});
@@ -22,7 +24,7 @@ class _SelectActState extends State<SelectAct> {
       backgroundColor: ColorConstant.scaffoldColor,
       appBar: BaseAppBar(
         hideBack: false,
-        title: StringHelper.welcomeUser,
+        title: GuardLocalizations.of(context)!.translate("welcomeUser") ?? "",
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
@@ -39,7 +41,7 @@ class _SelectActState extends State<SelectAct> {
             TextButton(onPressed: (){}, child: Text('	The Trade Unions Act, 1926')),
             TextButton(onPressed: (){}, child: Text('	The Motor Transport Workers Act, 1961')),
             TextButton(onPressed: (){}, child: Text('	The Inter- State Migrant Workmen (RE&CS) Act, 1979')),
-            CustomButton(text: StringHelper.submit, onTap: (){
+            CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
             }),
           ],
         ),

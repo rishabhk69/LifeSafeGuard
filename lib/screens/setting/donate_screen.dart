@@ -6,6 +6,8 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class DonateScreen extends StatefulWidget {
   const DonateScreen({super.key});
@@ -20,17 +22,20 @@ class _DonateScreenState extends State<DonateScreen> {
   String? selectedMethod;
 
   final List<int> amounts = [10, 50, 100, 500];
-  final List<Map<String, dynamic>> paymentMethods = [
-    {"name": StringHelper.uPI, "icon": ImageHelper.upiIc},
-    {"name": StringHelper.payPal, "icon": ImageHelper.paypalIc},
-    {"name": StringHelper.paymentMethod, "icon": ImageHelper.upiIc},
-  ];
+
 
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Map<String, dynamic>> paymentMethods = [
+      {"name": GuardLocalizations.of(context)!.translate("uPI") ?? "", "icon": ImageHelper.upiIc},
+      {"name": GuardLocalizations.of(context)!.translate("payPal") ?? "", "icon": ImageHelper.paypalIc},
+      {"name": GuardLocalizations.of(context)!.translate("paymentMethod") ?? "", "icon": ImageHelper.upiIc},
+    ];
     final method = paymentMethods[0];
     final isSelected = selectedMethod == method["name"];
+
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -44,7 +49,7 @@ class _DonateScreenState extends State<DonateScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          StringHelper.donateNow,
+          GuardLocalizations.of(context)!.translate("donateNow") ?? "",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
@@ -100,7 +105,7 @@ class _DonateScreenState extends State<DonateScreen> {
               // Enter manually
               TextField(
                 decoration: InputDecoration(
-                  hintText: StringHelper.enterManually,
+                  hintText: GuardLocalizations.of(context)!.translate("enterManually") ?? "",
                   hintStyle: const TextStyle(color: Colors.white),
                   filled: true,
                   fillColor: Colors.black,
@@ -122,7 +127,7 @@ class _DonateScreenState extends State<DonateScreen> {
 
               // Payment Method
               Text(
-                StringHelper.paymentMethod,
+                GuardLocalizations.of(context)!.translate("paymentMethod") ?? "",
                 style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 12),
@@ -179,7 +184,7 @@ class _DonateScreenState extends State<DonateScreen> {
 
               const Spacer(),
 
-              CustomButton(text: StringHelper.donateNow, onTap: (){})
+              CustomButton(text: GuardLocalizations.of(context)!.translate("donateNow") ?? "", onTap: (){})
             ],
           ),
         ),

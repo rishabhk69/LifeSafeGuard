@@ -17,6 +17,8 @@ import '../../custom/app_progress_indicator.dart';
 import '../../main.dart';
 import '../locator/locator.dart';
 import 'navigation_service.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 @lazySingleton
 class DialogService {
@@ -201,11 +203,11 @@ class DialogService {
                   content: Column(
                     children: [
                        Text(
-                        StringHelper.noInternetFound,
+                        GuardLocalizations.of(context)!.translate("noInternetFound") ?? "",
                         style: const TextStyle(fontSize: 24.0),
                       ),
                        Text(
-                        StringHelper.checkYourConnectionOrTryAgain,
+                        GuardLocalizations.of(context)!.translate("checkYourConnectionOrTryAgain") ?? "",
                         style: const TextStyle(fontSize: 15.0),
                       ),
                       Padding(
@@ -217,7 +219,7 @@ class DialogService {
                               backgroundColor:
                               ColorConstant.primaryColor),
                           child: Text(
-                            StringHelper.ok,
+                            GuardLocalizations.of(context)!.translate("ok") ?? "",
                             style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w700,
@@ -260,7 +262,7 @@ class DialogService {
                       child: Column(
                         children: [
                            Text(
-                            StringHelper.emailVerificationRequired,
+                            GuardLocalizations.of(context)!.translate("emailVerificationRequired") ?? "",
                             textAlign: TextAlign.center,
                             style: MyTextStyleBase.headingStyle.copyWith(
                               fontSize: textSize20
@@ -268,7 +270,7 @@ class DialogService {
                           ),
                            Text(
                             textAlign: TextAlign.center,
-                            StringHelper.pleaseCheckYouInboxAndVerifyRegisteredEmailAddress,
+                            GuardLocalizations.of(context)!.translate("pleaseCheckYouInboxAndVerifyRegisteredEmailAddress") ?? "",
                             style: MyTextStyleBase.headingStyleLight.copyWith(
                               fontSize: textSize14
                             )
@@ -348,7 +350,7 @@ class DialogService {
                                   decoration: BoxDecoration(
                                       color: ColorConstant.primaryColor, borderRadius: BorderRadius.circular(8)),
                                   child: Text(
-                                    // StringHelper.save,
+                                    // GuardLocalizations.of(context)!.translate("save") ?? "",
                                     positiveButtonText??"",
                                     style: GoogleFonts.jost(
                                         color: ColorConstant.whiteColor,
@@ -370,7 +372,7 @@ class DialogService {
                                       color: ColorConstant.primaryColor),
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Text(
-                                    // StringHelper.save,
+                                    // GuardLocalizations.of(context)!.translate("save") ?? "",
                                     negativeButtonText??"",
                                     style: GoogleFonts.jost(
                                         color: ColorConstant.primaryColor,

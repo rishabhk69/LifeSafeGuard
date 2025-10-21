@@ -9,6 +9,8 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class TermsAndCondition extends StatefulWidget {
 
@@ -44,7 +46,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                 child: CustomButton(
                     buttonColor: Colors.grey,
                     buttonHeight: 50,
-                    text: StringHelper.decline, onTap: (){
+                    text: GuardLocalizations.of(context)!.translate("decline") ?? "", onTap: (){
                   context.go('/mobileScreen');
                 }),
               ),
@@ -52,7 +54,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
               Expanded(
                 child: CustomButton(
                   buttonHeight: 50,
-                  text: StringHelper.accept,
+                  text: GuardLocalizations.of(context)!.translate("accept") ?? "",
                   onTap: () {
                     if(widget.isLogin=='true'){
                       context.push('/signupScreen');
@@ -68,7 +70,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
         ),
         body: CommonBackground(
           iconName: ImageHelper.aggrementIc,
-          title: StringHelper.agreement,
+          title: GuardLocalizations.of(context)!.translate("agreement") ?? "",
           showBack: true,
           child: BlocBuilder<AgreementBloc, AgreementState>(
             builder: (context, agreementState) {

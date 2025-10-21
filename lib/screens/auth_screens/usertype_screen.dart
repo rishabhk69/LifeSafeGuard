@@ -8,6 +8,8 @@ import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 
 import '../../constants/logo_widget.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class UserTypeScreen extends StatefulWidget {
   const UserTypeScreen({super.key});
@@ -22,7 +24,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
     return Scaffold(
       backgroundColor: ColorConstant.scaffoldColor,
       appBar: BaseAppBar(
-        title: StringHelper.welcomeUser,
+        title: GuardLocalizations.of(context)!.translate("welcomeUser") ?? "",
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
@@ -36,7 +38,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             TextButton(onPressed: (){}, child: Text('ii.	Renewal')),
             TextButton(onPressed: (){}, child: Text('iii.	Amendment')),
             TextButton(onPressed: (){}, child: Text('iv.	Payment')),
-            CustomButton(text: StringHelper.submit, onTap: (){
+            CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
               context.push('/select_act');
             }),
           ],

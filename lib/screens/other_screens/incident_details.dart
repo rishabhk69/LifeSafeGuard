@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class IncidentDetails extends StatefulWidget {
   dynamic incidentData;
@@ -51,13 +53,13 @@ class _IncidentDetailsState extends State<IncidentDetails> {
               );
             },
             child: Text(
-              StringHelper.takeAction,
+              GuardLocalizations.of(context)!.translate("takeAction") ?? "",
               style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             ),
           )
         ],
         title: Text(
-          StringHelper.incidentDetails,
+          GuardLocalizations.of(context)!.translate("incidentDetails") ?? "",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
@@ -113,7 +115,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                     color: Colors.orange, size: 20),
                 const SizedBox(width: 8),
                  Text(
-                  "${StringHelper.type} - ${incidentsModel?.category??""}",
+                  "${GuardLocalizations.of(context)!.translate("type") ?? ""} - ${incidentsModel?.category??""}",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ],
@@ -148,7 +150,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
 
             // Title
              Text(
-              StringHelper.title,
+              GuardLocalizations.of(context)!.translate("title") ?? "",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
@@ -161,7 +163,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
 
             // Incident Details
              Text(
-              StringHelper.incidentDetails,
+              GuardLocalizations.of(context)!.translate("incidentDetails") ?? "",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),

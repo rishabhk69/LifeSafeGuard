@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:untitled/localization/fitness_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,28 +85,28 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: [
                             CommonTextFieldWidget(isPassword: false,
                                 validator: (v){
-                                  return Validations.commonValidation(v,StringHelper.firstName);
+                                  return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("firstName") ?? "");
                                 },
-                                hintText: StringHelper.firstName,
+                                hintText: GuardLocalizations.of(context)!.translate("firstName") ?? "",
                                 maxLength: 20,
                                 textController: fNameController),
                             CommonTextFieldWidget(isPassword: false,
                               validator: (v){
-                                return Validations.commonValidation(v,StringHelper.lastName);
+                                return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("lastName") ?? "");
                               },
-                              hintText: StringHelper.lastName,
+                              hintText: GuardLocalizations.of(context)!.translate("lastName") ?? "",
                               textController: lNameController,
                               maxLength: 20,),
                             CommonTextFieldWidget(isPassword: false,
                                 validator: (v){
-                                  return Validations.commonValidation(v,StringHelper.userName);
+                                  return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("userName") ?? "");
                                 },
-                                hintText: StringHelper.userName,
+                                hintText: GuardLocalizations.of(context)!.translate("userName") ?? "",
                                 maxLength: 20,
                                 textController: uNameController)
-                            // _buildTextField(Icons.person, StringHelper.firstName),
-                            // _buildTextField(Icons.person, StringHelper.lastName),
-                            // _buildTextField(Icons.person, StringHelper.userName),
+                            // _buildTextField(Icons.person, GuardLocalizations.of(context)!.translate("firstName") ?? ""),
+                            // _buildTextField(Icons.person, GuardLocalizations.of(context)!.translate("lastName") ?? ""),
+                            // _buildTextField(Icons.person, GuardLocalizations.of(context)!.translate("userName") ?? ""),
                           ],
                         ),
 
@@ -127,7 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             }
                           },child:  CustomButton(
                             buttonHeight: 50,
-                            text: StringHelper.submit, onTap: (){
+                            text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
                           if(formGlobalKey.currentState!.validate()){
                             if(selectedFile==null){
                               locator<ToastService>().show('Please Select Image');
@@ -211,7 +212,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(Icons.keyboard_backspace_outlined,color: ColorConstant.whiteColor,),
-                          Text(StringHelper.signUP,style: GoogleFonts.poppins(
+                          Text(GuardLocalizations.of(context)!.translate("signUP") ?? "",style: GoogleFonts.poppins(
                               fontSize: 20,
                               color: ColorConstant.whiteColor,
                               fontWeight: FontWeight.w500

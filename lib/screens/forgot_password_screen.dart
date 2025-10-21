@@ -9,6 +9,10 @@ import '../constants/custom_button.dart';
 import '../constants/custom_text_field.dart';
 import '../constants/logo_widget.dart';
 import '../constants/sizes.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -28,7 +32,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstant.scaffoldColor,
-      appBar: BaseAppBar(hideBack: false, title: StringHelper.changePassword),
+      appBar: BaseAppBar(hideBack: false, title: GuardLocalizations.of(context)!.translate("changePassword") ?? ""),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -40,13 +44,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 maxLength: 10,
                 keyboardType: TextInputType.phone,
                 isPassword: false,
-                hintText: StringHelper.phoneNumber,
+                hintText: GuardLocalizations.of(context)!.translate("phoneNumber") ?? "",
                 textController: phoneController,
               ),
               CommonTextFieldWidget(
                 maxLength: 20,
                 isPassword: false,
-                hintText: StringHelper.emailAddress,
+                hintText: GuardLocalizations.of(context)!.translate("emailAddress") ?? "",
                 textController: emailController,
               ),
 
@@ -57,7 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: DropdownButton2<String>(
                   isExpanded: true,
                   hint: Text(
-                    StringHelper.hintQuestion,
+                    GuardLocalizations.of(context)!.translate("hintQuestion") ?? "",
                     style: TextStyle(
                       color: Colors.black26,
                       // fontSize: 14,
@@ -100,11 +104,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               CommonTextFieldWidget(
                 maxLength: 20,
                 isPassword: false,
-                hintText: StringHelper.hintAnswer,
+                hintText: GuardLocalizations.of(context)!.translate("hintAnswer") ?? "",
                 textController: answerController,
               ),
               addHeight(50.h),
-              CustomButton(text: StringHelper.submit, onTap: () {}),
+              CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: () {}),
             ],
           ),
         ),

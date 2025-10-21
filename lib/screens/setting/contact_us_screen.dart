@@ -6,6 +6,8 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
@@ -99,7 +101,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     height: 20,
                     width: 20,
                   ),
-                  hintText: StringHelper.fullName,
+                  hintText: GuardLocalizations.of(context)!.translate("fullName") ?? "",
                   textController: fullNameController),
               CommonTextFieldWidget(
                   isPassword: false,
@@ -107,7 +109,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     fit: BoxFit.scaleDown,
                     height: 20,
                     width: 20,),
-                  hintText: StringHelper.phoneNumber,
+                  hintText: GuardLocalizations.of(context)!.translate("phoneNumber") ?? "",
                   textController: numberController),
               CommonTextFieldWidget(
                   prefix: SvgPicture.asset(ImageHelper.smsIc,
@@ -115,17 +117,17 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     height: 20,
                     width: 20,),
                   isPassword: false,
-                  hintText: StringHelper.emailAddress,
+                  hintText: GuardLocalizations.of(context)!.translate("emailAddress") ?? "",
                   textController: emailController),
               CommonTextFieldWidget(
                   isPassword: false,
-                  hintText: StringHelper.howCanWeHelp,
+                  hintText: GuardLocalizations.of(context)!.translate("howCanWeHelp") ?? "",
                   textController: helpController),
 
               const SizedBox(height: 20),
 
               // Submit Button
-              CustomButton(text: StringHelper.submit, onTap: (){})
+              CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){})
             ],
           ),
         ),

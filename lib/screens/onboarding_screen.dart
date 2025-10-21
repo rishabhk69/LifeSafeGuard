@@ -6,6 +6,8 @@ import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/strings.dart';
+import 'package:untitled/localization/fitness_localization.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -16,26 +18,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   bool isLastPage = false;
 
-  final List<Map<String, String>> onboardingData = [
-    {
-      "image": "assets/images/onboarding1.png",
-      "title": StringHelper.title1,
-      "desc": StringHelper.des1
-    },
-    {
-      "image": "assets/images/onboarding2.png",
-      "title": StringHelper.title2,
-      "desc": StringHelper.des2
-    },
-    {
-      "image": "assets/images/onboarding3.png",
-      "title": StringHelper.title3,
-      "desc": StringHelper.des3
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Map<String, String>> onboardingData = [
+      {
+        "image": "assets/images/onboarding1.png",
+        "title": GuardLocalizations.of(context)!.translate("title1") ?? "",
+        "desc": GuardLocalizations.of(context)!.translate("des1") ?? ""
+      },
+      {
+        "image": "assets/images/onboarding2.png",
+        "title": GuardLocalizations.of(context)!.translate("title2") ?? "",
+        "desc": GuardLocalizations.of(context)!.translate("des2") ?? ""
+      },
+      {
+        "image": "assets/images/onboarding3.png",
+        "title": GuardLocalizations.of(context)!.translate("title3") ?? "",
+        "desc": GuardLocalizations.of(context)!.translate("des3") ?? ""
+      },
+    ];
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -87,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
                 child: CustomButton(
                     buttonHeight: 50,
-                    text: StringHelper.getStarted, onTap: (){
+                    text: GuardLocalizations.of(context)!.translate("getStarted") ?? "", onTap: (){
                       AppUtils().setRemember(true);
                       context.go('/chooseLogin');
                 }),

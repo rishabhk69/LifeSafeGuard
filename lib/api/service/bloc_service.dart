@@ -23,6 +23,8 @@ import '../../common/router/router.dart';
 import '../../constants/colors_constant.dart';
 import '../../localization/fitness_localization.dart';
 import '../repository/base/auth/auth_repo.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 class BlocServices {
   BlocServices(this._locale);
@@ -87,14 +89,19 @@ class BlocServices {
             return GestureDetector(
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
               child: MaterialApp.router(
-                localizationsDelegates: [
-                  FitnessLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                ],
+
                 routerConfig: goRouter,
                 title: 'LifeSafeGuard',
                 debugShowCheckedModeBanner: false,
+                locale: _locale,
+                supportedLocales: const [
+                  Locale('en', 'US'),
+                  Locale('hi', 'IN'),
+                ],
+                localizationsDelegates: [
+                  GuardLocalizations.delegate,
+                  ...GlobalMaterialLocalizations.delegates,
+                ],
                 theme: ThemeData(
                   appBarTheme: AppBarTheme(
                     titleTextStyle: TextStyle(
