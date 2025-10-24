@@ -323,5 +323,7 @@
   "addComments": "Add Comments",
   "fileAlreadySelectedYouWantToReplace": "File already selected, you want to replace?",
   "areYouSureYouWantToDelete": "Are you sure you want to delete?",
-  "signOut": "Sign Out"
+  "signOut": "Sign Out",
+  "resend": "Resend",
+  "selectType": "Select Type"
 }

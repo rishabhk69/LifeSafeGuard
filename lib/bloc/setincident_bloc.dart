@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../api/repository/base/auth/main_repo.dart';
+import '../localization/fitness_localization.dart';
+import '../main.dart';
 
 class SetIncidentsEvent {}
 
@@ -30,7 +32,7 @@ class SetIncidentsErrorState extends SetIncidentsState {
 }
 
 class SetIncidentsBloc extends Bloc<SetIncidentsEvent, SetIncidentsState> {
-  String selectedIncident = 'Select Type';
+  String selectedIncident =  GuardLocalizations.of(NavigationServiceKey.navigatorKey.currentState!.context)!.translate("selectType") ?? "";
   SetIncidentsBloc() : super(SetIncidentsInitialState()) {
     on<SetIncidentsRefreshEvent>(_onSetIncidentsRefresh);
   }

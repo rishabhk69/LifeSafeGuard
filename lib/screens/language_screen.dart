@@ -10,6 +10,9 @@ import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
+import '../constants/app_utils.dart';
+import '../main.dart';
+
 
 class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
@@ -104,7 +107,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   trailing: selectedLanguage == "English"
                       ? Icon(Icons.check, color: Colors.black)
                       : null,
-                  onTap: () {
+                  onTap: () async {
+                    await AppUtils().setLanguage('en');
                     setState(() {
                       selectedLanguage = "English";
                     });
@@ -118,7 +122,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   trailing: selectedLanguage == "हिंदी"
                       ? Icon(Icons.check, color: Colors.black)
                       : null,
-                  onTap: () {
+                  onTap: () async {
+                    await AppUtils().setLanguage('hi');
                     setState(() {
                       selectedLanguage = "हिंदी";
                     });
@@ -141,6 +146,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
+                      updateLang();
                     },
                     child: Text(
                       "Done",
@@ -155,6 +161,17 @@ class _LanguageScreenState extends State<LanguageScreen> {
         );
       },
     );
+  }
+
+  updateLang() async {
+    final currentLang = await AppUtils().getSelectedLanguage();
+    if (currentLang == 'hi') {
+      MyApp.setLocale(context, const Locale('hi', 'IN'));
+      await AppUtils().setLanguage("hi");
+    } else {
+      MyApp.setLocale(context, const Locale("en", "US"));
+      await AppUtils().setLanguage("en");
+    }
   }
 
 }

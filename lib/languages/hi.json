@@ -324,5 +324,7 @@
   "addComments": "टिप्पणियाँ जोड़ें",
   "fileAlreadySelectedYouWantToReplace": "फ़ाइल पहले से ही चयनित है, क्या आप बदलना चाहते हैं?",
   "areYouSureYouWantToDelete": "क्या आप वाकई हटाना चाहते हैं?",
-  "signOut": "साइन आउट"
+  "signOut": "साइन आउट",
+  "resend": "पुन: भेजें",
+  "selectType": "प्रकार चुनें"
 }

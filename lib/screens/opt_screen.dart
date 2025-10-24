@@ -102,7 +102,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 onTap: (){
                   BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(widget.phone,false));
                 },
-                child: Text('Resend'))),
+                child: Text( GuardLocalizations.of(context)!.translate("resend") ?? ""))),
 
           ],
         ),

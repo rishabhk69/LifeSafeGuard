@@ -8,9 +8,6 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
-import 'package:untitled/constants/strings.dart';
-import 'package:untitled/localization/fitness_localization.dart';
-import 'package:untitled/localization/fitness_localization.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
@@ -56,54 +53,54 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
               if(incidentState is SetIncidentsSuccessState){
                 return  Column(
                   children: [
-                    _buildListTile(StringHelper.bomBlast,'',ImageHelper.bombIc,
-                        StringHelper.bomBlast==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.bomBlast));
+                    _buildListTile( GuardLocalizations.of(context)!.translate("bomBlast") ?? "",'',ImageHelper.bombIc,
+                        (GuardLocalizations.of(context)!.translate("bomBlast") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("bomBlast") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.planeCrash,'',ImageHelper.missileIc,
-                        StringHelper.planeCrash==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.planeCrash));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("planeCrash") ?? "",'',ImageHelper.missileIc,
+                        (GuardLocalizations.of(context)!.translate("planeCrash") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("planeCrash") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.missileAttack,'',ImageHelper.attackIc,
-                        StringHelper.missileAttack==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.missileAttack));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("missileAttack") ?? "",'',ImageHelper.attackIc,
+                        (GuardLocalizations.of(context)!.translate("missileAttack") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("missileAttack") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.droneAttack,'',ImageHelper.planeIc,
-                        StringHelper.droneAttack==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.droneAttack));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("droneAttack") ?? "",'',ImageHelper.planeIc,
+                        (GuardLocalizations.of(context)!.translate("droneAttack") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("droneAttack") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.animalAbuse,'',ImageHelper.dogIc,
-                        StringHelper.animalAbuse==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.animalAbuse));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("animalAbuse") ?? "",'',ImageHelper.dogIc,
+                        (GuardLocalizations.of(context)!.translate("animalAbuse") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("animalAbuse") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.humanAbuse,'',ImageHelper.humanIc,
-                        StringHelper.humanAbuse==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.humanAbuse));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("humanAbuse") ?? "",'',ImageHelper.humanIc,
+                        (GuardLocalizations.of(context)!.translate("humanAbuse") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("humanAbuse") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.roadCloser,'',ImageHelper.roadIc,
-                        StringHelper.roadCloser==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.roadCloser));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("roadCloser") ?? "",'',ImageHelper.roadIc,
+                        (GuardLocalizations.of(context)!.translate("roadCloser") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("roadCloser") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.landslide,'',ImageHelper.landIc,
-                        StringHelper.landslide==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.landslide));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("landslide") ?? "",'',ImageHelper.landIc,
+                        (GuardLocalizations.of(context)!.translate("landslide") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("landslide") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.fight,'',ImageHelper.fightIc,
-                        StringHelper.fight==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.fight));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("fight") ?? "",'',ImageHelper.fightIc,
+                        (GuardLocalizations.of(context)!.translate("fight") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("fight") ?? ""));
                           context.pop();
                         }),
-                    _buildListTile(StringHelper.others,'',ImageHelper.otherIc,
-                        StringHelper.others==incidentState.selectedIncidentName,(){
-                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:StringHelper.others));
+                    _buildListTile(GuardLocalizations.of(context)!.translate("others") ?? "",'',ImageHelper.otherIc,
+                        (GuardLocalizations.of(context)!.translate("others") ?? "")==incidentState.selectedIncidentName,(){
+                          BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent(incidentName:GuardLocalizations.of(context)!.translate("others") ?? ""));
                           context.pop();
                         }),
 

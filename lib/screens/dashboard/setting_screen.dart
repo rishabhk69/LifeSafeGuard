@@ -45,7 +45,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
               child: ListView(
                 children: [
-                  _buildListTile(GuardLocalizations.of(context)!.translate("language") ?? "", "English", true,(){
+                  _buildListTile(GuardLocalizations.of(context)!.translate("language") ?? "", selectedLanguage == "English"? "English":'हिन्दी', true,(){
                     _showLanguageBottomSheet();
                   }),
                   _buildListTile(GuardLocalizations.of(context)!.translate("contactUs") ?? "", "", true,(){
@@ -126,8 +126,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   locator<DialogService>().showLogoutDialog(
                       title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
                       subTitle: GuardLocalizations.of(context)!.translate("youWantToLogOut") ?? "",
-                      negativeButtonText: "No",
-                      positiveButtonText: "Yes",
+                      negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                      positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
                       negativeTap: () {
                         context.pop();
                       },
