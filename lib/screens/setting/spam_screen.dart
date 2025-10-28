@@ -17,15 +17,15 @@ import '../../common/service/dialog_service.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
-class ReportIssueScreen extends StatefulWidget {
+class SpamScreen extends StatefulWidget {
   dynamic incidentData;
-  ReportIssueScreen(this.incidentData);
+  SpamScreen(this.incidentData);
 
   @override
-  State<ReportIssueScreen> createState() => _ReportIssueScreenState();
+  State<SpamScreen> createState() => _SpamScreenState();
 }
 
-class _ReportIssueScreenState extends State<ReportIssueScreen> {
+class _SpamScreenState extends State<SpamScreen> {
 
   IncidentsModel? incidentsModel;
   final formGlobalKey = GlobalKey<FormState>();
@@ -61,7 +61,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title:  Text(
-            GuardLocalizations.of(context)!.translate("block") ?? "",
+            GuardLocalizations.of(context)!.translate("spamIncident") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           centerTitle: false,
@@ -159,7 +159,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                       if(formGlobalKey.currentState!.validate()) {
                         locator<DialogService>().showLogoutDialog(
                             title: 'Confirm ?',
-                            subTitle: 'Are you sure you want to block this incident?',
+                            subTitle: 'Are you sure you want to spam this incident?',
                             negativeButtonText: "No",
                             positiveButtonText: "Yes",
                             negativeTap: () {

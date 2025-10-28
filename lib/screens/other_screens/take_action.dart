@@ -82,6 +82,7 @@ class _TakeActionState extends State<TakeAction> {
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
+                  context.push('/spamScreen',extra: widget.incidentData);
                   // Handle spam incident action
                 },
               ),

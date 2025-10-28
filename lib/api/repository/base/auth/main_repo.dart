@@ -18,6 +18,12 @@ class MainRepository extends BaseRepository {
     return safeCall(service.getLogin(data,type));
   }
 
+
+  Future<Result<dynamic>> deleteAccount(String data,String reason) async {
+    final service = MainService(await dio);
+    return safeCall(service.deleteAccount(data,reason));
+  }
+
   Future<Result<dynamic>> getSignUp(
       {String? firstName, String? lastName, String? userName, File? profilePhoto,}) async {
     final service = MainService(await dio);
@@ -106,6 +112,20 @@ class MainRepository extends BaseRepository {
       List<String>? urls}) async {
     final service = MainService(await dio);
     return safeCall(service.blockIncident(title: title,
+        incidentId: incidentId,
+        urls: urls,
+        description: description,
+        userId: userId,
+       ));
+  }
+
+    Future<Result<dynamic>> spamIncident({String? title,
+      String? description,
+      String? incidentId,
+      String? userId,
+      List<String>? urls}) async {
+    final service = MainService(await dio);
+    return safeCall(service.spamIncident(title: title,
         incidentId: incidentId,
         urls: urls,
         description: description,

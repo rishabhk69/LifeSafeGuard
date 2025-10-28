@@ -325,5 +325,8 @@
   "areYouSureYouWantToDelete": "Are you sure you want to delete?",
   "signOut": "Sign Out",
   "resend": "Resend",
-  "selectType": "Select Type"
+  "selectType": "Select Type",
+  "youWantToDeleteAccount": "You want to delete account",
+  "addReason": "Add Reason",
+  "enterReason": "Enter Reason"
 }

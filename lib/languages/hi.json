@@ -326,5 +326,10 @@
   "areYouSureYouWantToDelete": "क्या आप वाकई हटाना चाहते हैं?",
   "signOut": "साइन आउट",
   "resend": "पुन: भेजें",
-  "selectType": "प्रकार चुनें"
+  "selectType": "प्रकार चुनें",
+  "youWantToDeleteAccount": "You want to delete account",
+  "addReason": "Add Reason",
+  "enterReason": "Enter Reason"
+
+
 }

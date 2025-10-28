@@ -78,8 +78,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
-                      incidentsModel?.location?.latitude??0.0,
-                      incidentsModel?.location?.longitude??0.0,
+                      (incidentsModel?.location?.latitude??0.0).toDouble(),
+                      (incidentsModel?.location?.longitude??0.0).toDouble(),
                     ),
                     zoom: 15,
                   ),
@@ -87,8 +87,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                     Marker(
                       markerId: const MarkerId("incident_location"),
                       position: LatLng(
-                        incidentsModel?.location?.latitude??0.0,
-                        incidentsModel?.location?.longitude??0.0,
+                        (incidentsModel?.location?.latitude??0).toDouble(),
+                        (incidentsModel?.location?.longitude??0).toDouble(),
                       ),
                       infoWindow: InfoWindow(
                         title: incidentsModel?.title ?? "Incident",

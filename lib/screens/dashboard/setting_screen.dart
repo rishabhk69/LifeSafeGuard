@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/bloc/auth/delete_account_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
@@ -27,6 +29,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
 
   String selectedLanguage = "English";
+  TextEditingController detailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +65,44 @@ class _SettingScreenState extends State<SettingScreen> {
                     // context.push('/reportIssueScreen');
                   }),
                   _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){}),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("deleteYourAccount") ?? "", "", true,(){}),
+                  BlocListener<DeleteAccountBloc,DeleteAccountState>(
+                  listener: (context,deleteListener){
+                    if(deleteListener is DeleteAccountLoadingState){
+                      locator<DialogService>().showLoader();
+                    }
+                    else if(deleteListener is DeleteAccountSuccessState){
+                      locator<DialogService>().hideLoader();
+                      AppUtils().logoutUser().then((onValue){
+                        context.go('/chooseLogin');
+                      });
+                      locator<ToastService>().show(deleteListener.commonModel.message??"");
+                    }
+                    else if(deleteListener is DeleteAccountErrorState){
+                      locator<DialogService>().hideLoader();
+                      locator<ToastService>().show(deleteListener.errorMsg);
+                    }
+                  },child: _buildListTile(GuardLocalizations.of(context)!.translate("deleteYourAccount") ?? "", "", true,(){
+                    locator<DialogService>().showDeleteDialog(
+                        detailController: detailController,
+                        title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
+                        subTitle: GuardLocalizations.of(context)!.translate("youWantToDeleteAccount") ?? "",
+                        negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                        positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                        negativeTap: () {
+                          context.pop();
+                        },
+                        positiveTap: () async {
+                          if(detailController.text.isEmpty){
+                            locator<ToastService> ().show(GuardLocalizations.of(context)!.translate("enterReason") ?? "");
+                          }
+                          else{
+                           var userId =  await AppUtils().getUserId();
+                            context.read<DeleteAccountBloc>().add(DeleteAccountRefreshEvent(userId.toString(),detailController.text));
+                            context.pop();
+                          }
+                        }
+                    );
+                  })),
                   _buildListTile(GuardLocalizations.of(context)!.translate("agreement") ?? "", "", true,(){
                     context.push('/termsAndCondition',extra: {
                     'isLogin': 'false',

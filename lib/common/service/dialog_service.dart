@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:untitled/constants/custom_text_field.dart';
 
 
 import '../../constants/app_styles.dart';
@@ -335,6 +336,126 @@ class DialogService {
                                 fontSize: textSize14,
                               color: color
                             )
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(child: InkWell(
+                                onTap: positiveTap,
+                                child: Container(
+                                  height: 40,
+                                  // padding: EdgeInsets.symmetric(horizontal: 50.w),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.primaryColor, borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    // GuardLocalizations.of(context)!.translate("save") ?? "",
+                                    positiveButtonText??"",
+                                    style: GoogleFonts.jost(
+                                        color: ColorConstant.whiteColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                ),
+                              )),
+                              const SizedBox(width: 10,),
+                              Expanded(child: InkWell(
+                                onTap: negativeTap,
+                                child: Container(
+                                  height: 40,
+                                  // padding: EdgeInsets.symmetric(horizontal: 50.w),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: ColorConstant.primaryColor),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    // GuardLocalizations.of(context)!.translate("save") ?? "",
+                                    negativeButtonText??"",
+                                    style: GoogleFonts.jost(
+                                        color: ColorConstant.primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                ),
+                              )),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  showDeleteDialog(
+      {String? image,
+      String? title,
+      String? subTitle,
+      Color? color,
+      void Function()? positiveTap,
+      void Function()? negativeTap,
+      String? negativeButtonText,
+      TextEditingController? detailController,
+      String? positiveButtonText}) {
+    showDialog(
+        context: _getSafeContext(),
+        builder: (context) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AlertDialog(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        20.0,
+                      ),
+                    ),
+                  ),
+                  titlePadding: const EdgeInsets.only(top: 12, left: 24, right: 24),
+                  contentPadding: const EdgeInsets.only(top: 12, left: 24, bottom: 20,right: 24),
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  title:image==null? SizedBox():Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(image??"",height: 100,width: 100),
+                  ),
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(
+                            title??"",
+                            textAlign: TextAlign.center,
+                            style: MyTextStyleBase.headingStyle.copyWith(
+                                fontSize: textSize20
+                            )
+                        ),
+                        Text(
+                            subTitle??"",
+                            textAlign: TextAlign.center,
+                            style: MyTextStyleBase.headingStyleLight.copyWith(
+                                fontSize: textSize14,
+                              color: color
+                            )
+                        ),
+
+                        CommonTextFieldWidget(
+                          maxLines: 2,
+                          // validator: (v){
+                          //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterIncidentDetails") ?? "");
+                          // },
+                          hintText: GuardLocalizations.of(context)!.translate("addReason") ?? "",
+                          isPassword: false, textController: detailController!,
+
                         ),
 
                         Padding(

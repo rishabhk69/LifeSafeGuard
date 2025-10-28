@@ -26,8 +26,8 @@ abstract class BaseRepository {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token",
       'App-Version': '1.0.0',
-      'OS-Version': '18.3',
-      'Device-Type': 'Android',
+      'OS-Version': Platform.isAndroid ? '18.3': Platform.operatingSystem.toString(),
+      'Device-Type': Platform.isAndroid ? 'Android':'IOS',
       // HttpHeaders.authorizationHeader: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEyMzQiLCJleHAiOjE3NTIyNDc1ODN9.OifTzH016hLbzB0s4IKNrtzJ6QQ4XhwOefKT9xocj0A"
     };
   }

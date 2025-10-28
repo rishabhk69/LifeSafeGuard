@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:untitled/api/repository/base/auth/main_repo.dart';
 import 'package:untitled/bloc/auth/aggrement_bloc.dart';
+import 'package:untitled/bloc/auth/delete_account_bloc.dart';
 import 'package:untitled/bloc/blocked_list_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/auth/otp_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/bloc/post_comment_bloc.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
+import 'package:untitled/bloc/spam_incident_bloc.dart';
 
 import '../../bloc/auth/login_bloc.dart';
 import '../../bloc/block_incident_bloc.dart';
@@ -77,6 +79,12 @@ class BlocServices {
           ),
           BlocProvider<PostCommentBloc>(
             create: (context) => PostCommentBloc(_mainRepository),
+          ),
+          BlocProvider<SpamIncidentBloc>(
+            create: (context) => SpamIncidentBloc(_mainRepository),
+          ),
+          BlocProvider<DeleteAccountBloc>(
+            create: (context) => DeleteAccountBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

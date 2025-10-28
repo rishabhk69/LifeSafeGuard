@@ -35,6 +35,23 @@ import '../repository/base/base_repository.dart';
      }
    }
 
+   Future<dynamic> deleteAccount(String userId,String reason) async {
+     try {
+       final response = await _dio.post(
+         '$userId${AppConfig.deleteAccount}',
+         data: {
+           "userId": userId,
+           "reason": reason,
+           "deletedBy": "admin"
+         },
+
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> getIncidents({int? offset, int? size}) async {
      try {
        final response = await _dio.get(
@@ -232,6 +249,39 @@ import '../repository/base/base_repository.dart';
      }
    }
 
+
+   Future<dynamic> spamIncident({String? title,
+     String? incidentId,
+      List<String>? urls,
+     String? userId,
+     String? description,}) async {
+     try {
+       String token = await AppUtils().getToken();
+       final formData = FormData.fromMap({
+         "incidentId": incidentId,
+         "incidentBlockerId": userId,
+         "title": title,
+         "description": description,
+         "attachments": urls ?? [],
+       });
+       final response = await _dio.post(
+         "${AppConfig.postIncidents}/$incidentId/block",
+         data:formData,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "multipart/form-data",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> postComment({String? comment,
      String? incidentId,
      String? userId,
@@ -289,8 +339,8 @@ import '../repository/base/base_repository.dart';
              HttpHeaders.contentTypeHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              'App-Version': '1.0.0',
-             'OS-Version': '18.3',
-             'Device-Type': 'Android',
+             'OS-Version': Platform.isAndroid ? '18.3': Platform.operatingSystem.toString(),
+             'Device-Type': Platform.isAndroid ? 'Android':'IOS',
            },
          ),
          "${AppConfig.getBlockedIncidents}/$userId",
