@@ -10,14 +10,10 @@ class SpamIncidentEvent {}
 
 class SpamIncidentRefreshEvent extends SpamIncidentEvent {
 
-  String? title;
-  String? description;
   String? userId;
   String? incidentId;
-  List<String>? urls;
 
-  SpamIncidentRefreshEvent({this.title, this.description, this.userId,
-    this.incidentId, this.urls});
+  SpamIncidentRefreshEvent({this.userId, this.incidentId});
 
 
 }
@@ -51,10 +47,7 @@ class SpamIncidentBloc extends Bloc<SpamIncidentEvent, SpamIncidentState> {
     emit(SpamIncidentLoadingState());
     try {
       final result = await repository.spamIncident(
-          description: event.description,
-         incidentId: event.incidentId,
-          title:event.title,
-          urls: event.urls,
+           incidentId: event.incidentId,
           userId: event.userId,
 
       ); // API call

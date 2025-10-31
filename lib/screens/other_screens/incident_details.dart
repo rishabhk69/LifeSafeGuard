@@ -148,12 +148,14 @@ class _IncidentDetailsState extends State<IncidentDetails> {
 
             const SizedBox(height: 20),
 
+            if((incidentsModel?.title??"").isNotEmpty)
             // Title
              Text(
               GuardLocalizations.of(context)!.translate("title") ?? "",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
+            if((incidentsModel?.title??"").isNotEmpty)
             Text(
               incidentsModel?.title??"",
               style: TextStyle(fontSize: 14),
@@ -162,11 +164,13 @@ class _IncidentDetailsState extends State<IncidentDetails> {
             const SizedBox(height: 20),
 
             // Incident Details
+            if((incidentsModel?.description??"").isNotEmpty)
              Text(
               GuardLocalizations.of(context)!.translate("incidentDetails") ?? "",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
+            if((incidentsModel?.description??"").isNotEmpty)
             Text(
               incidentsModel?.description??"",
               style: TextStyle(fontSize: 14, height: 1.4),

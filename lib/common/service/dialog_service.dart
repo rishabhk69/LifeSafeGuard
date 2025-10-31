@@ -147,7 +147,7 @@ class DialogService {
           ),
           child: AppProgressIndicator()
         ),
-        dismissable: true
+        dismissable: false
       );
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _cpr!.show();
@@ -162,7 +162,7 @@ class DialogService {
         ),
         defaultLoadingWidget: AppProgressIndicator(),
         message: Text(message),
-        dismissable: true
+        dismissable: false
       );
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _pr!.show();

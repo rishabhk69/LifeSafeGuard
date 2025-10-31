@@ -177,7 +177,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       margin: EdgeInsets.all(5),
                       height: 140,
                       width: 140,
-                      padding: EdgeInsets.all(40),
+                      // padding: EdgeInsets.all(40),
                       decoration: BoxDecoration(
                           border: Border.all(color: ColorConstant.primaryColor),
                           color: Colors.white,
@@ -185,13 +185,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: SizedBox(
-                          height: 50,
-                          width: 50,
-                          child:selectedFile!=null?
-                          Image.file(File(selectedFile!.path)) :
-                          SvgPicture.asset(ImageHelper.cameraIc),
-                        ),
+                        child: CircleAvatar(
+                          radius: 70,
+                          backgroundImage:
+                          selectedFile != null ? FileImage(File(selectedFile!.path)) : null,
+                          child: selectedFile == null
+                              ? SvgPicture.asset(ImageHelper.cameraIc, fit: BoxFit.cover)
+                              : null,
+                        )
+
                       ),
                     ),
                   ),

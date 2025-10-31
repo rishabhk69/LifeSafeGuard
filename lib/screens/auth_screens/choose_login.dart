@@ -28,7 +28,7 @@ class _ChooseLoginState extends State<ChooseLogin> {
                CustomButton(
                    buttonHeight: 50,
                    text: GuardLocalizations.of(context)!.translate("login") ?? "", onTap: (){
-                 context.go('/mobileScreen',extra: {
+                 context.push('/mobileScreen',extra: {
                    'isLogin': 'true',
                  });
                }),
@@ -42,7 +42,7 @@ class _ChooseLoginState extends State<ChooseLogin> {
                CustomButton(
                    buttonHeight: 50,
                    text: GuardLocalizations.of(context)!.translate("signUP") ?? "", onTap: (){
-                 context.go('/mobileScreen',extra: {
+                 context.push('/mobileScreen',extra: {
                    'isLogin': 'false',
                  });
                }),

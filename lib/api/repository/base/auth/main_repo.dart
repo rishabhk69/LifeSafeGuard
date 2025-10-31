@@ -125,10 +125,8 @@ class MainRepository extends BaseRepository {
       String? userId,
       List<String>? urls}) async {
     final service = MainService(await dio);
-    return safeCall(service.spamIncident(title: title,
+    return safeCall(service.spamIncident(
         incidentId: incidentId,
-        urls: urls,
-        description: description,
         userId: userId,
        ));
   }

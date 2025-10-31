@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, BlocListener;
 import 'package:go_router/go_router.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/spam_incident_bloc.dart';
+import 'package:untitled/common/locator/locator.dart';
+import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
-import 'package:untitled/constants/strings.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
@@ -69,7 +75,23 @@ class _TakeActionState extends State<TakeAction> {
             const SizedBox(height: 20),
 
             // Spam Incident
-            Card(
+            BlocListener<SpamIncidentBloc,SpamIncidentState>(
+            listener: (context,spamStates){
+              if(spamStates is SpamIncidentLoadingState){
+                locator<DialogService>().showLoader();
+              }
+              else if(spamStates is SpamIncidentSuccessState){
+                locator<DialogService>().hideLoader();
+                context.pop();
+                locator<ToastService>().show(spamStates.spamIncidentData.message??"");
+                context.go('/dashboardScreen');
+                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+              }
+              else if(spamStates is SpamIncidentErrorState){
+                locator<DialogService>().hideLoader();
+                locator<ToastService>().show(spamStates.errorMsg??"");
+              }
+            },child:  Card(
               elevation: 0,
               color: Colors.grey.shade100,
               shape: RoundedRectangleBorder(
@@ -82,11 +104,31 @@ class _TakeActionState extends State<TakeAction> {
                 ),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
-                  context.push('/spamScreen',extra: widget.incidentData);
+                  locator<DialogService>().showLogoutDialog(
+                      title: 'Confirm ?',
+                      subTitle: 'Are you sure you want to spam this incident?',
+                      negativeButtonText: GuardLocalizations.of(context)!.translate("no") ?? "",
+                      positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                      negativeTap: () {
+                        context.pop();
+                      },
+                      positiveTap: () {
+                        context.pop();
+                        AppUtils().getUserId().then((userId) {
+                          BlocProvider.of<SpamIncidentBloc>(context).add(
+                              SpamIncidentRefreshEvent(
+                                  incidentId: widget.incidentData
+                                      ?.incidentId ?? "",
+                                  userId: userId.toString())
+                          );
+                        });
+                      }
+                  );
+                  // context.push('/spamScreen',extra: widget.incidentData);
                   // Handle spam incident action
                 },
               ),
-            ),
+            ),),
             const SizedBox(height: 4),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),

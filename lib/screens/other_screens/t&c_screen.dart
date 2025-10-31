@@ -47,7 +47,9 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                     buttonColor: Colors.grey,
                     buttonHeight: 50,
                     text: GuardLocalizations.of(context)!.translate("decline") ?? "", onTap: (){
-                  context.go('/mobileScreen');
+                  context.go('/mobileScreen',extra: {
+                    'isLogin': 'true',
+                  });
                 }),
               ),
               addWidth(5),
@@ -104,7 +106,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                           ),
                         },
                       ),
-
+                      addHeight(50),
                     ],
                   ),
                 );

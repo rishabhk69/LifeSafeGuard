@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
-import 'package:untitled/bloc/block_incident_bloc.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/spam_incident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/app_utils.dart';
@@ -138,19 +138,19 @@ class _SpamScreenState extends State<SpamScreen> {
 
                 // Submit button
 
-                BlocListener<BlockIncidentBloc,BlockIncidentState>(
+                BlocListener<SpamIncidentBloc,SpamIncidentState>(
                     listener: (context,blockState){
-                      if(blockState is BlockIncidentLoadingState){
+                      if(blockState is SpamIncidentLoadingState){
                         locator<DialogService>().showLoader();
                       }
-                      else if(blockState is BlockIncidentSuccessState){
+                      else if(blockState is SpamIncidentSuccessState){
                         locator<DialogService>().hideLoader();
                         context.pop();
-                        locator<ToastService>().show(blockState.blockIncidentData.status??"");
+                        locator<ToastService>().show(blockState.spamIncidentData.message??"");
                         context.go('/dashboardScreen');
                         BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                       }
-                      else if(blockState is BlockIncidentErrorState){
+                      else if(blockState is SpamIncidentErrorState){
                         locator<DialogService>().hideLoader();
                         locator<ToastService>().show(blockState.errorMsg??"");
                       }
@@ -168,15 +168,11 @@ class _SpamScreenState extends State<SpamScreen> {
                             positiveTap: () {
                               context.pop();
                               AppUtils().getUserId().then((userId) {
-                                BlocProvider.of<BlockIncidentBloc>(context).add(
-                                    BlockIncidentRefreshEvent(
-                                        title: titleController.text.trim(),
+                                BlocProvider.of<SpamIncidentBloc>(context).add(
+                                    SpamIncidentRefreshEvent(
                                         incidentId: incidentsModel
                                             ?.incidentId ?? "",
-                                        userId: userId.toString(),
-                                        description: detailController.text
-                                            .trim(),
-                                        urls: [])
+                                        userId: userId.toString())
                                 );
                               });
                             }

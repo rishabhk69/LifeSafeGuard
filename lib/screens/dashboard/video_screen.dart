@@ -90,6 +90,8 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   void dispose() {
+    print('dispossees');
+    _videoController?.pause();
     _videoController?.dispose();
     super.dispose();
   }
@@ -139,9 +141,15 @@ class _VideoScreenState extends State<VideoScreen> {
                               currentIndex == index)
                               ? AspectRatio(
                             aspectRatio: _videoController!.value.aspectRatio,
-                            child: VideoPlayer(_videoController!),
+                            child: InkWell(
+                                onTap: (){
+                                  if(!_videoController!.value.isPlaying){
+                                    _videoController!.play();
+                                  }
+                                },
+                                child: VideoPlayer(_videoController!)),
                           )
-                              : const CircularProgressIndicator(color: Colors.white),
+                              : const CircularProgressIndicator(color: Colors.white,),
                         ) : Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -198,16 +206,18 @@ class _VideoScreenState extends State<VideoScreen> {
                               children: [
                                 TextButton(
                                   child: Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                                  onPressed: (){
+                                  onPressed: () async {
                                     context.pop();
                                     context.pop();
+                                    await _videoController?.pause();
                                     context.push('/filterScreen');
                                   },
                                 ),
                                 Divider(),
                                 TextButton(
                                   child: Text(GuardLocalizations.of(context)!.translate("allText") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                                  onPressed: (){
+                                  onPressed: () async {
+                                    await _videoController?.pause();
                                     context.pop();
                                     // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                                   },
@@ -289,7 +299,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 SvgPicture.asset(ImageHelper.locationIc),
                                 addWidth(5),
                                 Text(
-                                incidentState.incidentsModel[index].address??"",
+                                (incidentState.incidentsModel[index].address??"").split(',').first,
                                 style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,
@@ -314,7 +324,9 @@ class _VideoScreenState extends State<VideoScreen> {
                             ),
 
                             InkWell(
-                              onTap: (){
+                              onTap: () async {
+                                await _videoController?.pause();
+                                // await _videoController?.dispose();
                                 context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                               },
                               child: Text(GuardLocalizations.of(context)!.translate("seeMore") ?? "",

@@ -6,7 +6,6 @@ import 'package:untitled/constants/app_utils.dart';
 
 import '../../constants/app_config.dart';
 import '../../main.dart';
-import '../repository/base/base_repository.dart';
 
  class MainService {
    final Dio _dio;
@@ -70,7 +69,7 @@ import '../repository/base/base_repository.dart';
    Future<dynamic> getProfile({int? offset, int? size, String? userId}) async {
      try {
        final response = await _dio.get(
-         "${AppConfig.getProfile}/${userId}",
+         "${AppConfig.getProfile}/$userId",
          queryParameters: {
            'offset':offset,
            'size' :size
@@ -250,28 +249,22 @@ import '../repository/base/base_repository.dart';
    }
 
 
-   Future<dynamic> spamIncident({String? title,
+   Future<dynamic> spamIncident({
      String? incidentId,
-      List<String>? urls,
-     String? userId,
-     String? description,}) async {
+     String? userId,}) async {
      try {
        String token = await AppUtils().getToken();
-       final formData = FormData.fromMap({
-         "incidentId": incidentId,
-         "incidentBlockerId": userId,
-         "title": title,
-         "description": description,
-         "attachments": urls ?? [],
-       });
        final response = await _dio.post(
-         "${AppConfig.postIncidents}/$incidentId/block",
-         data:formData,
+         "${AppConfig.postIncidents}/$incidentId/spam",
+         data:{
+           "incidentId": incidentId,
+           "userId": userId,
+         },
          options: Options(
            headers: {
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
-             HttpHeaders.contentTypeHeader: "multipart/form-data",
+             HttpHeaders.contentTypeHeader: "application/json",
            },
          ),
        );
@@ -300,7 +293,7 @@ import '../repository/base/base_repository.dart';
         "timestamp": currentDate
       };
        final response = await _dio.post(
-         "${AppConfig.postComments}",
+         AppConfig.postComments,
          data:request,
          options: Options(
            headers: {
