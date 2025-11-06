@@ -149,6 +149,11 @@ class MainRepository extends BaseRepository {
        ));
   }
 
+    Future<Result<dynamic>> getCityList() async {
+    final service = MainService(await dio);
+    return safeCall(service.getCityList());
+  }
+
     Future<Result<dynamic>> agreementData() async {
     final service = MainService(await dio);
     return safeCall(service.agreementData());

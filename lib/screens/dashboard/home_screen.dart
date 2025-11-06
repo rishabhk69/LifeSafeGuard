@@ -17,7 +17,6 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
-import 'package:untitled/constants/strings.dart';
 import 'package:video_compress/video_compress.dart';
 
 import '../../constants/app_styles.dart';
@@ -342,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             // aspectRatio: 16/9,
                             viewportFraction: 1,
                             initialPage: 0,
-                            enableInfiniteScroll: true,
+                            enableInfiniteScroll: selectedFiles.length>1 ?true:false,
                             reverse: false,
                             autoPlay: true,
                             autoPlayInterval: Duration(seconds: 3),

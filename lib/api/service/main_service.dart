@@ -275,6 +275,27 @@ import '../../main.dart';
      }
    }
 
+
+   Future<dynamic> getCityList() async {
+     try {
+       String token = await AppUtils().getToken();
+       final response = await _dio.get(
+         AppConfig.cityList,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "application/json",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> postComment({String? comment,
      String? incidentId,
      String? userId,

@@ -8,9 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/video_trimmer.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 import '../common/locator/locator.dart';
 import '../localization/language_constants.dart';
 
@@ -124,21 +126,22 @@ class CommonFunction{
   Future<List<XFile>?> pickImageVideoFile(
       bool isPhoto, bool isFromGallery, BuildContext context) async {
     final picker = ImagePicker();
+    final trimmer = Trimmer();
     try {
       if (isPhoto) {
         if (isFromGallery) {
           final pickedFiles = await picker.pickMultiImage(imageQuality: 70);
 
           if (pickedFiles.isNotEmpty) {
-            if (pickedFiles.length > 4) {
+            if (pickedFiles.length > 5) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text("You can select a maximum of 4 images."),
+                  content: Text("You can select a maximum of 5 images."),
                 ),
               );
             }
 
-            final limitedFiles = pickedFiles.take(4).toList();
+            final limitedFiles = pickedFiles.take(5).toList();
 
             for (final file in limitedFiles) {
               if (_isFileTooLarge(file, context)) {

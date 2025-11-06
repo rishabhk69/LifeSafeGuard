@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
+import 'package:untitled/bloc/get_city_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
@@ -208,8 +209,9 @@ class _VideoScreenState extends State<VideoScreen> {
                                   child: Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
                                   onPressed: () async {
                                     context.pop();
-                                    context.pop();
+                                    // context.pop();
                                     await _videoController?.pause();
+                                    BlocProvider.of<CityListBloc>(context).add(CityListRefreshEvent());
                                     context.push('/filterScreen');
                                   },
                                 ),

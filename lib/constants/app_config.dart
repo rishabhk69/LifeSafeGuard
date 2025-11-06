@@ -18,4 +18,5 @@ class AppConfig {
   static const getComments = "/incidents";
   static const postComments = "/comment";
   static const deleteAccount = "/delete";
+  static const cityList = "cities/incidents";
 }
