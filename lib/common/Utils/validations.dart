@@ -23,7 +23,7 @@ class Validations {
               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
           .hasMatch(value);
       if (!result) {
-        return 'Please enter valid url!';
+        return 'Please enter valid email';
       } else {
         return null;
       }

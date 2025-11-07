@@ -17,6 +17,7 @@ class AppConfig {
   static const getBlockedIncidents = "/blocked-incidents";
   static const getComments = "/incidents";
   static const postComments = "/comment";
+  static const support = "support";
   static const deleteAccount = "/delete";
   static const cityList = "cities/incidents";
   static const typeList = "types/incidents";

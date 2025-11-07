@@ -18,6 +18,7 @@ import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/save_city_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/bloc/spam_incident_bloc.dart';
+import 'package:untitled/bloc/support_bloc.dart';
 
 import '../../bloc/auth/login_bloc.dart';
 import '../../bloc/block_incident_bloc.dart';
@@ -97,6 +98,9 @@ class BlocServices {
           ),
           BlocProvider<IncidentTypeBloc>(
             create: (context) => IncidentTypeBloc(_mainRepository),
+          ),
+          BlocProvider<SupportHelpBloc>(
+            create: (context) => SupportHelpBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

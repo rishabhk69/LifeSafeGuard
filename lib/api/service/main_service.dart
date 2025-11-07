@@ -396,5 +396,44 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> supportHelp({ String? supportType,
+     String? subject,
+     String? details,
+     String? inqueryType,
+     String? name,
+     String? number,
+     String? email}) async {
+     String token = await AppUtils().getToken();
+     String userId = await AppUtils().getUserId();
+     try {
+       final response = await _dio.post(
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.contentTypeHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             'App-Version': '1.0.0',
+             'OS-Version': Platform.isAndroid ? '18.3': Platform.operatingSystem.toString(),
+             'Device-Type': Platform.isAndroid ? 'Android':'IOS',
+           },
+         ),
+         AppConfig.support,
+         data:{
+             "userId": userId,
+             "supportType": supportType,
+             "subject": subject,
+             "details": details,
+             "inqueryType": inqueryType,
+             "name": name,
+             "number": number,
+             "email": email
+           }
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
 
  }

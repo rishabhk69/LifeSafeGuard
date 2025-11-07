@@ -170,4 +170,23 @@ class MainRepository extends BaseRepository {
     return safeCall(service.getBlockedIncidents(offset,size));
   }
 
+    Future<Result<dynamic>> supportHelp({String? supportType,
+      String? subject,
+      String? details,
+      String? inqueryType,
+      String? name,
+      String? number,
+      String? email}) async {
+    final service = MainService(await dio);
+    return safeCall(service.supportHelp(
+      name: name,
+      details: details,
+      email: email,
+      inqueryType: inqueryType,
+      number: number,
+      subject: subject,
+      supportType: supportType
+    ));
+  }
+
 }

@@ -329,5 +329,6 @@
   "youWantToDeleteAccount": "You want to delete account",
   "addReason": "Add Reason",
   "enterReason": "Enter Reason",
-  "incidentsNotFound": "Incidents Not Found"
+  "incidentsNotFound": "Incidents Not Found",
+  "queryType": "Query Type"
 }
