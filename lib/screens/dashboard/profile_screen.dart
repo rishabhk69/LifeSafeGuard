@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 8),
                       InkWell(
                         onTap: () {
-                          context.push('/signupScreen');
+                          // context.push('/signupScreen');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: SvgPicture.asset(ImageHelper.playCircle)),
       ],
     )
-        : Stack(
+        : (item
+        .media??[]).isEmpty ? Icon(Icons.image):Stack(
       children: [
         Container(
           decoration: BoxDecoration(

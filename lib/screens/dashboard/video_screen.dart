@@ -122,9 +122,22 @@ class _VideoScreenState extends State<VideoScreen> {
                   isInitialized = true;
                 });
               });
-                        }
+            }
 
-            return  PageView.builder(
+            return  incidentState.incidentsModel.isEmpty ?
+            Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(GuardLocalizations.of(context)!.translate("incidentsNotFound") ?? "",style: TextStyle(color: Colors.white),),
+                TextButton(onPressed: (){
+                  BlocProvider.of<IncidentsBloc>(context, listen: false)
+                      .add(IncidentsRefreshEvent(
+                      10,
+                      0,isFilter: false));
+                }, child: Text('Reload All'))
+              ],
+            )):
+            PageView.builder(
                 scrollDirection: Axis.vertical,
                 controller: _pageController,
                 onPageChanged: (index) => _onPageChanged(index, incidents),
@@ -206,7 +219,13 @@ class _VideoScreenState extends State<VideoScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextButton(
-                                  child: Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                                      incidentState.isFilter?Icon(Icons.check,color: Colors.green,):SizedBox()
+                                    ],
+                                  ),
                                   onPressed: () async {
                                     context.pop();
                                     // context.pop();
@@ -217,7 +236,13 @@ class _VideoScreenState extends State<VideoScreen> {
                                 ),
                                 Divider(),
                                 TextButton(
-                                  child: Text(GuardLocalizations.of(context)!.translate("allText") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(GuardLocalizations.of(context)!.translate("allText") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                                      incidentState.isFilter==false?Icon(Icons.check,color: Colors.green,):SizedBox()
+                                    ],
+                                  ),
                                   onPressed: () async {
                                     await _videoController?.pause();
                                     context.pop();

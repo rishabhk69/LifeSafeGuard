@@ -9,8 +9,11 @@ class IncidentsRefreshEvent extends IncidentsEvent {
 
   int? offset;
   int? size;
+  String? city;
+  String? type;
+  bool? isFilter;
 
-  IncidentsRefreshEvent(this.size,this.offset);
+  IncidentsRefreshEvent(this.size,this.offset, {this.type, this.city,this.isFilter});
 }
 
 class InitializeRefreshEvent extends IncidentsEvent {
@@ -28,8 +31,8 @@ class IncidentsLoadingState extends IncidentsState {}
 
 class IncidentsSuccessState extends IncidentsState {
   final List<IncidentsModel> incidentsModel;
-
-  IncidentsSuccessState(this.incidentsModel);
+  bool isFilter;
+  IncidentsSuccessState(this.incidentsModel,this.isFilter);
 }
 
 
@@ -54,6 +57,7 @@ class IncidentsLoadMoreEvent extends IncidentsEvent {
 class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
   final MainRepository repository;
   bool isInitialize = false;
+  bool isFilter = false;
   List<IncidentsModel> allIncidents = []; // ✅ cache list
 
   IncidentsBloc(this.repository) : super(IncidentsInitialState()) {
@@ -67,15 +71,22 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
     emit(IncidentsLoadingState());
     try {
       final result = await repository.getIncidents(
+        city: event.city,
         size: event.size,
         offset: event.offset,
+        type: event.type,
       );
-
+      if(event.isFilter??false){
+        isFilter = event.isFilter!;
+      }
+      else{
+        isFilter = false;
+      }
       if (result.isSuccess) {
         allIncidents = (result.data as List)
             .map((e) => IncidentsModel.fromJson(e as Map<String, dynamic>))
             .toList();
-        emit(IncidentsSuccessState(allIncidents));
+        emit(IncidentsSuccessState(allIncidents,isFilter));
       } else {
         emit(IncidentsErrorState("Something went wrong"));
       }
@@ -99,7 +110,7 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
 
         if (newData.isNotEmpty) {
           allIncidents.addAll(newData);
-          emit(IncidentsSuccessState(List.from(allIncidents))); // ✅ update UI
+          emit(IncidentsSuccessState(List.from(allIncidents),isFilter)); // ✅ update UI
         }
       }
     } catch (e) {

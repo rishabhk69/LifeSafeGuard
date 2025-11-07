@@ -328,5 +328,6 @@
   "selectType": "Select Type",
   "youWantToDeleteAccount": "You want to delete account",
   "addReason": "Add Reason",
-  "enterReason": "Enter Reason"
+  "enterReason": "Enter Reason",
+  "incidentsNotFound": "Incidents Not Found"
 }

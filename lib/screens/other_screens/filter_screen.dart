@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled/bloc/getIncident_bloc.dart';
+import 'package:untitled/bloc/save_city_bloc.dart';
+import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/constants/colors_constant.dart';
+import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
@@ -38,12 +43,24 @@ class _FilterScreenState extends State<FilterScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              _buildListTile(GuardLocalizations.of(context)!.translate("selectCity") ?? "", "Mumbai", true,(){
+              _buildListTile(GuardLocalizations.of(context)!.translate("selectCity") ?? "",  (BlocProvider.of<SaveCityBloc>(context,listen: false).selectedCity?.city??""), true,(){
                 context.push('/selectCity');
               }),
-              _buildListTile(GuardLocalizations.of(context)!.translate("typeOfIncidents") ?? "", "Bom Blast", true,(){
-                context.push('/incidentTypeScreen');
+              _buildListTile(GuardLocalizations.of(context)!.translate("typeOfIncidents") ?? "",
+                  BlocProvider.of<SetIncidentsBloc>(context).selectedIncident, true,(){
+                    context.push('/incidentTypeScreen').then((onValue){
+                    });
               }),
+              CustomButton(text: 'Apply', onTap: (){
+                BlocProvider.of<IncidentsBloc>(context, listen: false)
+                    .add(IncidentsRefreshEvent(
+                    10,
+                    0,
+                    type: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
+                    isFilter: true,
+                    city: BlocProvider.of<SaveCityBloc>(context,listen: false).selectedCity?.city??""));
+                context.pop();
+              })
             ],
           ),
         ),

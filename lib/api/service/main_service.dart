@@ -51,13 +51,15 @@ import '../../main.dart';
      }
    }
 
-   Future<dynamic> getIncidents({int? offset, int? size}) async {
+   Future<dynamic> getIncidents({int? offset, int? size,String? city,String? type}) async {
      try {
        final response = await _dio.get(
          AppConfig.getIncidents,
          queryParameters: {
            'offset':offset,
-           'size' :size
+           'size' :size,
+           'city' :city,
+           'type' :type,
          },
        );
        return response.data;
@@ -281,6 +283,26 @@ import '../../main.dart';
        String token = await AppUtils().getToken();
        final response = await _dio.get(
          AppConfig.cityList,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "application/json",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+   Future<dynamic> getTypeList() async {
+     try {
+       String token = await AppUtils().getToken();
+       final response = await _dio.get(
+         AppConfig.typeList,
          options: Options(
            headers: {
              HttpHeaders.acceptHeader: "application/json",

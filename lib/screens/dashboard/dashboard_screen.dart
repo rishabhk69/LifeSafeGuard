@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
+import 'package:untitled/bloc/get_incident_type_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/image_helper.dart';
@@ -45,6 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     getUserId();
     BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+    BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
   }
 
   @override

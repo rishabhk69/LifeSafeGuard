@@ -10,14 +10,6 @@ class CityListRefreshEvent extends CityListEvent {
   CityListRefreshEvent();
 }
 
-class AddSelectedCityEvent extends CityListEvent {
-
-  Cities? isInitialized;
-
-
-  AddSelectedCityEvent(this.isInitialized);
-}
-
 class CityListState {}
 
 class CityListInitialState extends CityListState {}
@@ -30,13 +22,6 @@ class CityListSuccessState extends CityListState {
   CityListSuccessState(this.cityListModel);
 }
 
-
-class SelectedCitySuccessState extends CityListState {
-  Cities? selectedCity;
-
-  SelectedCitySuccessState(this.selectedCity);
-}
-
 class CityListErrorState extends CityListState {
   String errorMsg;
 
@@ -44,13 +29,12 @@ class CityListErrorState extends CityListState {
 }
 
 class CityListBloc extends Bloc<CityListEvent, CityListState> {
+  Cities? selectedCity;
   final MainRepository repository;
-  String? selectedCity;
 
 
   CityListBloc(this.repository) : super(CityListInitialState()) {
     on<CityListRefreshEvent>(_onCityListRefresh);
-    on<AddSelectedCityEvent>(_addSelectedCityEvent);
   }
 
   Future<void> _onCityListRefresh(
@@ -71,12 +55,5 @@ class CityListBloc extends Bloc<CityListEvent, CityListState> {
     } catch (e) {
       emit(CityListErrorState(e.toString()));
     }
-  }
-
-
-  Future<void> _addSelectedCityEvent(
-      AddSelectedCityEvent event, Emitter<CityListState> emit) async {
-    selectedCity = event.isInitialized?.city;
-        emit(SelectedCitySuccessState(event.isInitialized));
   }
 }

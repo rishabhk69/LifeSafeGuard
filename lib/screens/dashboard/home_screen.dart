@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
@@ -17,6 +18,7 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
+import 'package:untitled/screens/other_screens/preview_images.dart';
 import 'package:video_compress/video_compress.dart';
 
 import '../../constants/app_styles.dart';
@@ -329,30 +331,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 ) :
                 Stack(
                   children: [
-                    SizedBox(
-                        height: 150,
-                        width: double.infinity,
-                        child: CarouselSlider.builder(
-                          itemCount: selectedFiles.length,
-                          itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-                              Image.file(File(selectedFiles[itemIndex].path,),fit: BoxFit.fitWidth,),
-                          options: CarouselOptions(
-                            height: 400,
-                            // aspectRatio: 16/9,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                            enableInfiniteScroll: selectedFiles.length>1 ?true:false,
-                            reverse: false,
-                            autoPlay: true,
-                            autoPlayInterval: Duration(seconds: 3),
-                            autoPlayAnimationDuration: Duration(milliseconds: 800),
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enlargeCenterPage: false,
-                            enlargeFactor: 0.3,
-                            scrollDirection: Axis.horizontal,
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ImagePreviewGallery(
+                              imageFiles: selectedFiles.map((x) => File(x.path)).toList(),
+                              initialIndex: 0, // Optional
+                            ),
                           ),
-                        ),
-                        // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
+                        );
+
+                      },
+                      child: SizedBox(
+                          height: 150,
+                          width: double.infinity,
+                          child: CarouselSlider.builder(
+                            itemCount: selectedFiles.length,
+                            itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                                Image.file(File(selectedFiles[itemIndex].path,),fit: BoxFit.fitWidth,),
+                            options: CarouselOptions(
+                              height: 400,
+                              // aspectRatio: 16/9,
+                              viewportFraction: 1,
+                              initialPage: 0,
+                              enableInfiniteScroll: selectedFiles.length>1 ?true:false,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 3),
+                              autoPlayAnimationDuration: Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: false,
+                              enlargeFactor: 0.3,
+                              scrollDirection: Axis.horizontal,
+                            ),
+                          ),
+                          // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
+                      ),
                     ),
                     Positioned(
                       bottom: -10,

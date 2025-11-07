@@ -36,11 +36,13 @@ class MainRepository extends BaseRepository {
   }
 
   Future<Result<dynamic>> getIncidents(
-      {int? offset, int? size}) async {
+      {int? offset, int? size,String? city,String? type}) async {
     final service = MainService(await dio);
     return safeCall(service.getIncidents(
       offset: offset,
-      size: size
+      size: size,
+      city: city,
+      type: type,
     ));
   }
 
@@ -152,6 +154,10 @@ class MainRepository extends BaseRepository {
     Future<Result<dynamic>> getCityList() async {
     final service = MainService(await dio);
     return safeCall(service.getCityList());
+  }
+    Future<Result<dynamic>> getTypeList() async {
+    final service = MainService(await dio);
+    return safeCall(service.getTypeList());
   }
 
     Future<Result<dynamic>> agreementData() async {
