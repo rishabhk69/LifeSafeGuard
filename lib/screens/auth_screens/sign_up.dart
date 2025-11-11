@@ -21,7 +21,10 @@ import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/strings.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  dynamic isEdit;
+
+  SignupScreen(this.isEdit,{super.key});
+
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -91,9 +94,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 maxLength: 20,
                                 textController: fNameController),
                             CommonTextFieldWidget(isPassword: false,
-                              validator: (v){
-                                return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("lastName") ?? "");
-                              },
+                              // validator: (v){
+                              //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("lastName") ?? "");
+                              // },
                               hintText: GuardLocalizations.of(context)!.translate("lastName") ?? "",
                               textController: lNameController,
                               maxLength: 20,),
@@ -130,17 +133,17 @@ class _SignupScreenState extends State<SignupScreen> {
                             buttonHeight: 50,
                             text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
                           if(formGlobalKey.currentState!.validate()){
-                            if(selectedFile==null){
-                              locator<ToastService>().show('Please Select Image');
-                            }
-                            else{
+                            // if(selectedFile==null){
+                            //   locator<ToastService>().show('Please Select Image');
+                            // }
+                            // else{
                               BlocProvider.of<SignupBloc>(context).add(SignupRefreshEvent(
                                   userName: uNameController.text.trim(),
-                                  profilePhoto: File(selectedFile!.path),
+                                  profilePhoto: selectedFile==null?  null:File(selectedFile!.path),
                                   lastName: lNameController.text.trim(),
                                   firstName: fNameController.text.trim()
                               ));
-                            }
+                            // }
                           }
                         }),),
 
@@ -214,7 +217,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(Icons.keyboard_backspace_outlined,color: ColorConstant.whiteColor,),
-                          Text(GuardLocalizations.of(context)!.translate("signUP") ?? "",style: GoogleFonts.poppins(
+                          Text(widget.isEdit=='true' ?
+                          GuardLocalizations.of(context)!.translate("update") ?? "" :
+                          GuardLocalizations.of(context)!.translate("signUP") ?? "",style: GoogleFonts.poppins(
                               fontSize: 20,
                               color: ColorConstant.whiteColor,
                               fontWeight: FontWeight.w500

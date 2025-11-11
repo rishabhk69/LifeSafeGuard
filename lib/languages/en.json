@@ -330,5 +330,11 @@
   "addReason": "Add Reason",
   "enterReason": "Enter Reason",
   "incidentsNotFound": "Incidents Not Found",
-  "queryType": "Query Type"
+  "queryType": "Query Type",
+  "enterDetails": "Enter Details",
+  "captureMore": "Capture more",
+  "update": "Update",
+  "deleteIncident": "Delete Incident",
+  "editIncident": "Edit Incident",
+  "viewIncident": "View Incident"
 }

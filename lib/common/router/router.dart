@@ -11,6 +11,7 @@ import 'package:untitled/screens/other_screens/incident_type_screen.dart';
 import 'package:untitled/screens/other_screens/select_city.dart';
 import 'package:untitled/screens/other_screens/t&c_screen.dart';
 import 'package:untitled/screens/other_screens/take_action.dart';
+import 'package:untitled/screens/setting/block_incident_screen.dart';
 import 'package:untitled/screens/setting/spam_screen.dart';
 
 import '../../main.dart';
@@ -65,10 +66,17 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/reportIssueScreen',
       builder: (context, state) {
-    dynamic incidentData = state.extra as IncidentsModel;
-    return ReportIssueScreen(incidentData);
-    }
-    ),
+      dynamic args = state.extra;
+      return ReportIssueScreen(args['isReport'].toString());
+    }),
+
+    GoRoute(
+      path: '/blockIncidentScreen',
+      builder: (context, state) {
+        dynamic incidentData = state.extra as IncidentsModel;
+        return BlockIncidentScreen(incidentData);
+    }),
+
     GoRoute(
       path: '/spamScreen',
       builder: (context, state) {
@@ -122,7 +130,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/signupScreen',
-      builder: (context, state) => const SignupScreen(),
+      builder: (context, state) {
+        dynamic args = state.extra;
+        return  SignupScreen(args['isEdit'].toString());
+      },
     ),
     GoRoute(
       path: '/termsAndCondition',

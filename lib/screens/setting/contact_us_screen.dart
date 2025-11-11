@@ -85,9 +85,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     color: Colors.grey[100],
                   ),
                   child: DropdownButtonFormField<String>(
-                    validator: (v){
-                      return Validations.phoneValidation(v,GuardLocalizations.of(context)!.translate("queryType") ?? "");
-                    },
+                    // validator: (v){
+                    //   return Validations.phoneValidation(v,GuardLocalizations.of(context)!.translate("queryType") ?? "");
+                    // },
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
@@ -170,7 +170,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   else if(supportListener is SupportHelpSuccessState){
                     locator<DialogService>().hideLoader();
                     context.pop();
-                    locator<ToastService>().show(supportListener.SupportHelpData.message??"");
+                    locator<ToastService>().show(supportListener.supportHelpData.message??"");
                   }
                   else if(supportListener is SupportHelpErrorState){
                     locator<DialogService>().hideLoader();
@@ -182,7 +182,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     // context.go('/dashboardScreen');
                     BlocProvider.of<SupportHelpBloc>(context,listen: false).add(SupportHelpRefreshEvent(
                         supportType: 'contact',
-                        subject: helpController.text.trim(),
+                        subject:'',
                         number: numberController.text.trim(),
                         inqueryType: selectedQuery,
                         email: emailController.text.trim(),

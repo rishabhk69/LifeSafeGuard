@@ -36,9 +36,9 @@ class SupportHelpInitialState extends SupportHelpState {}
 class SupportHelpLoadingState extends SupportHelpState {}
 
 class SupportHelpSuccessState extends SupportHelpState {
-  final CommonModel SupportHelpData;
+  final CommonModel supportHelpData;
 
-  SupportHelpSuccessState(this.SupportHelpData);
+  SupportHelpSuccessState(this.supportHelpData);
 }
 
 class SupportHelpErrorState extends SupportHelpState {

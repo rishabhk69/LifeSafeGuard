@@ -191,7 +191,6 @@ class CommonFunction{
   }
 
 
-
   compressVideo(XFile file) async {
     final MediaInfo? response = await VideoCompress.compressVideo(
       file.path,
@@ -199,7 +198,9 @@ class CommonFunction{
       deleteOrigin: false,
     );
     if (response != null && response.path != null) {
-      locator<DialogService>().hideLoader();
+     Future.delayed(Duration(seconds: 1)).then((onValue){
+       locator<DialogService>().hideLoader();
+     });
       return XFile(response.path!);
     }
   }

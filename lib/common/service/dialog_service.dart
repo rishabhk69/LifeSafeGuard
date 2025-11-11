@@ -453,7 +453,7 @@ class DialogService {
                           // validator: (v){
                           //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterIncidentDetails") ?? "");
                           // },
-                          hintText: GuardLocalizations.of(context)!.translate("addReason") ?? "",
+                          hintText: GuardLocalizations.of(context)!.translate("enterDetails") ?? "",
                           isPassword: false, textController: detailController!,
 
                         ),
@@ -482,6 +482,7 @@ class DialogService {
                                 ),
                               )),
                               const SizedBox(width: 10,),
+                              if(negativeTap!=null)
                               Expanded(child: InkWell(
                                 onTap: negativeTap,
                                 child: Container(

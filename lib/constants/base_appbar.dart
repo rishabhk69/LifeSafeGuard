@@ -16,13 +16,14 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? isMainBar;
   final bool? isVideo;
   final bool? showAction;
+  final bool? isProfile;
   final List<Widget>? widgets;
   final void Function()? onTap;
   final Function()? onActionTap;
 
   /// you can add more fields that meet your needs
 
-  const  BaseAppBar({super.key, this.title,this.isVideo, this.widgets, this.hideBack,this.isMainBar,this.showAction,this.onTap,this.onActionTap});
+  const  BaseAppBar({super.key, this.title,this.isVideo,this.isProfile, this.widgets, this.hideBack,this.isMainBar,this.showAction,this.onTap,this.onActionTap});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +36,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            isProfile==true?SizedBox():
             Icon(Icons.keyboard_backspace),
             Row(
               children: [

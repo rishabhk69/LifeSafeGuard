@@ -59,7 +59,9 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                   text: GuardLocalizations.of(context)!.translate("accept") ?? "",
                   onTap: () {
                     if(widget.isLogin=='true'){
-                      context.push('/signupScreen');
+                      context.push('/signupScreen',extra: {
+                        'isEdit':false
+                      });
                     }
                     else {
                       context.pop();
@@ -106,7 +108,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                           ),
                         },
                       ),
-                      addHeight(50),
+                      addHeight(60),
                     ],
                   ),
                 );

@@ -217,22 +217,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
                           if (files != null && files.isNotEmpty) {
                             if (isVideo) {
-                              // ---- VIDEO (only 1 file expected) ----
-                              XFile videoFile = files.first;
+                             try{
+                               XFile videoFile = files.first;
+                               selectedFiles = [];
+                               FileStat stat = await File(videoFile.path).stat();
+                               createdDate = stat.accessed.toString();
 
-                              FileStat stat = await File(videoFile.path).stat();
-                              createdDate = stat.accessed.toString();
-
-                              CommonFunction().compressVideo(videoFile).then((v) async {
-                                if (v != null) {
-                                  locator<DialogService>().hideLoader();
-                                  setState(() {
-                                    selectedFiles = [XFile(v.path)];
-                                    createdDate = stat.accessed.toString();
-                                    isCameraUpload = false;
-                                  });
-                                }
-                              });
+                               CommonFunction().compressVideo(videoFile).then((v) async {
+                                 if (v != null) {
+                                   setState(() {
+                                     selectedFiles = [XFile(v.path)];
+                                     createdDate = stat.accessed.toString();
+                                     isCameraUpload = false;
+                                   });
+                                   // locator<DialogService>().hideLoader();
+                                 }
+                               });
+                             }
+                             catch(e){
+                               print(e);
+                             }
                             } else {
                               // ---- MULTIPLE IMAGES ----
                               List<FileStat> stats = await Future.wait(
@@ -256,37 +260,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 ) : isVideo ?
                 Stack(
                   children: [
-                    SizedBox(
-                      height: 150,
-                      width: double.infinity,
-                      child: FutureBuilder<File>(
-                        future: getThumbnail(selectedFiles[0]), // async call
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return const Center(child: Icon(Icons.error, color: Colors.red));
-                          } else if (snapshot.hasData) {
-                            return Center(
-                              child: Stack(
-                                children: [
-                                  Image.file(
-                                    snapshot.data!,
-                                    // fit: BoxFit.fill,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                      top: 0,
-                                      left: 0,
-                                      right: 0,
-                                      child: Icon(Icons.play_circle,size: 50,color: ColorConstant.whiteColor,))
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ImagePreviewGallery(
+                              mediaFiles:selectedFiles.map((x) => File(x.path)).toList(),
+                              initialIndex: 0, // Optional
+                            ),
+                          ),
+                        );
+                      },
+                      child: SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: FutureBuilder<File>(
+                          future: getThumbnail(selectedFiles[0]), // async call
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Icon(Icons.error, color: Colors.red));
+                            } else if (snapshot.hasData) {
+                              return Center(
+                                child: Stack(
+                                  children: [
+                                    Image.file(
+                                      snapshot.data!,
+                                      // fit: BoxFit.fill,
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Icon(Icons.play_circle,size: 50,color: ColorConstant.whiteColor,))
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),
                       ),
                     ),
 
@@ -331,13 +348,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ) :
                 Stack(
                   children: [
+
                     InkWell(
                       onTap: (){
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => ImagePreviewGallery(
-                              imageFiles: selectedFiles.map((x) => File(x.path)).toList(),
+                              mediaFiles:selectedFiles.map((x) => File(x.path)).toList(),
                               initialIndex: 0, // Optional
                             ),
                           ),
@@ -370,6 +388,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
                       ),
                     ),
+
+                    if(selectedFiles.length<=5)
+                    Positioned(
+                        right: 0,
+                        left: 0,
+                        bottom: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                child: Text(GuardLocalizations.of(context)!.translate("captureMore")??"",style: TextStyle(
+                                  color: ColorConstant.primaryColor
+                                ),),
+                            onPressed: () async {
+                              await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
+                                if (files != null && files.isNotEmpty) {
+                                    setState(() {
+                                      selectedFiles.add(files.first); // directly assign all picked images
+                                      createdDate = currentDate;
+                                      isCameraUpload = true;
+                                    });
+
+                                } else {
+                                  return null;
+                                }
+                              });
+
+                            },),
+                          ],
+                        )),
+
                     Positioned(
                       bottom: -10,
                       right: -10,
@@ -417,7 +466,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: Row(
                       children: [
-                        Text(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
+                        Text(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident.length>15 ?
+                        '${BlocProvider.of<SetIncidentsBloc>(context).selectedIncident.substring(0,15)}...':
+                        BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
                             style:GoogleFonts.poppins(fontSize: 13,fontWeight: FontWeight.w400,color: Color(0xff191919))),
                         const Icon(Icons.arrow_forward_ios, size: 14),
                       ],

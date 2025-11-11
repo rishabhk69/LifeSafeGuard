@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/constants/base_appbar.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
+import 'package:untitled/localization/fitness_localization.dart';
 
 import '../../constants/app_config.dart';
 import '../../constants/app_utils.dart';
@@ -60,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onTap: () {
           context.push("/blockedIncidents");
         },
+        isProfile: true,
         showAction: true,
         isMainBar: true,
         // widgets: [Icon(Icons.verified, color: Colors.blue),],
@@ -99,7 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 8),
                       InkWell(
                         onTap: () {
-                          // context.push('/signupScreen');
+                          context.push('/signupScreen',extra: {
+                            'isEdit':true
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +154,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // Number of posts
                           itemBuilder: (context, index) {
                             final item = profileState.profileModel.incidents![index];
-                            return buildItem(item);
+                            return InkWell(
+                              onTap: (){
+                                BlocProvider.of<IncidentsBloc>(context, listen: false)
+                                    .add(IncidentsRefreshEvent(10, 0));
+                                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(1));
+                              },
+                              onLongPress: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        TextButton(onPressed: (){},child: Text(
+                                            GuardLocalizations.of(context)!.translate("viewIncident") ?? "",
+                                            style: TextStyle(
+                                              color: ColorConstant.blackColor
+                                            ),)),
+                                        Divider(),
+                                        TextButton(onPressed: (){},child: Text(
+                                            GuardLocalizations.of(context)!.translate("editIncident") ?? "",
+                                            style: TextStyle(
+                                              color: ColorConstant.blackColor
+                                            ),)),
+                                        Divider(),
+                                        TextButton(onPressed: (){},child: Text(GuardLocalizations.of(context)!.translate("deleteIncident") ?? "",
+                                          style: TextStyle(
+                                              color: ColorConstant.blackColor
+                                          ),)),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: buildItem(item),
+                            );
                           },
                         ),
                 ],

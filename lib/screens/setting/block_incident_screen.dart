@@ -1,32 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:untitled/api/model/main/profile_model.dart';
-import 'package:untitled/bloc/support_bloc.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/bloc/block_incident_bloc.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
+import 'package:untitled/constants/strings.dart';
 
 import '../../common/Utils/validations.dart';
 import '../../common/service/dialog_service.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
-class ReportIssueScreen extends StatefulWidget {
-
-  dynamic isReport;
-  ReportIssueScreen(this.isReport);
+class BlockIncidentScreen extends StatefulWidget {
+  dynamic incidentData;
+  BlockIncidentScreen(this.incidentData);
 
   @override
-  State<ReportIssueScreen> createState() => _ReportIssueScreenState();
+  State<BlockIncidentScreen> createState() => _BlockIncidentScreenState();
 }
 
-class _ReportIssueScreenState extends State<ReportIssueScreen> {
+class _BlockIncidentScreenState extends State<BlockIncidentScreen> {
 
+  IncidentsModel? incidentsModel;
   final formGlobalKey = GlobalKey<FormState>();
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        incidentsModel = widget.incidentData;
+      });
+    });
+  }
 
 
   @override
@@ -48,8 +61,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title:  Text(
-            widget.isReport=="true"?GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "":
-            GuardLocalizations.of(context)!.translate("feedback") ?? "",
+            GuardLocalizations.of(context)!.translate("block") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           centerTitle: false,
@@ -80,10 +92,10 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
 
                 CommonTextFieldWidget(
-                  hintText: GuardLocalizations.of(context)!.translate("enterDetails") ?? "",
+                  hintText: GuardLocalizations.of(context)!.translate("whyAreYouBlockTheIncident") ?? "",
                   isPassword: false,
                   validator: (v){
-                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterDetails") ?? "");
+                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("details") ?? "");
                   },
                   textController: detailController,
                 ),
@@ -126,26 +138,28 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
                 // Submit button
 
-                BlocListener<SupportHelpBloc,SupportHelpState>(
-                    listener: (context,supportListener){
-                      if(supportListener is SupportHelpLoadingState){
+                BlocListener<BlockIncidentBloc,BlockIncidentState>(
+                    listener: (context,blockState){
+                      if(blockState is BlockIncidentLoadingState){
                         locator<DialogService>().showLoader();
                       }
-                      else if(supportListener is SupportHelpSuccessState){
+                      else if(blockState is BlockIncidentSuccessState){
                         locator<DialogService>().hideLoader();
                         context.pop();
-                        locator<ToastService>().show(supportListener.supportHelpData.message??"");
+                        locator<ToastService>().show(blockState.blockIncidentData.status??"");
+                        context.go('/dashboardScreen');
+                        BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                       }
-                      else if(supportListener is SupportHelpErrorState){
+                      else if(blockState is BlockIncidentErrorState){
                         locator<DialogService>().hideLoader();
-                        locator<ToastService>().show(supportListener.errorMsg);
+                        locator<ToastService>().show(blockState.errorMsg??"");
                       }
                     },
                     child: CustomButton(text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
                       if(formGlobalKey.currentState!.validate()) {
                         locator<DialogService>().showLogoutDialog(
                             title: 'Confirm ?',
-                            subTitle:widget.isReport=="true"?'Are you sure you want to report?': 'Are you sure you want to submit feedback?',
+                            subTitle: 'Are you sure you want to block this incident?',
                             negativeButtonText: "No",
                             positiveButtonText: "Yes",
                             negativeTap: () {
@@ -153,18 +167,16 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             },
                             positiveTap: () {
                               context.pop();
-                              AppUtils().getUserData().then((onValue) {
-                                var profileData = ProfileModel.fromJson(onValue);
-                                BlocProvider.of<SupportHelpBloc>(context).add(
-                                    SupportHelpRefreshEvent(
-                                        supportType:widget.isReport=="true"? 'issue':'feedback',
-                                        subject: titleController.text.trim(),
-                                        details: detailController.text.trim(),
-                                        inqueryType: '',
-                                        name: profileData.userName,
-                                        number: profileData.phone,
-                                        email: ''
-                                    )
+                              AppUtils().getUserId().then((userId) {
+                                BlocProvider.of<BlockIncidentBloc>(context).add(
+                                    BlockIncidentRefreshEvent(
+                                        title: titleController.text.trim(),
+                                        incidentId: incidentsModel
+                                            ?.incidentId ?? "",
+                                        userId: userId.toString(),
+                                        description: detailController.text
+                                            .trim(),
+                                        urls: [])
                                 );
                               });
                             }
@@ -178,6 +190,27 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // File item widget
+  Widget _buildFileTile(String filename) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          const Icon(Icons.picture_as_pdf, color: Colors.red),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(filename,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.delete, color: Colors.red),
+          )
+        ],
       ),
     );
   }

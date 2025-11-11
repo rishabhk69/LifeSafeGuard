@@ -9,7 +9,6 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
-
 class SelectCity extends StatefulWidget {
   const SelectCity({super.key});
 
@@ -18,8 +17,6 @@ class SelectCity extends StatefulWidget {
 }
 
 class _SelectCityState extends State<SelectCity> {
-
-
   String searchQuery = "";
 
   @override
@@ -38,19 +35,18 @@ class _SelectCityState extends State<SelectCity> {
           elevation: 0,
           title: Text(
             GuardLocalizations.of(context)!.translate("selectCity") ?? "",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              // Search Field
+              // 🔍 Search Field
               TextField(
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: GuardLocalizations.of(context)!.translate(
-                      "searchCity") ?? "",
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: GuardLocalizations.of(context)!.translate("searchCity") ?? "Search city",
                   filled: true,
                   fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
@@ -60,141 +56,111 @@ class _SelectCityState extends State<SelectCity> {
                 ),
                 onChanged: (value) {
                   setState(() {
-                    searchQuery = value;
+                    searchQuery = value.trim().toLowerCase();
                   });
                 },
               ),
 
               addHeight(10),
 
+              // 🏙 City List Bloc
               BlocBuilder<CityListBloc, CityListState>(
-                  builder: (context, cityState) {
-                    if (cityState is CityListLoadingState) {
-                      return BuilderDialog();
-                    }
-                    else if (cityState is CityListSuccessState) {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: cityState.cityListModel.cities?.length,
-                          itemBuilder: (context, index) {
-                            // final city = cityState.cityListModel[index];
-                            return GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<SaveCityBloc>(
-                                    context, listen: false).add(
-                                    SaveCityRefreshEvent(cityState.cityListModel
-                                        .cities![index]));
-                                // setState(() {
-                                //   selectedCity = city;
-                                // });
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 16),
-                                  margin: EdgeInsets.symmetric(vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffFBFBFB),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: BlocBuilder<SaveCityBloc,
-                                      SaveCityState>(
-                                      builder: (context, saveState) {
-                                        if (saveState is SaveCitySuccessState) {
-                                          return Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Text(
-                                                cityState.cityListModel
-                                                    .cities![index].city ?? "",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: saveState.selectedCity
-                                                      ?.city ==
-                                                      cityState.cityListModel
-                                                          .cities![index].city
-                                                      ? FontWeight.bold
-                                                      : FontWeight.normal,
-                                                  color: saveState.selectedCity
-                                                      ?.city ==
-                                                      cityState.cityListModel
-                                                          .cities![index].city
-                                                      ? Colors.orange
-                                                      : Colors.black,
-                                                ),
-                                              ),
-                                              if (saveState.selectedCity
-                                                  ?.city ==
-                                                  cityState.cityListModel
-                                                      .cities![index].city)
-                                                Icon(Icons.check,
-                                                    color: Colors.orange,
-                                                    size: 20),
-                                            ],
-                                          );
-                                        }
-                                        else {
-                                          return Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Text(
-                                                cityState.cityListModel
-                                                    .cities![index].city ?? "",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: BlocProvider
-                                                      .of<SaveCityBloc>(
-                                                      context, listen: false)
-                                                      .selectedCity
-                                                      ?.city ==
-                                                      cityState.cityListModel
-                                                          .cities![index].city
-                                                      ? FontWeight.bold
-                                                      : FontWeight.normal,
-                                                  color: BlocProvider
-                                                      .of<SaveCityBloc>(
-                                                      context, listen: false)
-                                                      .selectedCity
-                                                      ?.city ==
-                                                      cityState.cityListModel
-                                                          .cities![index].city
-                                                      ? Colors.orange
-                                                      : Colors.black,
-                                                ),
-                                              ),
-                                              if (BlocProvider
-                                                  .of<SaveCityBloc>(context)
-                                                  .selectedCity
-                                                  ?.city ==
-                                                  cityState.cityListModel
-                                                      .cities![index].city)
-                                                Icon(Icons.check,
-                                                    color: Colors.orange,
-                                                    size: 20),
-                                            ],
-                                          );
-                                        }
-                                      })
-                              ),
-                            );
-                          },
+                builder: (context, cityState) {
+                  if (cityState is CityListLoadingState) {
+                    return const BuilderDialog();
+                  } else if (cityState is CityListSuccessState) {
+                    // 🔎 Filter cities based on searchQuery
+                    final filteredCities = cityState.cityListModel.cities!
+                        .where((city) {
+                      final cityName = city.city?.toLowerCase() ?? "";
+                      final stateName = city.state?.toLowerCase() ?? "";
+                      return cityName.contains(searchQuery) || stateName.contains(searchQuery);
+                    })
+                        .toList();
+
+                    if (filteredCities.isEmpty) {
+                      return const Expanded(
+                        child: Center(
+                          child: Text(
+                            "No matching cities found",
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                       );
                     }
-                    else if (cityState is CityListErrorState) {
-                      return Center(
-                        child: Text(cityState.errorMsg),
-                      );
-                    }
-                    return Container();
-                  }),
 
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredCities.length,
+                        itemBuilder: (context, index) {
+                          final currentCity = filteredCities[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              BlocProvider.of<SaveCityBloc>(context, listen: false)
+                                  .add(SaveCityRefreshEvent(currentCity));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFBFBFB),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: BlocBuilder<SaveCityBloc, SaveCityState>(
+                                builder: (context, saveState) {
+                                  final selectedCity =
+                                  (saveState is SaveCitySuccessState)
+                                      ? saveState.selectedCity
+                                      : BlocProvider.of<SaveCityBloc>(context, listen: false)
+                                      .selectedCity;
+
+                                  final isSelected =
+                                      selectedCity?.city == currentCity.city;
+
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${currentCity.city ?? ""}, ${currentCity.state ?? ""}",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: isSelected
+                                              ? Colors.orange
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      if (isSelected)
+                                        const Icon(Icons.check,
+                                            color: Colors.orange, size: 20),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  } else if (cityState is CityListErrorState) {
+                    return Center(
+                      child: Text(cityState.errorMsg),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+
+              // ✅ Select Button
               CustomButton(
-                  text: GuardLocalizations.of(context)!.translate("select") ??
-                      "", onTap: () {
-                    context.pop();
-              })
+                text: GuardLocalizations.of(context)!.translate("select") ?? "Select",
+                onTap: () {
+                  context.pop();
+                },
+              )
             ],
           ),
         ),

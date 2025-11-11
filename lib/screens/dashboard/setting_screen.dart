@@ -61,10 +61,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     context.push('/donateScreen');
                   }),
                   _buildListTile(GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "", "", true,(){
-                    locator<ToastService> ().show('In Process');
-                    // context.push('/reportIssueScreen');
+                    // locator<ToastService> ().show('In Process');
+                    context.push('/reportIssueScreen',extra: {
+                      'isReport': 'true',
+                    });
                   }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){}),
+                  _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){
+                    context.push('/reportIssueScreen',extra: {
+                      'isReport': 'false',
+                    });
+                  }),
                   BlocListener<DeleteAccountBloc,DeleteAccountState>(
                   listener: (context,deleteListener){
                     if(deleteListener is DeleteAccountLoadingState){
