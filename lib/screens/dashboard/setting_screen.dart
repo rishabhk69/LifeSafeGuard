@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/bloc/auth/delete_account_bloc.dart';
+import 'package:untitled/bloc/setting_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
+import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/image_helper.dart';
@@ -36,165 +38,179 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("setting") ?? "",showAction: false,),
       backgroundColor: ColorConstant.scaffoldColor,
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Color(0xffFBFBFB),
-                borderRadius: BorderRadius.circular(5)
-              ),
-              margin: const EdgeInsets.all(12),
+      body: BlocBuilder<SettingBloc,SettingState>(
+        builder: (context,settingBuilder){
+        if(settingBuilder is SettingLoadingState){
+          return BuilderDialog();
+        }
+        else if(settingBuilder is SettingSuccessState){
+          return Column(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(0xffFBFBFB),
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  margin: const EdgeInsets.all(12),
 
-              child: ListView(
-                children: [
-                  _buildListTile(GuardLocalizations.of(context)!.translate("language") ?? "", selectedLanguage == "English"? "English":'हिन्दी', true,(){
-                    _showLanguageBottomSheet();
-                  }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("contactUs") ?? "", "", true,(){
-                    context.push('/contactUsScreen');
-                  }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("aboutUS") ?? "", "", true,(){
-                    context.push('/aboutUs');
-                  }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("donation") ?? "", "", true,(){
-                    context.push('/donateScreen');
-                  }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "", "", true,(){
-                    // locator<ToastService> ().show('In Process');
-                    context.push('/reportIssueScreen',extra: {
-                      'isReport': 'true',
-                    });
-                  }),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){
-                    context.push('/reportIssueScreen',extra: {
-                      'isReport': 'false',
-                    });
-                  }),
-                  BlocListener<DeleteAccountBloc,DeleteAccountState>(
-                  listener: (context,deleteListener){
-                    if(deleteListener is DeleteAccountLoadingState){
-                      locator<DialogService>().showLoader();
-                    }
-                    else if(deleteListener is DeleteAccountSuccessState){
-                      locator<DialogService>().hideLoader();
-                      AppUtils().logoutUser().then((onValue){
-                        context.go('/chooseLogin');
-                      });
-                      locator<ToastService>().show(deleteListener.commonModel.message??"");
-                    }
-                    else if(deleteListener is DeleteAccountErrorState){
-                      locator<DialogService>().hideLoader();
-                      locator<ToastService>().show(deleteListener.errorMsg);
-                    }
-                  },child: _buildListTile(GuardLocalizations.of(context)!.translate("deleteYourAccount") ?? "", "", true,(){
-                    locator<DialogService>().showDeleteDialog(
-                        detailController: detailController,
-                        title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
-                        subTitle: GuardLocalizations.of(context)!.translate("youWantToDeleteAccount") ?? "",
-                        negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
-                        positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
-                        negativeTap: () {
-                          context.pop();
+                  child: ListView(
+                    children: [
+                      _buildListTile(GuardLocalizations.of(context)!.translate("language") ?? "", selectedLanguage == "English"? "English":'हिन्दी', true,(){
+                        _showLanguageBottomSheet();
+                      }),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("contactUs") ?? "", "", true,(){
+                        context.push('/contactUsScreen');
+                      }),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("aboutUS") ?? "", "", true,(){
+                        context.push('/aboutUs',extra: {
+                          "data": settingBuilder.settingModel.aboutUs
+                        });
+                      }),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("donation") ?? "", "", true,(){
+                        context.push('/donateScreen');
+                      }),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "", "", true,(){
+                        // locator<ToastService> ().show('In Process');
+                        context.push('/reportIssueScreen',extra: {
+                          'isReport': 'true',
+                        });
+                      }),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("feedback") ?? "", "", true,(){
+                        context.push('/reportIssueScreen',extra: {
+                          'isReport': 'false',
+                        });
+                      }),
+                      BlocListener<DeleteAccountBloc,DeleteAccountState>(
+                          listener: (context,deleteListener){
+                            if(deleteListener is DeleteAccountLoadingState){
+                              locator<DialogService>().showLoader();
+                            }
+                            else if(deleteListener is DeleteAccountSuccessState){
+                              locator<DialogService>().hideLoader();
+                              AppUtils().logoutUser().then((onValue){
+                                context.go('/chooseLogin');
+                              });
+                              locator<ToastService>().show(deleteListener.commonModel.message??"");
+                            }
+                            else if(deleteListener is DeleteAccountErrorState){
+                              locator<DialogService>().hideLoader();
+                              locator<ToastService>().show(deleteListener.errorMsg);
+                            }
+                          },child: _buildListTile(GuardLocalizations.of(context)!.translate("deleteYourAccount") ?? "", "", true,(){
+                        locator<DialogService>().showDeleteDialog(
+                            detailController: detailController,
+                            title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
+                            subTitle: GuardLocalizations.of(context)!.translate("youWantToDeleteAccount") ?? "",
+                            negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                            positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                            negativeTap: () {
+                              context.pop();
+                            },
+                            positiveTap: () async {
+                              if(detailController.text.isEmpty){
+                                locator<ToastService> ().show(GuardLocalizations.of(context)!.translate("enterReason") ?? "");
+                              }
+                              else{
+                                var userId =  await AppUtils().getUserId();
+                                context.read<DeleteAccountBloc>().add(DeleteAccountRefreshEvent(userId.toString(),detailController.text));
+                                context.pop();
+                              }
+                            }
+                        );
+                      })),
+                      _buildListTile(GuardLocalizations.of(context)!.translate("agreement") ?? "", "", true,(){
+                        context.push('/termsAndCondition',extra: {
+                          'isLogin': 'false',
+                        });
+                      }),
+                      const SizedBox(height: 10),
+                      const Center(
+                        child: Text(
+                          "App Version - 1.2.9",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Social Icons
+              Padding(
+                padding:  EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:  [
+                    InkWell(
+                        onTap: (){
+                          launchUrl(Uri.parse(settingBuilder.settingModel.facebook??""));
                         },
-                        positiveTap: () async {
-                          if(detailController.text.isEmpty){
-                            locator<ToastService> ().show(GuardLocalizations.of(context)!.translate("enterReason") ?? "");
-                          }
-                          else{
-                           var userId =  await AppUtils().getUserId();
-                            context.read<DeleteAccountBloc>().add(DeleteAccountRefreshEvent(userId.toString(),detailController.text));
+                        child: SvgPicture.asset(ImageHelper.fbIc)),
+                    SizedBox(width: 30),
+                    InkWell(
+                        onTap: (){
+                          launchUrl(Uri.parse(settingBuilder.settingModel.instagram??""));
+                        },
+                        child: SvgPicture.asset(ImageHelper.instaIc)),
+                    SizedBox(width: 30),
+                    InkWell(
+                        onTap: (){
+                          launchUrl(Uri.parse(settingBuilder.settingModel.x??""));
+                        },
+                        child: SvgPicture.asset(ImageHelper.twitterIc)),
+                  ],
+                ),
+              ),
+              addHeight(20),
+              // Sign Out Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:20,vertical: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: () {
+                      locator<DialogService>().showLogoutDialog(
+                          title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
+                          subTitle: GuardLocalizations.of(context)!.translate("youWantToLogOut") ?? "",
+                          negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                          positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                          negativeTap: () {
                             context.pop();
+                          },
+                          positiveTap: () {
+                            context.pop();
+                            AppUtils().logoutUser().then((onValue){
+                              context.go('/chooseLogin');
+                            });
                           }
-                        }
-                    );
-                  })),
-                  _buildListTile(GuardLocalizations.of(context)!.translate("agreement") ?? "", "", true,(){
-                    context.push('/termsAndCondition',extra: {
-                    'isLogin': 'false',
-                    });
-                  }),
-                  const SizedBox(height: 10),
-                  const Center(
+                      );
+
+                    },
                     child: Text(
-                      "App Version - 1.2.9",
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      GuardLocalizations.of(context)!.translate("signOut") ?? "",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // Social Icons
-          Padding(
-            padding:  EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
-                InkWell(
-                    onTap: (){
-                      launchUrl(Uri.parse('https://flutter.dev'));
-                    },
-                    child: SvgPicture.asset(ImageHelper.fbIc)),
-                SizedBox(width: 30),
-                InkWell(
-                    onTap: (){
-                      launchUrl(Uri.parse('https://flutter.dev'));
-                    },
-                    child: SvgPicture.asset(ImageHelper.instaIc)),
-                SizedBox(width: 30),
-                InkWell(
-                    onTap: (){
-                      launchUrl(Uri.parse('https://flutter.dev'));
-                    },
-                    child: SvgPicture.asset(ImageHelper.twitterIc)),
-              ],
-            ),
-          ),
-          addHeight(20),
-          // Sign Out Button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal:20,vertical: 10),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: () {
-                  locator<DialogService>().showLogoutDialog(
-                      title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
-                      subTitle: GuardLocalizations.of(context)!.translate("youWantToLogOut") ?? "",
-                      negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
-                      positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
-                      negativeTap: () {
-                        context.pop();
-                      },
-                      positiveTap: () {
-                        context.pop();
-                        AppUtils().logoutUser().then((onValue){
-                          context.go('/chooseLogin');
-                        });
-                      }
-                  );
-
-                },
-                child: Text(
-                  GuardLocalizations.of(context)!.translate("signOut") ?? "",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
+            ],
+          );
+        }
+        else if(settingBuilder is SettingErrorState){
+          return Center(child: Text(settingBuilder.errorMsg));
+        }
+        return Container();
+      })
     );
   }
 

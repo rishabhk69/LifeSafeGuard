@@ -137,7 +137,7 @@ class _OtpScreenState extends State<OtpScreen> {
             text: GuardLocalizations.of(context)!.translate("verify") ?? "", onTap: (){
           // context.push('/termsAndCondition');
         if((otpCode?.length)==6){
-          BlocProvider.of<OtpBloc>(context).add(OtpRefreshEvent(otp: otpCode,phoneNumber: widget.phone));
+          BlocProvider.of<OtpBloc>(context).add(OtpRefreshEvent(otp: otpCode,phoneNumber: widget.phone,isRegistering: widget.isLogin=='true'? false:true));
         }
         else{
           locator<ToastService>().show('Invalid');

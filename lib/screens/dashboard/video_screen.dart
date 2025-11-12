@@ -4,19 +4,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_city_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
+import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
 import 'package:untitled/screens/dashboard/comments_bottomsheet.dart';
+import 'package:untitled/screens/dashboard/other_user_profile.dart';
 import 'package:video_player/video_player.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
@@ -294,25 +298,43 @@ class _VideoScreenState extends State<VideoScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:  [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
-                                    backgroundImage:
-                                    NetworkImage(incidentState.incidentsModel[index].profilePic??""), // User profile
-                                    radius: 25,
+                            InkWell(
+                              onTap: () async {
+                                String userId = await AppUtils().getUserId();
+                                if(incidentState.incidentsModel[index].userId==userId){
+                                  BlocProvider.of<ProfileBloc>(context, listen: false).add(
+                                      ProfileRefreshEvent(10, 0, userId));
+                                  BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
+                                }
+                                else{
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => OtherUserProfileDialog(
+                                      incidentState.incidentsModel[index],
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
+                                      backgroundImage:
+                                      NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentState.incidentsModel[index].profilePic??"")), // User profile
+                                      radius: 25,
+                                    ),
                                   ),
-                                ),
-                                addWidth(5),
-                                Text(incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: ColorConstant.whiteColor
-                                ),)
+                                  addWidth(5),
+                                  Text(incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: ColorConstant.whiteColor
+                                  ),)
 
-                              ],
+                                ],
+                              ),
                             ),
                             addHeight(5),
                             Text(incidentState.incidentsModel[index].category??"",style: GoogleFonts.poppins(

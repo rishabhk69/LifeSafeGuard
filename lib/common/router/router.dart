@@ -13,6 +13,7 @@ import 'package:untitled/screens/other_screens/t&c_screen.dart';
 import 'package:untitled/screens/other_screens/take_action.dart';
 import 'package:untitled/screens/setting/block_incident_screen.dart';
 import 'package:untitled/screens/setting/spam_screen.dart';
+import 'package:untitled/screens/setting/update_profile.dart';
 
 import '../../main.dart';
 import '../../screens/dashboard/dashboard_screen.dart';
@@ -90,7 +91,10 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/aboutUs',
-      builder: (context, state) => const AboutUs(),
+      builder: (context, state){
+        dynamic args = state.extra;
+        return AboutUs(args['data'].toString());
+      },
     ),
     GoRoute(
       path: '/donateScreen',
@@ -130,10 +134,11 @@ final goRouter = GoRouter(
     ),
     GoRoute(
       path: '/signupScreen',
-      builder: (context, state) {
-        dynamic args = state.extra;
-        return  SignupScreen(args['isEdit'].toString());
-      },
+      builder: (context, state) => SignupScreen(),
+    ),
+    GoRoute(
+      path: '/updateProfileScreen',
+      builder: (context, state) => UpdateProfileScreen(),
     ),
     GoRoute(
       path: '/termsAndCondition',

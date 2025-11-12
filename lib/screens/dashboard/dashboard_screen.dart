@@ -5,6 +5,7 @@ import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_incident_type_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/bloc/setting_bloc.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/screens/dashboard/profile_screen.dart';
@@ -87,6 +88,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     else if (index == 2) {
                       BlocProvider.of<ProfileBloc>(context, listen: false).add(
                           ProfileRefreshEvent(10, 0, userId));
+                    }
+                    else{
+                      BlocProvider.of<SettingBloc>(context, listen: false).add(
+                          SettingRefreshEvent());
                     }
                   },
                   items: [

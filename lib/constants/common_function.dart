@@ -191,7 +191,7 @@ class CommonFunction{
   }
 
 
-  compressVideo(XFile file) async {
+  compressVideo(XFile file,BuildContext context) async {
     final MediaInfo? response = await VideoCompress.compressVideo(
       file.path,
       quality: VideoQuality.MediumQuality,
@@ -206,17 +206,13 @@ class CommonFunction{
   }
 
   Future<void> requestCameraPermission() async {
-    // Request the camera permission
     await Permission.camera.request();
     var status = await Permission.camera.status;
 
     if (status.isGranted) {
-      // Permission is granted
     } else if (status.isDenied) {
       openAppSettings();
-      // Permission is denied
     } else if (status.isPermanentlyDenied) {
-      // Permission is permanently denied
       openAppSettings();
     }
   }

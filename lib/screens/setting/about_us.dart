@@ -10,7 +10,8 @@ import 'package:untitled/localization/fitness_localization.dart';
 
 
 class AboutUs extends StatefulWidget {
-  const AboutUs({super.key});
+  dynamic data;
+  AboutUs(this.data);
 
   @override
   State<AboutUs> createState() => _AboutUsState();
@@ -64,16 +65,7 @@ class _AboutUsState extends State<AboutUs> {
 
               // Description
                Text(
-                "Lorem ipsum dolor sit amet consectetur. "
-                    "Nisi id consectetur aliquam quam varius cursus scelerisque. "
-                    "Nunc mattis ullamcorper aliquet eget iaculis nunc dignissim suspendisse. "
-                    "Facilisis elementum etiam et ut. Nulla feugiat fringilla blandit ut ut "
-                    "adipiscing malesuada vulputate.\n\n"
-                    "Lorem ipsum dolor sit amet consectetur. "
-                    "Nisi id consectetur aliquam quam varius cursus scelerisque. "
-                    "Nunc mattis ullamcorper aliquet eget iaculis nunc dignissim suspendisse. "
-                    "Facilisis elementum etiam et ut. Nulla feugiat fringilla blandit ut ut "
-                    "adipiscing malesuada vulputate.",
+                widget.data,
                 style: GoogleFonts.poppins(fontSize: 14, height: 1.5, color: Colors.black87),
               ),
             ],

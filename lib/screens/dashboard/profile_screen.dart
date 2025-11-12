@@ -103,9 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 8),
                       InkWell(
                         onTap: () {
-                          context.push('/signupScreen',extra: {
-                            'isEdit':true
-                          });
+                          context.push('/updateProfileScreen');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

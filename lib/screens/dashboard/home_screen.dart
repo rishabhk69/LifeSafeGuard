@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? userId;
   LocationData? data;
   String? createdDate;
+  int _currentIndex = 0;
 
   @override
     void initState() {
@@ -173,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               XFile videoFile = files.first;
                               selectedFiles = [];
                               selectedFiles.add(videoFile);
-                              CommonFunction().compressVideo(videoFile).then((compressed) async {
+                              CommonFunction().compressVideo(videoFile,context).then((compressed) async {
                                 if (compressed != null) {
                                   locator<DialogService>().hideLoader();
                                   setState(() {
@@ -223,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                FileStat stat = await File(videoFile.path).stat();
                                createdDate = stat.accessed.toString();
 
-                               CommonFunction().compressVideo(videoFile).then((v) async {
+                               CommonFunction().compressVideo(videoFile,context).then((v) async {
                                  if (v != null) {
                                    setState(() {
                                      selectedFiles = [XFile(v.path)];
@@ -383,6 +384,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               enlargeCenterPage: false,
                               enlargeFactor: 0.3,
                               scrollDirection: Axis.horizontal,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentIndex = index;
+                                });
+                              },
                             ),
                           ),
                           // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
@@ -391,16 +397,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     if(selectedFiles.length<=5)
                     Positioned(
-                        right: 0,
+                        right: -10,
                         left: 0,
-                        bottom: 0,
+                        top: -10,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            TextButton(
-                                child: Text(GuardLocalizations.of(context)!.translate("captureMore")??"",style: TextStyle(
-                                  color: ColorConstant.primaryColor
-                                ),),
+                            IconButton(
                             onPressed: () async {
                               await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
                                 if (files != null && files.isNotEmpty) {
@@ -415,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               });
 
-                            },),
+                            }, icon: Icon(Icons.add_circle_outline,color: Colors.grey,),),
                           ],
                         )),
 
@@ -435,9 +438,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 positiveTap: (){
                                   context.pop();
                                   setState(() {
-                                    selectedFiles.clear();
+                                    selectedFiles.removeAt(_currentIndex); // ✅ delete current
+                                    if (_currentIndex >= selectedFiles.length && _currentIndex > 0) {
+                                      _currentIndex--; // move index safely if last item removed
+                                    }
                                   });
-                                }
+                                },
                             );
                       }, icon: Icon(Icons.delete,color: Colors.grey,)),
                     )

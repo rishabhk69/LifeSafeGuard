@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:untitled/api/model/main/profile_model.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/update_profile_bloc.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 import 'package:flutter/material.dart';
@@ -7,7 +10,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:untitled/bloc/auth/signup_bloc.dart';
 import 'package:untitled/common/Utils/validations.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
@@ -18,15 +20,17 @@ import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
-import 'package:untitled/constants/strings.dart';
 
-class SignupScreen extends StatefulWidget {
+class UpdateProfileScreen extends StatefulWidget {
+
+  UpdateProfileScreen();
+
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
 
   TextEditingController fNameController = TextEditingController();
@@ -34,6 +38,26 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController uNameController = TextEditingController();
   final formGlobalKey = GlobalKey<FormState>();
   XFile? selectedFile;
+  String? userId;
+
+
+  setPreFill(){
+    AppUtils().getUserData().then((onValue){
+      var profileData = ProfileModel.fromJson(onValue);
+     setState(() {
+       fNameController.text = profileData.fisrtName??"";
+       lNameController.text = profileData.lastName??"";
+       uNameController.text = profileData.userName??"";
+       userId = profileData.userId??"";
+     });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setPreFill();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               textController: lNameController,
                               maxLength: 20,),
                             CommonTextFieldWidget(isPassword: false,
+                                enable: false,
                                 validator: (v){
                                   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("userName") ?? "");
                                 },
@@ -109,19 +134,18 @@ class _SignupScreenState extends State<SignupScreen> {
                           ],
                         ),
 
-                        BlocListener<SignupBloc,SignupState>(
+                        BlocListener<UpdateProfileBloc,UpdateProfileState>(
                           listener: (context,loginState){
-                            if(loginState is SignupLoadingState){
+                            if(loginState is UpdateProfileLoadingState){
                               locator<DialogService>().showLoader();
                             }
-                            else if(loginState is SignupSuccessState){
+                            else if(loginState is UpdateProfileSuccessState){
                               locator<DialogService>().hideLoader();
-                              AppUtils().setUserLoggedIn();
-                              AppUtils().setUserId(loginState.signupData.userId??"");
-                              locator<ToastService>().show(loginState.signupData.message??"");
+                              locator<ToastService>().show(loginState.commonModel.message??"");
                               context.go('/dashboardScreen');
+                              BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                             }
-                            else if(loginState is SignupErrorState){
+                            else if(loginState is UpdateProfileErrorState){
                               locator<DialogService>().hideLoader();
                               locator<ToastService>().show(loginState.errorMsg??"");
                             }
@@ -133,8 +157,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             //   locator<ToastService>().show('Please Select Image');
                             // }
                             // else{
-                              BlocProvider.of<SignupBloc>(context).add(SignupRefreshEvent(
-                                  userName: uNameController.text.trim(),
+                              BlocProvider.of<UpdateProfileBloc>(context).add(UpdateProfileRefreshEvent(
+                                  userId: userId,
                                   profilePhoto: selectedFile==null?  null:File(selectedFile!.path),
                                   lastName: lNameController.text.trim(),
                                   firstName: fNameController.text.trim()
@@ -214,7 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           Icon(Icons.keyboard_backspace_outlined,color: ColorConstant.whiteColor,),
                           Text(
-                          GuardLocalizations.of(context)!.translate("signUP") ?? "",style: GoogleFonts.poppins(
+                          GuardLocalizations.of(context)!.translate("update") ?? "" ,style: GoogleFonts.poppins(
                               fontSize: 20,
                               color: ColorConstant.whiteColor,
                               fontWeight: FontWeight.w500

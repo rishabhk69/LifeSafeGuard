@@ -9,7 +9,8 @@ class OtpRefreshEvent extends OtpEvent {
 
   String? phoneNumber;
   String? otp;
-  OtpRefreshEvent({this.phoneNumber, this.otp});
+  bool? isRegistering;
+  OtpRefreshEvent({this.phoneNumber, this.otp,this.isRegistering});
 }
 
 class OtpState {}
@@ -40,7 +41,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       OtpRefreshEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
     try {
-      final result = await repository.verifyOtp(event.phoneNumber??"",event.otp??""); // API call
+      final result = await repository.verifyOtp(event.phoneNumber??"",event.otp??"",event.isRegistering!); // API call
 
       if (result.isSuccess) {
         OtpVerifyModel otpData = OtpVerifyModel.fromJson(result.data);

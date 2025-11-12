@@ -1,3 +1,6 @@
+import 'package:untitled/api/model/main/profile_model.dart';
+
+
 class IncidentsModel {
   String? incidentId;
   String? userId;
@@ -74,24 +77,6 @@ class IncidentsModel {
   }
 }
 
-class Media {
-  bool? isMediaDeleted;
-  String? name;
-
-  Media({this.isMediaDeleted, this.name});
-
-  Media.fromJson(Map<String, dynamic> json) {
-    isMediaDeleted = json['isMediaDeleted'];
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isMediaDeleted'] = this.isMediaDeleted;
-    data['name'] = this.name;
-    return data;
-  }
-}
 
 class Location {
   dynamic latitude;

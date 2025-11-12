@@ -136,14 +136,53 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> updateProfile({
+     String? firstName,
+     String? lastName,
+     String? userId,
+     File? profilePhoto,
+   }) async {
+     String token = await AppUtils().getToken();
 
-   Future<dynamic> verifyOtp(String phone,String otp) async {
+     try {
+       final formData = FormData.fromMap({
+         "firstName": firstName,
+         "lastName": lastName,
+         "userId": userId,
+         if (profilePhoto != null)
+           "profilePhoto": await MultipartFile.fromFile(
+             profilePhoto.path,
+             filename: profilePhoto.path.split('/').last,
+           ),
+       });
+
+       final response = await _dio.post(
+         AppConfig.profileUpdate,
+         data: formData,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "multipart/form-data",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+
+   Future<dynamic> verifyOtp(String phone,String otp,bool isRegistering) async {
      try {
        final response = await _dio.post(
          AppConfig.verifyOtp,
          data: {
            "phone": phone,
-           "otp": otp
+           "otp": otp,
+           "isRegistering": isRegistering,
          },
        );
        return response.data;
@@ -303,6 +342,27 @@ import '../../main.dart';
        String token = await AppUtils().getToken();
        final response = await _dio.get(
          AppConfig.typeList,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "application/json",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
+
+   Future<dynamic> settingData() async {
+     try {
+       String token = await AppUtils().getToken();
+       final response = await _dio.get(
+         AppConfig.getSetting,
          options: Options(
            headers: {
              HttpHeaders.acceptHeader: "application/json",

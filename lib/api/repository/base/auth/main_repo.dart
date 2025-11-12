@@ -35,6 +35,17 @@ class MainRepository extends BaseRepository {
     ));
   }
 
+  Future<Result<dynamic>> updateProfile(
+      {String? firstName, String? lastName, String? userId, File? profilePhoto,}) async {
+    final service = MainService(await dio);
+    return safeCall(service.updateProfile(
+      firstName: firstName,
+      lastName: lastName,
+      profilePhoto: profilePhoto,
+        userId: userId
+    ));
+  }
+
   Future<Result<dynamic>> getIncidents(
       {int? offset, int? size,String? city,String? type}) async {
     final service = MainService(await dio);
@@ -67,9 +78,9 @@ class MainRepository extends BaseRepository {
     ));
   }
 
-    Future<Result<dynamic>> verifyOtp(String phone,String otp) async {
+    Future<Result<dynamic>> verifyOtp(String phone,String otp, bool isRegistering) async {
     final service = MainService(await dio);
-    return safeCall(service.verifyOtp(phone,otp));
+    return safeCall(service.verifyOtp(phone,otp,isRegistering));
   }
 
     Future<Result<dynamic>> postIncidents({String? title,
@@ -158,6 +169,10 @@ class MainRepository extends BaseRepository {
     Future<Result<dynamic>> getTypeList() async {
     final service = MainService(await dio);
     return safeCall(service.getTypeList());
+  }
+    Future<Result<dynamic>> settingData() async {
+    final service = MainService(await dio);
+    return safeCall(service.settingData());
   }
 
     Future<Result<dynamic>> agreementData() async {

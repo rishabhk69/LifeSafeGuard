@@ -11,6 +11,7 @@ class AppConfig {
   static const getIncidents = "incidents";
   static const getProfile = "incidents/";
   static const signup = "signup";
+  static const profileUpdate = "profileUpdate";
   static const verifyOtp = "auth/verify-otp";
   static const postIncidents = "incidents";
   static const userAgreement = "/user-agreement";
@@ -21,4 +22,5 @@ class AppConfig {
   static const deleteAccount = "/delete";
   static const cityList = "cities/incidents";
   static const typeList = "types/incidents";
+  static const getSetting = "settings";
 }
