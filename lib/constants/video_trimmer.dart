@@ -1,16 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_trimmer/video_trimmer.dart';
-// import 'package:video_trimmer/widgets/video_viewer.dart';
-// import 'package:video_trimmer/widgets/trim_viewer.dart';
+import 'package:image_picker/image_picker.dart';
 
 class VideoTrimmerPage extends StatefulWidget {
-  final Trimmer trimmer;
   final File videoFile;
 
   const VideoTrimmerPage({
     super.key,
-    required this.trimmer,
     required this.videoFile,
   });
 
@@ -23,6 +20,7 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
   double _endValue = 0.0;
   bool _isTrimming = false;
   bool _isLoaded = false;
+  final Trimmer trimmer = Trimmer();
 
   @override
   void initState() {
@@ -31,7 +29,7 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
   }
 
   Future<void> _loadVideo() async {
-    await widget.trimmer.loadVideo(videoFile: widget.videoFile);
+    await trimmer.loadVideo(videoFile: widget.videoFile);
     setState(() => _isLoaded = true);
   }
 
@@ -49,7 +47,7 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
                 : () async {
               setState(() => _isTrimming = true);
 
-              await widget.trimmer.saveTrimmedVideo(
+              await trimmer.saveTrimmedVideo(
                 startValue: _startValue,
                 endValue: _endValue,
                 onSave: (String? outputPath) {
@@ -73,17 +71,20 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
         children: [
           SizedBox(
             height: 200,
-            child: VideoViewer(trimmer: widget.trimmer),
+            child: VideoViewer(trimmer: trimmer),
           ),
-          TrimViewer(
-            showDuration: true,
-            trimmer: widget.trimmer,
-            viewerHeight: 80.0,
-            viewerWidth: MediaQuery.of(context).size.width,
-            maxVideoLength: const Duration(seconds: 60),
-            onChangeStart: (value) => _startValue = value,
-            onChangeEnd: (value) => _endValue = value,
-            onChangePlaybackState: (value) {},
+          Container(
+            color: Colors.blue.withOpacity(0.2),
+            child: TrimViewer(
+              showDuration: true,
+              trimmer: trimmer,
+              viewerHeight: 80.0,
+              viewerWidth: MediaQuery.of(context).size.width,
+              maxVideoLength: const Duration(seconds: 20),
+              onChangeStart: (value) => _startValue = value,
+              onChangeEnd: (value) => _endValue = value,
+              onChangePlaybackState: (value) {},
+            ),
           ),
           const SizedBox(height: 10),
         ],
@@ -91,3 +92,63 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
     );
   }
 }
+
+class TrimTestScreen extends StatefulWidget {
+  const TrimTestScreen({super.key});
+
+  @override
+  State<TrimTestScreen> createState() => _TrimTestScreenState();
+}
+
+class _TrimTestScreenState extends State<TrimTestScreen> {
+  String? trimmedVideoPath;
+
+  Future<void> pickAndTrimVideo() async {
+    final picker = ImagePicker();
+    final XFile? picked = await picker.pickVideo(source: ImageSource.gallery);
+
+    if (picked == null) return;
+
+    // Navigate to the trimming screen
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoTrimmerPage(
+          videoFile: File(picked.path),
+        ),
+      ),
+    );
+
+    if (result != null && result is String) {
+      setState(() => trimmedVideoPath = result);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Trimmed video saved at: $trimmedVideoPath")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Video Trimmer Example")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: pickAndTrimVideo,
+              child: const Text("Pick & Trim Video"),
+            ),
+            const SizedBox(height: 20),
+            if (trimmedVideoPath != null)
+              Text(
+                "Trimmed video:\n$trimmedVideoPath",
+                textAlign: TextAlign.center,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
