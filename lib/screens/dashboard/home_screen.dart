@@ -18,6 +18,7 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
+import 'package:untitled/constants/video_trimmer.dart';
 import 'package:untitled/screens/other_screens/preview_images.dart';
 import 'package:video_compress/video_compress.dart';
 

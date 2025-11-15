@@ -1,154 +1,157 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:video_trimmer/video_trimmer.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 
-class VideoTrimmerPage extends StatefulWidget {
-  final File videoFile;
+class ModernTrimDialog extends StatefulWidget {
+  final File file;
 
-  const VideoTrimmerPage({
-    super.key,
-    required this.videoFile,
-  });
+  const ModernTrimDialog({super.key, required this.file});
 
   @override
-  State<VideoTrimmerPage> createState() => _VideoTrimmerPageState();
+  State<ModernTrimDialog> createState() => _ModernTrimDialogState();
 }
 
-class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
-  double _startValue = 0.0;
-  double _endValue = 0.0;
-  bool _isTrimming = false;
-  bool _isLoaded = false;
-  final Trimmer trimmer = Trimmer();
+class _ModernTrimDialogState extends State<ModernTrimDialog> {
+  late VideoPlayerController _controller;
+  double start = 0.0, end = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _loadVideo();
+
+    _controller = VideoPlayerController.file(widget.file)
+      ..initialize().then((_) {
+        setState(() {
+          end = _controller.value.duration.inMilliseconds.toDouble();
+        });
+        _controller.play();
+        _controller.setLooping(true);
+      });
   }
 
-  Future<void> _loadVideo() async {
-    await trimmer.loadVideo(videoFile: widget.videoFile);
-    setState(() => _isLoaded = true);
-  }
+  Future<void> trimVideo() async {
+    final selectedDurationSeconds = (end - start) / 1000;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xff1E1E1E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff6a7691),
-        title: const Text("Trim Video"),
-        actions: [
-          TextButton(
-            onPressed: _isTrimming
-                ? null
-                : () async {
-              setState(() => _isTrimming = true);
-
-              await trimmer.saveTrimmedVideo(
-                startValue: _startValue,
-                endValue: _endValue,
-                onSave: (String? outputPath) {
-                  setState(() => _isTrimming = false);
-                  if (outputPath != null && mounted) {
-                    Navigator.pop(context, outputPath);
-                  }
-                },
-              );
-            },
-            child: const Text(
-              "SAVE",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-      body: !_isLoaded
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-        children: [
-          SizedBox(
-            height: 200,
-            child: VideoViewer(trimmer: trimmer),
-          ),
-          Container(
-            color: Colors.blue.withOpacity(0.2),
-            child: TrimViewer(
-              showDuration: true,
-              trimmer: trimmer,
-              viewerHeight: 80.0,
-              viewerWidth: MediaQuery.of(context).size.width,
-              maxVideoLength: const Duration(seconds: 20),
-              onChangeStart: (value) => _startValue = value,
-              onChangeEnd: (value) => _endValue = value,
-              onChangePlaybackState: (value) {},
-            ),
-          ),
-          const SizedBox(height: 10),
-        ],
-      ),
-    );
-  }
-}
-
-class TrimTestScreen extends StatefulWidget {
-  const TrimTestScreen({super.key});
-
-  @override
-  State<TrimTestScreen> createState() => _TrimTestScreenState();
-}
-
-class _TrimTestScreenState extends State<TrimTestScreen> {
-  String? trimmedVideoPath;
-
-  Future<void> pickAndTrimVideo() async {
-    final picker = ImagePicker();
-    final XFile? picked = await picker.pickVideo(source: ImageSource.gallery);
-
-    if (picked == null) return;
-
-    // Navigate to the trimming screen
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VideoTrimmerPage(
-          videoFile: File(picked.path),
-        ),
-      ),
-    );
-
-    if (result != null && result is String) {
-      setState(() => trimmedVideoPath = result);
+    // ❗ LIMIT: Maximum 20 seconds allowed
+    if (selectedDurationSeconds > 20) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Trimmed video saved at: $trimmedVideoPath")),
+        SnackBar(
+          content: Text(
+            "Maximum allowed trimmed duration is 20 seconds.\n"
+                "Selected: ${selectedDurationSeconds.toStringAsFixed(1)} sec",
+          ),
+        ),
+      );
+      return;
+    }
+
+    final output = "${widget.file.path}_trimmed.mp4";
+
+    // Show loader
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final cmd =
+        "-i ${widget.file.path} -ss ${start / 1000} -to ${end / 1000} -c copy $output";
+
+    final session = await FFmpegKit.execute(cmd);
+    final rc = await session.getReturnCode();
+
+    Navigator.pop(context); // close loader
+
+    if (ReturnCode.isSuccess(rc)) {
+      Navigator.pop(context, File(output)); // return trimmed file
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error trimming video")),
       );
     }
   }
 
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Video Trimmer Example")),
-      body: Center(
+    return Dialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ElevatedButton(
-              onPressed: pickAndTrimVideo,
-              child: const Text("Pick & Trim Video"),
+            AspectRatio(
+              aspectRatio: _controller.value.isInitialized
+                  ? _controller.value.aspectRatio
+                  : 16 / 9,
+              child: VideoPlayer(_controller),
             ),
-            const SizedBox(height: 20),
-            if (trimmedVideoPath != null)
-              Text(
-                "Trimmed video:\n$trimmedVideoPath",
-                textAlign: TextAlign.center,
+
+            const SizedBox(height: 10),
+
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: Colors.blue,
+                inactiveTrackColor: Colors.grey,
+                thumbColor: Colors.white,
               ),
+              child: RangeSlider(
+                values: RangeValues(start, end),
+                min: 0,
+                max: _controller.value.isInitialized
+                    ? _controller.value.duration.inMilliseconds.toDouble()
+                    : 1,
+                onChanged: (values) {
+                  final diff = values.end - values.start;
+
+                  // block if > 20 sec
+                  if (diff > 20000) return;
+
+                  setState(() {
+                    start = values.start;
+                    end = values.end;
+                  });
+
+                  _controller.seekTo(Duration(milliseconds: start.toInt()));
+                },
+
+              ),
+            ),
+
+            Text(
+              "Start: ${(start / 1000).toStringAsFixed(2)}s   "
+                  "End: ${(end / 1000).toStringAsFixed(2)}s",
+              style: const TextStyle(color: Colors.white),
+            ),
+
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("CANCEL", style: TextStyle(color: Colors.red)),
+                ),
+                TextButton(
+                  onPressed: trimVideo,
+                  child: const Text("SAVE", style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+            )
           ],
         ),
       ),
     );
   }
 }
-

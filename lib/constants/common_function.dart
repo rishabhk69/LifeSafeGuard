@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/video_trimmer.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -162,7 +163,6 @@ class CommonFunction{
           source: isFromGallery ? ImageSource.gallery : ImageSource.camera,
         );
         if (pickedFile != null) {
-          locator<DialogService>().showLoader(message: 'Compressing..');
           return [pickedFile];
         }
       }
@@ -191,19 +191,38 @@ class CommonFunction{
   }
 
 
-  compressVideo(XFile file,BuildContext context) async {
+  compressVideo(XFile file, BuildContext context) async {
+    // 1. Open trimming screen and wait for result
+    final File? trimmedFile = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ModernTrimDialog(file: File(file.path)),
+      ),
+    );
+
+    // 2. If user cancelled or trimming failed
+    if (trimmedFile == null) return null;
+
+    locator<DialogService>().showLoader(message: 'Compressing..');
+    // 3. Compress trimmed video
     final MediaInfo? response = await VideoCompress.compressVideo(
-      file.path,
+      trimmedFile.path,
       quality: VideoQuality.MediumQuality,
       deleteOrigin: false,
     );
+
     if (response != null && response.path != null) {
-     Future.delayed(Duration(seconds: 1)).then((onValue){
-       locator<DialogService>().hideLoader();
-     });
+      Future.delayed(const Duration(seconds: 1)).then((_) {
+        locator<DialogService>().hideLoader();
+      });
+
       return XFile(response.path!);
     }
+
+    return null;
   }
+
+
 
   Future<void> requestCameraPermission() async {
     await Permission.camera.request();
