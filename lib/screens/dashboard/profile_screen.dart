@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,9 +8,14 @@ import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/bloc/update_profile_bloc.dart';
+import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
+import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/base_appbar.dart';
 import 'package:untitled/constants/colors_constant.dart';
+import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
@@ -93,11 +100,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ""),
                             ), // Replace with actual image
                           ),
-                          // Positioned(
-                          //   top: 3,
-                          //   right: 1,
-                          //   child: SvgPicture.asset(ImageHelper.editOrange),
-                          // ),
+                          Positioned(
+                            top: 3,
+                            right: 1,
+                            child:  BlocListener<UpdateProfileBloc,UpdateProfileState>(
+                              listener: (context,loginState){
+                                if(loginState is UpdateProfileLoadingState){
+                                  locator<DialogService>().showLoader();
+                                }
+                                else if(loginState is UpdateProfileSuccessState){
+                                  BlocProvider.of<ProfileBloc>(context, listen: false).add(
+                                      ProfileRefreshEvent(10, 0, profileState.profileModel.userId??""));
+                                  locator<DialogService>().hideLoader();
+                                  locator<ToastService>().show(loginState.commonModel.message??"");
+                                }
+                                else if(loginState is UpdateProfileErrorState){
+                                  locator<DialogService>().hideLoader();
+                                  locator<ToastService>().show(loginState.errorMsg??"");
+                                }
+                              },child: InkWell(
+                              onTap: (){
+                                String userId = profileState.profileModel.userId??"";
+                                CommonFunction().pickImage('gallery').then((onValue){
+                                  if(onValue.path.isNotEmpty){
+                                    BlocProvider.of<UpdateProfileBloc>(context).add(UpdateProfileRefreshEvent(
+                                      userId: userId,
+                                      profilePhoto:File(onValue.path),
+
+                                    ));
+                                  }
+                                });
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: SvgPicture.asset(ImageHelper.editGrey,color: ColorConstant.primaryColor,)),
+                            ),),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),

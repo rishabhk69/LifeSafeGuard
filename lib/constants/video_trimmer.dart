@@ -34,7 +34,6 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
   Future<void> trimVideo() async {
     final selectedDurationSeconds = (end - start) / 1000;
 
-    // ❗ LIMIT: Maximum 20 seconds allowed
     if (selectedDurationSeconds > 20) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
