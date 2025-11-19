@@ -67,9 +67,9 @@ class _SettingScreenState extends State<SettingScreen> {
                           "data": settingBuilder.settingModel.aboutUs
                         });
                       }),
-                      _buildListTile(GuardLocalizations.of(context)!.translate("donation") ?? "", "", true,(){
-                        context.push('/donateScreen');
-                      }),
+                      // _buildListTile(GuardLocalizations.of(context)!.translate("donation") ?? "", "", true,(){
+                      //   context.push('/donateScreen');
+                      // }),
                       _buildListTile(GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "", "", true,(){
                         // locator<ToastService> ().show('In Process');
                         context.push('/reportIssueScreen',extra: {

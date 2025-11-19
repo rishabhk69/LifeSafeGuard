@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/screens/auth_screens/choose_login.dart';
 import 'package:untitled/screens/auth_screens/sign_up.dart';
 import 'package:untitled/screens/mobile_screen.dart';
@@ -20,6 +21,7 @@ import '../../screens/dashboard/dashboard_screen.dart';
 import '../../screens/language_screen.dart';
 import '../../screens/onboarding_screen.dart';
 import '../../screens/opt_screen.dart';
+import '../../screens/other_screens/incident_preview_screen.dart';
 import '../../screens/setting/about_us.dart';
 import '../../screens/setting/contact_us_screen.dart';
 import '../../screens/setting/donate_screen.dart';
@@ -145,6 +147,15 @@ final goRouter = GoRouter(
       builder: (context, state) {
         dynamic args = state.extra;
         return  TermsAndCondition(args['isLogin'].toString());
+      },
+    ),
+    GoRoute(
+      path: '/incidentPreviewScreen',
+      builder: (context, state) {
+        dynamic args = state.extra;
+        final incident = ProfileModel.fromJson(args['incidentData']);
+        dynamic index = args['index'];
+        return  IncidentPreviewScreen(index,incident);
       },
     ),
     GoRoute(

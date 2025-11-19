@@ -177,7 +177,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Grid of Posts
                   (profileState.profileModel.incidents ?? []).isEmpty
                       ? SizedBox()
                       : GridView.builder(
@@ -196,9 +195,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final item = profileState.profileModel.incidents![index];
                             return InkWell(
                               onTap: (){
-                                BlocProvider.of<IncidentsBloc>(context, listen: false)
-                                    .add(IncidentsRefreshEvent(10, 0));
-                                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(1));
+                                context.push('/incidentPreviewScreen',extra:
+                                  {
+                                    "index":index,
+                                    "incidentData":profileState.profileModel.toJson()
+                                  }
+                                );
+
+                                // BlocProvider.of<IncidentsBloc>(context, listen: false)
+                                //     .add(IncidentsRefreshEvent(10, 0));
+                                // BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(1));
                               },
                               onLongPress: (){
                                 showDialog(
