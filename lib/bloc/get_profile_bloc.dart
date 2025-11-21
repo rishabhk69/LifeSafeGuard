@@ -80,7 +80,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         await AppUtils().setUserData(jsonEncode(profileModel));
         emit(ProfileSuccessState(profileModel));
       } else {
-        emit(ProfileErrorState(result.data.message ?? "Something went wrong"));
+        emit(ProfileErrorState(result.error));
       }
     } catch (e) {
       emit(ProfileErrorState(e.toString()));

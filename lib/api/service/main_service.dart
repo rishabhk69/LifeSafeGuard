@@ -76,7 +76,7 @@ import '../../main.dart';
            headers: {
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
-             'language': "english",
+             'language': "English",
            },
          ),
          queryParameters: {
@@ -101,7 +101,7 @@ import '../../main.dart';
            headers: {
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
-             'language': "english",
+             'language': "English",
            },
          ),
          queryParameters: {
@@ -278,7 +278,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "multipart/form-data",
-             'language': "english",
+             'language': "English",
            },
          ),
        );
@@ -360,7 +360,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
-             'language': "english",
+             'language': "English",
            },
          ),
        );
@@ -381,7 +381,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
-             'language': "english",
+             'language': "English",
            },
          ),
        );
@@ -403,7 +403,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
-             'language': "english",
+             'language': "English",
            },
          ),
        );
