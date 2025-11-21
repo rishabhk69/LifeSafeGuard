@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,11 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/delete_incident_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
+import 'package:untitled/bloc/get_profile_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
+import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
@@ -35,7 +38,9 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
   int _currentPage = 0;
   int currentIndex = 0;
   final PageController _pageController = PageController();
+  TextEditingController detailController = TextEditingController();
   String? address;
+  String? userId;
 
 
   @override
@@ -55,6 +60,14 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
     }
   }
 
+
+  void _onPageChanged(int index) {
+    setState(() {
+      currentIndex = index;
+      _currentPage = index;
+    });
+  }
+
   Future<void> _initializeVideoIfNeeded(String originUrl) async {
       _videoController?.dispose();
       _videoController = VideoPlayerController.network(AppConfig.VIDEO_BASE_URL+originUrl)
@@ -71,6 +84,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
   getAddress(lat,long) async {
     // address = await CommonFunction().getAddressFromLatLng(lat.toDouble(), long.toDouble());
     address = 'Jaipur';
+    await AppUtils().getUserId();
     setState(() {});
   }
 
@@ -85,7 +99,8 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
     //       incidentData!.incidents![widget.index!].incidentLocation?.longitude ??
     //           0.0);
     // }
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+      child: Scaffold(
       backgroundColor: ColorConstant.blackColor,
       appBar: AppBar(
         leading: InkWell(
@@ -100,6 +115,89 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
           GuardLocalizations.of(context)!.translate("incidentPreview") ?? "",
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          BlocListener<DeleteIncidentBloc,DeleteIncidentState>(
+            listener: (context,deleteListener) {
+              if(deleteListener is DeleteIncidentLoadingState){
+                locator<DialogService>().showLoader();
+              }
+              else if(deleteListener is DeleteIncidentSuccessState){
+                locator<DialogService>().hideLoader();
+                context.pop();
+                context.go('/dashboardScreen');
+                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+                locator<ToastService>().show(deleteListener.commonModel.message??"");
+              }
+              else if(deleteListener is DeleteIncidentErrorState){
+                locator<DialogService>().hideLoader();
+                locator<ToastService>().show(deleteListener.errorMsg);
+              }
+            },child:  IconButton(
+            icon:  Icon(Icons.more_horiz),color: Colors.black, onPressed: () {
+            locator<DialogService>().showCommonDialog(context, Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          GuardLocalizations.of(context)!.translate("deleteIncident") ?? "",
+                          style: MyTextStyleBase.headingStyleLight,),
+                        // Icon(Icons.check,color: Colors.green,)
+                      ],
+                    ),
+                    onPressed: () async {
+                      context.pop();
+                      await _videoController?.pause();
+                      locator<DialogService>().showDeleteDialog(
+                          detailController: detailController,
+                          title: GuardLocalizations.of(context)!.translate("areYouSure") ?? "",
+                          subTitle: GuardLocalizations.of(context)!.translate("youWantToDeleteIncident") ?? "",
+                          negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                          positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                          negativeTap: () {
+                            context.pop();
+                          },
+                          positiveTap: () async {
+                            if(detailController.text.isEmpty){
+                              locator<ToastService> ().show(GuardLocalizations.of(context)!.translate("enterReason") ?? "");
+                            }
+                            else{
+                              context.read<DeleteIncidentBloc>().add(
+                                  DeleteIncidentRefreshEvent(widget.incidentData.incidents![widget.index!].incidentId.toString(),detailController.text));
+                              context.pop();
+                            }
+                          }
+                      );
+                      // context.push('/filterScreen');
+                    },
+                  ),
+                  // Divider(),
+                  // TextButton(
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Text(GuardLocalizations.of(context)!.translate("edit") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                  //       // Icon(Icons.check,color: Colors.green,)
+                  //     ],
+                  //   ),
+                  //   onPressed: () async {
+                  //     await _videoController?.pause();
+                  //     locator<ToastService>().show('Coming soon');
+                  //     context.pop();
+                  //     // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                  //   },
+                  // ),
+                ],
+              ),
+            ));
+          },),
+          )
+        ],
       ),
       body:  Stack(
         children: [
@@ -126,7 +224,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     controller: _pageController,
                     scrollDirection: Axis.horizontal,
                     physics: const PageScrollPhysics(),
-                    // onPageChanged: _onPageChanged,
+                    onPageChanged: _onPageChanged,
                     itemCount: incidentData?.incidents?[widget.index!].media?.length ?? 0,
                     itemBuilder: (context, mediaIndex) {
                       return Image.network(
@@ -157,54 +255,6 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
             ),
           ),
 
-
-          // Overlay (Like TikTok UI)
-          Positioned(
-            top: 20,
-            right: 16,
-            child: IconButton(
-              icon:  Icon(Icons.more_horiz),color: Colors.white, onPressed: () {
-              locator<DialogService>().showCommonDialog(context, Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(GuardLocalizations.of(context)!.translate("filter") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                          Icon(Icons.check,color: Colors.green,)
-                        ],
-                      ),
-                      onPressed: () async {
-                        context.pop();
-                        // context.pop();
-                        await _videoController?.pause();
-                        context.push('/filterScreen');
-                      },
-                    ),
-                    Divider(),
-                    TextButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(GuardLocalizations.of(context)!.translate("allText") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                          Icon(Icons.check,color: Colors.green,)
-                        ],
-                      ),
-                      onPressed: () async {
-                        await _videoController?.pause();
-                        context.pop();
-                        // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
-                      },
-                    ),
-                  ],
-                ),
-              ));
-            },),
-          ),
           Positioned(
             bottom: 80,
             right: 16,
@@ -247,20 +297,10 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
               children:  [
                 InkWell(
                   onTap: () async {
-                    // String userId = await AppUtils().getUserId();
-                    // if(incidentData.userId==userId){
-                    //   BlocProvider.of<ProfileBloc>(context, listen: false).add(
-                    //       ProfileRefreshEvent(10, 0, userId));
-                    //   BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
-                    // }
-                    // else{
-                    //   showDialog(
-                    //     context: context,
-                    //     builder: (context) => OtherUserProfileDialog(
-                    //       incidentState.incidentsModel[index],
-                    //     ),
-                    //   );
-                    // }
+                    String userId = await AppUtils().getUserId();
+                    if(incidentData!.userId==userId){
+                    context.pop();
+                    }
                   },
                   child: Row(
                     children: [

@@ -20,7 +20,8 @@ abstract class BaseRepository {
 
   Future<Map<String, String>> _getHeaders() async {
     String token = await AppUtils().getToken();
-    print("Token:${token}");
+    String language = await AppUtils().getSelectedLanguage();
+    print("Token:$token");
     return {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.contentTypeHeader: "application/json",
@@ -28,6 +29,8 @@ abstract class BaseRepository {
       'App-Version': '1.0.0',
       'OS-Version': Platform.isAndroid ? '18.3': Platform.operatingSystem.toString(),
       'Device-Type': Platform.isAndroid ? 'Android':'IOS',
+      'language': language=='en'?'English':'Hindi',
+      // 'Content-Type': 'application/json'
       // HttpHeaders.authorizationHeader: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEyMzQiLCJleHAiOjE3NTIyNDc1ODN9.OifTzH016hLbzB0s4IKNrtzJ6QQ4XhwOefKT9xocj0A"
     };
   }

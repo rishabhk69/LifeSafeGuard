@@ -327,9 +327,19 @@
   "signOut": "साइन आउट",
   "resend": "पुन: भेजें",
   "selectType": "प्रकार चुनें",
-  "youWantToDeleteAccount": "You want to delete account",
-  "addReason": "Add Reason",
-  "enterReason": "Enter Reason"
+  "youWantToDeleteAccount": "आप खाता हटाना चाहते हैं",
+  "addReason": "कारण जोड़ें",
+  "enterReason": "कारण दर्ज करें",
+  "incidentsNotFound": "घटनाएँ नहीं मिलीं",
+  "queryType": "प्रश्न प्रकार",
+  "enterDetails": "विवरण दर्ज करें",
+  "captureMore": "और कैप्चर करें",
+  "update": "अपडेट करें",
+  "deleteIncident": "घटना हटाएँ",
+  "editIncident": "घटना संपादित करें",
+  "viewIncident": "घटना देखें",
+  "incidentPreview": "घटना पूर्वावलोकन",
+  "youWantToDeleteIncident": "क्या आप घटना हटाना चाहते हैं?"
 
 
 }

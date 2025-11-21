@@ -51,10 +51,34 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> deleteIncident(String incidentId,String reason) async {
+     try {
+       final response = await _dio.post(
+         "${AppConfig.getProfile}/delete",
+         data: {
+           "reason": reason,
+           "incidentId": incidentId
+         },
+
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> getIncidents({int? offset, int? size,String? city,String? type}) async {
+     String token = await AppUtils().getToken();
      try {
        final response = await _dio.get(
          AppConfig.getIncidents,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             'language': "english",
+           },
+         ),
          queryParameters: {
            'offset':offset,
            'size' :size,
@@ -69,9 +93,17 @@ import '../../main.dart';
    }
 
    Future<dynamic> getProfile({int? offset, int? size, String? userId}) async {
+     String token = await AppUtils().getToken();
      try {
        final response = await _dio.get(
          "${AppConfig.getProfile}/$userId",
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             'language': "english",
+           },
+         ),
          queryParameters: {
            'offset':offset,
            'size' :size
@@ -246,6 +278,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "multipart/form-data",
+             'language': "english",
            },
          ),
        );
@@ -327,6 +360,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
+             'language': "english",
            },
          ),
        );
@@ -347,6 +381,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
+             'language': "english",
            },
          ),
        );
@@ -368,6 +403,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              HttpHeaders.contentTypeHeader: "application/json",
+             'language': "english",
            },
          ),
        );

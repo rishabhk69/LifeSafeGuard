@@ -337,5 +337,6 @@
   "deleteIncident": "Delete Incident",
   "editIncident": "Edit Incident",
   "viewIncident": "View Incident",
-  "incidentPreview": "Incident Preview"
+  "incidentPreview": "Incident Preview",
+  "youWantToDeleteIncident": "You want to delete Incident"
 }

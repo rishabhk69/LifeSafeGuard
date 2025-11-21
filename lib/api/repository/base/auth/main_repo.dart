@@ -24,6 +24,11 @@ class MainRepository extends BaseRepository {
     return safeCall(service.deleteAccount(data,reason));
   }
 
+  Future<Result<dynamic>> deleteIncident(String incidentId,String reason) async {
+    final service = MainService(await dio);
+    return safeCall(service.deleteIncident(incidentId,reason));
+  }
+
   Future<Result<dynamic>> getSignUp(
       {String? firstName, String? lastName, String? userName, File? profilePhoto,}) async {
     final service = MainService(await dio);

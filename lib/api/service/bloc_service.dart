@@ -6,6 +6,7 @@ import 'package:untitled/api/repository/base/auth/main_repo.dart';
 import 'package:untitled/bloc/auth/aggrement_bloc.dart';
 import 'package:untitled/bloc/auth/delete_account_bloc.dart';
 import 'package:untitled/bloc/blocked_list_bloc.dart';
+import 'package:untitled/bloc/delete_incident_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/auth/otp_bloc.dart';
 import 'package:untitled/bloc/auth/signup_bloc.dart';
@@ -109,6 +110,9 @@ class BlocServices {
           ),
           BlocProvider<SettingBloc>(
             create: (context) => SettingBloc(_mainRepository),
+          ),
+          BlocProvider<DeleteIncidentBloc>(
+            create: (context) => DeleteIncidentBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),
