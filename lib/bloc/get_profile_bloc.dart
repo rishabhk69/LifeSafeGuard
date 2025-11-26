@@ -49,11 +49,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onProfileRefresh(
       ProfileRefreshEvent event, Emitter<ProfileState> emit) async {
 
-    // Avoid duplicate load calls
     if (isLoadingMore) return;
     isLoadingMore = true;
 
-    // If offset == 0 → it's a fresh load
     if (event.offset == 0) {
       emit(ProfileLoadingState());
       allIncidents.clear();
@@ -72,7 +70,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if ((profileModel.incidents ?? []).isNotEmpty) {
           allIncidents.addAll(profileModel.incidents!);
         } else {
-          hasMore = false; // No more data
+          hasMore = false;
         }
 
         profileModel.incidents = allIncidents;

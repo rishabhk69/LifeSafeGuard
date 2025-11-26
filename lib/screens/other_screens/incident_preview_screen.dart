@@ -19,6 +19,7 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+import 'package:untitled/screens/edit_incident.dart';
 import 'package:video_player/video_player.dart';
 
 import '../dashboard/comments_bottomsheet.dart';
@@ -176,22 +177,27 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                       // context.push('/filterScreen');
                     },
                   ),
-                  // Divider(),
-                  // TextButton(
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text(GuardLocalizations.of(context)!.translate("edit") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                  //       // Icon(Icons.check,color: Colors.green,)
-                  //     ],
-                  //   ),
-                  //   onPressed: () async {
-                  //     await _videoController?.pause();
-                  //     locator<ToastService>().show('Coming soon');
-                  //     context.pop();
-                  //     // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
-                  //   },
-                  // ),
+                  Divider(),
+                  TextButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(GuardLocalizations.of(context)!.translate("edit") ?? "",style: MyTextStyleBase.headingStyleLight,),
+                        // Icon(Icons.check,color: Colors.green,)
+                      ],
+                    ),
+                    onPressed: () async {
+                      await _videoController?.pause();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditIncidentScreen(
+                            incidentData: widget.incidentData.incidents![widget.index!],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ));
