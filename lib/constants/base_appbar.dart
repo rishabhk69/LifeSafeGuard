@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/sizes.dart';
 
+import '../bloc/instruction_bloc.dart';
 import '../common/locator/locator.dart';
 import '../common/service/navigation_service.dart';
 import 'app_styles.dart';
@@ -61,7 +63,12 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: showAction??false ? Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(),
+            InkWell(
+                onTap: (){
+                  context.push('/instructionScreen');
+                  BlocProvider.of<InstructionBloc>(context).add(InstructionRefreshEvent());
+                },
+                child: Icon(Icons.info_outline,color: ColorConstant.primaryColor,)),
             Text(title ?? '',
                 style:
                 MyTextStyleBase.headingStyle.copyWith(color:ColorConstant.blackColor)),

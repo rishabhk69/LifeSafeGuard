@@ -14,6 +14,7 @@ import 'package:untitled/bloc/get_city_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/bloc/get_incident_type_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/bloc/instruction_bloc.dart';
 import 'package:untitled/bloc/post_comment_bloc.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/save_city_bloc.dart';
@@ -113,6 +114,9 @@ class BlocServices {
           ),
           BlocProvider<DeleteIncidentBloc>(
             create: (context) => DeleteIncidentBloc(_mainRepository),
+          ),
+          BlocProvider<InstructionBloc>(
+            create: (context) => InstructionBloc(_mainRepository),
           ),
           // BlocProvider<UserProfileBloc>(
           //   create: (context) => UserProfileBloc(_mainRepository),

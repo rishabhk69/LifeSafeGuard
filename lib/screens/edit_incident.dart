@@ -11,6 +11,7 @@ import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
@@ -50,23 +51,28 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
 
     /// PREFILL DATA HERE
     titleController.text = widget.incidentData.title ?? "";
-    // detailController.text = widget.incidentData.description ?? "";
+    detailController.text = widget.incidentData.desc ?? "";
     // isAnonymous = widget.incidentData.reportAnonymously ?? false;
 
     createdDate = widget.incidentData.time;
     // BlocProvider.of<SetIncidentsBloc>(context).setSelectedIncident(widget.incidentData.category ?? "Select Type");
 
-    /// Load images/videos from URL
-    // if (widget.incidentData.media != null) {
-    //   for (var m in widget.incidentData.media) {
-    //     selectedFiles.add(XFile(m)); // you must store URLs directly
-    //   }
-    //
-    //   if (selectedFiles.isNotEmpty &&
-    //       selectedFiles[0].path.toLowerCase().contains(".mp4")) {
-    //     isVideo = true;
-    //   }
-    // }
+
+    if (selectedFiles.isNotEmpty &&
+        selectedFiles[0].path.toLowerCase().contains(".mp4")) {
+      isVideo = true;
+    }
+    if (widget.incidentData.media != null &&  isVideo) {
+      for (var m in widget.incidentData.media) {
+        selectedFiles.add(XFile(AppConfig.VIDEO_BASE_URL+m.name)); // you must store URLs directly
+      }
+
+    }
+    else{
+      for (var m in widget.incidentData.media) {
+        selectedFiles.add(m); // you must store URLs directly
+      }
+    }
   }
 
   Future<File> getThumbnail(XFile thumbnailFile) async {
@@ -77,9 +83,19 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseAppBar(
-        title: "Edit Incident",
-        showAction: false,
+      appBar: AppBar(
+        leading: InkWell(
+            onTap: (){
+              context.pop();
+            },
+            child: const Icon(Icons.arrow_back, color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          GuardLocalizations.of(context)!.translate("editIncident") ?? "",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
       ),
       backgroundColor: ColorConstant.scaffoldColor,
       body: SingleChildScrollView(
@@ -203,7 +219,7 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
               if (!snap.hasData) return Center(child: CircularProgressIndicator());
               return Stack(
                 children: [
-                  Image.file(snap.data!, fit: BoxFit.cover),
+                  Center(child: Image.file(snap.data!, fit: BoxFit.fitWidth)),
                   Center(
                     child: Icon(Icons.play_circle,
                         size: 50, color: Colors.white),

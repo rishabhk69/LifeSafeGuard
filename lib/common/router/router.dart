@@ -4,6 +4,7 @@ import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/screens/auth_screens/choose_login.dart';
 import 'package:untitled/screens/auth_screens/sign_up.dart';
+import 'package:untitled/screens/instruction_screen.dart';
 import 'package:untitled/screens/mobile_screen.dart';
 import 'package:untitled/screens/other_screens/blocked_incidents.dart';
 import 'package:untitled/screens/other_screens/filter_screen.dart';
@@ -161,6 +162,10 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/chooseLogin',
       builder: (context, state) => const ChooseLogin(),
+    ),
+    GoRoute(
+      path: '/instructionScreen',
+      builder: (context, state) => const InstructionScreen(),
     ),
   ],
 );

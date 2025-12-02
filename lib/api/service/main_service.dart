@@ -414,6 +414,27 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> instructionData() async {
+     try {
+       String token = await AppUtils().getToken();
+       final response = await _dio.get(
+         AppConfig.getInstructions,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "application/json",
+             'language': "English",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> postComment({String? comment,
      String? incidentId,
      String? userId,

@@ -1,15 +1,11 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 
 import 'api/service/bloc_service.dart';
 import 'common/locator/locator.dart';
-import 'common/router/router.dart';
 import 'constants/app_utils.dart';
-import 'constants/colors_constant.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 
@@ -81,28 +77,6 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
-    // return MaterialApp.router(
-    //   localizationsDelegates: [
-    //     CountryLocalizations.delegate,
-    //     GlobalMaterialLocalizations.delegate,
-    //     GlobalWidgetsLocalizations.delegate,
-    //   ],
-    //   routerConfig: goRouter,
-    //   title: 'LifeSafeGuard',
-    //   debugShowCheckedModeBanner: false,
-    //   theme: ThemeData(
-    //     appBarTheme: const AppBarTheme(
-    //       titleTextStyle: TextStyle(
-    //           color: ColorConstant.whiteColor
-    //       ),
-    //       iconTheme: IconThemeData(
-    //           color: ColorConstant.whiteColor// 👈 back button color
-    //       ),),
-    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-    //   ),
-    //   // home: const SplashScreen(),
-    // );
     return BlocServices(_locale).blocService();
   }
 }
