@@ -45,7 +45,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     AppUtils().getUserData().then((onValue){
       var profileData = ProfileModel.fromJson(onValue);
      setState(() {
-       fNameController.text = profileData.fisrtName??"";
+       fNameController.text = profileData.firstName??"";
        lNameController.text = profileData.lastName??"";
        uNameController.text = profileData.userName??"";
        userId = profileData.userId??"";

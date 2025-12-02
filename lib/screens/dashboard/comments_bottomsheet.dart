@@ -190,7 +190,7 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                                     var profileData = ProfileModel.fromJson(onValue);
                                     BlocProvider.of<PostCommentBloc>(context).add(PostCommentRefreshEvent(
                                         comment: commentsController.text.trim(),
-                                        firstName:profileData.fisrtName,
+                                        firstName:profileData.firstName,
                                         lastName: profileData.lastName,
                                         userId: profileData.userId,
                                         userName: profileData.userName,

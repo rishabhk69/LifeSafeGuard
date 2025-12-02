@@ -9,7 +9,7 @@
 
 
     <application
-        android:label="LifeSafeGuard"
+        android:label="Life Safe Guard"
         android:name="${applicationName}"
         android:extractNativeLibs="true"
         android:icon="@mipmap/launcher_icon">

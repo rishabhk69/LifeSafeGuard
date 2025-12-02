@@ -108,7 +108,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                           ),
                         },
                       ),
-                      addHeight(60),
+                      addHeight(200),
                     ],
                   ),
                 );

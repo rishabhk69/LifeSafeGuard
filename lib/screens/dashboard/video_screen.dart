@@ -178,7 +178,11 @@ class _VideoScreenState extends State<VideoScreen> {
                                 controller: _pageController,
                                 scrollDirection: Axis.horizontal,
                                 physics: const PageScrollPhysics(),
-                                // onPageChanged: _onPageChanged,
+                                onPageChanged: (mediaIndex) {
+                                  setState(() {
+                                    _currentPage = mediaIndex;
+                                  });
+                                },
                                 itemCount: incidentState.incidentsModel[index].media?.length ?? 0,
                                 itemBuilder: (context, mediaIndex) {
                                   return Image.network(

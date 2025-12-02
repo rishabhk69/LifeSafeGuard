@@ -42,6 +42,7 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
           leading: InkWell(
             onTap: () {
               context.pop();
+              BlocProvider.of<SetIncidentsBloc>(context).add(SetIncidentsRefreshEvent());
             },
             child: const Icon(Icons.arrow_back, color: Colors.black),
           ),
@@ -58,17 +59,17 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
             return BuilderDialog();
           }
           else if(incidentTypeState is IncidentTypeSuccessState){
-            return SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:BlocBuilder<SetIncidentsBloc,SetIncidentsState>(
-                      builder: (context,incidentState){
-                        if(incidentState is SetIncidentsSuccessState){
-                          return  Column(
-                            children: [
-                              ListView.builder(
+            return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:BlocBuilder<SetIncidentsBloc,SetIncidentsState>(
+                    builder: (context,incidentState){
+                      if(incidentState is SetIncidentsSuccessState){
+                        return  Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                // physics: NeverScrollableScrollPhysics(),
                                 itemCount: incidentTypeState.incidentTypeModel.icons?.length,
                                 itemBuilder: (context,index){
                                 return _buildListTile(incidentTypeState.incidentTypeModel.icons?[index].incidentType??"",
@@ -99,15 +100,15 @@ class _IncidentTypeScreenState extends State<IncidentTypeScreen> {
                                   }
                                     });
                               }),
-                              CustomButton(text: GuardLocalizations.of(context)!.translate("select") ?? "", onTap: (){
-                                context.pop();
-                              })
-                            ],
-                          );
-                        }
-                        return Container();
-                      })
-              ),
+                            ),
+                            CustomButton(text: GuardLocalizations.of(context)!.translate("select") ?? "", onTap: (){
+                              context.pop();
+                            })
+                          ],
+                        );
+                      }
+                      return Container();
+                    })
             );
           }
           else if(incidentTypeState is IncidentTypeErrorState){

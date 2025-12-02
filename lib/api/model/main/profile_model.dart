@@ -2,7 +2,7 @@ class ProfileModel {
   int? starRanking;
   String? userId;
   String? userName;
-  String? fisrtName;
+  String? firstName;
   String? lastName;
   String? phone;
   String? profilePhotoUrl;
@@ -13,7 +13,7 @@ class ProfileModel {
       {this.starRanking,
         this.userId,
         this.userName,
-        this.fisrtName,
+        this.firstName,
         this.lastName,
         this.phone,
         this.profilePhotoUrl,
@@ -24,7 +24,7 @@ class ProfileModel {
     starRanking = json['starRanking'];
     userId = json['userId'];
     userName = json['userName'];
-    fisrtName = json['fisrtName'];
+    firstName = json['firstName'];
     lastName = json['lastName'];
     phone = json['phone'];
     profilePhotoUrl = json['profilePhotoUrl'];
@@ -42,7 +42,7 @@ class ProfileModel {
     data['starRanking'] = this.starRanking;
     data['userId'] = this.userId;
     data['userName'] = this.userName;
-    data['fisrtName'] = this.fisrtName;
+    data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['phone'] = this.phone;
     data['profilePhotoUrl'] = this.profilePhotoUrl;

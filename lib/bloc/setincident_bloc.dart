@@ -41,7 +41,7 @@ class SetIncidentsBloc extends Bloc<SetIncidentsEvent, SetIncidentsState> {
       SetIncidentsRefreshEvent event, Emitter<SetIncidentsState> emit) async {
     emit(SetIncidentsLoadingState());
     try {
-      selectedIncident = event.incidentName??"";
+      selectedIncident = event.incidentName??GuardLocalizations.of(NavigationServiceKey.navigatorKey.currentState!.context)!.translate("selectType") ?? "";
         emit(SetIncidentsSuccessState(event.incidentName??""));
     } catch (e) {
       emit(SetIncidentsErrorState(e.toString()));

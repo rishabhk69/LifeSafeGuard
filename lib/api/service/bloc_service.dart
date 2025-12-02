@@ -127,7 +127,7 @@ class BlocServices {
               child: MaterialApp.router(
 
                 routerConfig: goRouter,
-                title: 'LifeSafeGuard',
+                title: 'Life Safe Guard',
                 debugShowCheckedModeBanner: false,
                 locale: _locale,
                 supportedLocales: const [

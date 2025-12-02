@@ -394,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-                    if(selectedFiles.length<=5)
+                    // if(selectedFiles.length<=5)
                     Positioned(
                         right: -10,
                         left: 0,
@@ -404,20 +404,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             IconButton(
                             onPressed: () async {
-                              await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
-                                if (files != null && files.isNotEmpty) {
+                              if(selectedFiles.length<5){
+                                await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
+                                  if (files != null && files.isNotEmpty) {
                                     setState(() {
                                       selectedFiles.add(files.first); // directly assign all picked images
                                       createdDate = currentDate;
                                       isCameraUpload = true;
                                     });
 
-                                } else {
-                                  return null;
-                                }
-                              });
+                                  } else {
+                                    return null;
+                                  }
+                                });
+                              }
+                           else{
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("You can select a maximum of 5 images."),
+                                  ),
+                                );
+                              }
 
-                            }, icon: Icon(Icons.add_circle_outline,color: Colors.grey,),),
+                            }, icon: Icon(Icons.add_circle_outline,color: Colors.black,),),
                           ],
                         )),
 
@@ -453,23 +462,22 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
 
               // Type of Incident
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.category, color: Colors.orange),
-                      const SizedBox(width: 8),
-                      Text(GuardLocalizations.of(context)!.translate("typeOfIncident") ?? "",
-                          style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      context.push('/incidentTypeScreen').then((onValue){
-                      });
-                    },
-                    child: Row(
+              InkWell(
+                onTap: (){
+                  context.push('/incidentTypeScreen');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.category, color: Colors.orange),
+                        const SizedBox(width: 8),
+                        Text(GuardLocalizations.of(context)!.translate("typeOfIncident") ?? "",
+                            style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                    Row(
                       children: [
                         Text(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident.length>15 ?
                         '${BlocProvider.of<SetIncidentsBloc>(context).selectedIncident.substring(0,15)}...':
@@ -478,8 +486,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Icon(Icons.arrow_forward_ios, size: 14),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               const SizedBox(height: 20),
