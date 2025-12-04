@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -15,7 +17,6 @@ import 'package:untitled/constants/image_helper.dart';
 import '../constants/colors_constant.dart';
 import '../constants/custom_button.dart';
 import '../constants/sizes.dart';
-import '../constants/strings.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
@@ -35,7 +36,45 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
 
 
+
+  int _seconds = 300;
+  Timer? _timer;
   String? otpCode;
+
+  void startTimer() {
+    _timer?.cancel();
+    _seconds = 300;
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_seconds == 0) {
+        timer.cancel();
+      } else {
+        setState(() {
+          _seconds--;
+        });
+      }
+    });
+  }
+
+  String formatTime(int seconds) {
+    final m = (seconds ~/ 60).toString().padLeft(2, '0');
+    final s = (seconds % 60).toString().padLeft(2, '0');
+    return "$m:$s";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     print(widget.phone);
@@ -72,13 +111,11 @@ class _OtpScreenState extends State<OtpScreen> {
                   color: Colors.black,
                   fontSize: 20
               ),
-              //runs when a code is typed in
               onCodeChanged: (String code) {
                 setState(() {
                   otpCode = code;
                 });
               },
-              //runs when every textfield is filled
               onSubmit: (String verificationCode){
                 otpCode = verificationCode;
               }, // end onSubmit
@@ -91,18 +128,15 @@ class _OtpScreenState extends State<OtpScreen> {
                 }
                 else if(loginState is LoginSuccessState){
                   locator<DialogService>().hideLoader();
-                  context.pop();
+                  // context.pop();
                   locator<ToastService>().show(loginState.loginData.message??"");
+                  startTimer();
                 }
                 else if(loginState is LoginErrorState){
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show(loginState.errorMsg??"");
                 }
-              },child: InkWell(
-                onTap: (){
-                  BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(widget.phone,false));
-                },
-                child: Text( GuardLocalizations.of(context)!.translate("resend") ?? ""))),
+              },child: resendButton()),
 
           ],
         ),
@@ -148,4 +182,27 @@ class _OtpScreenState extends State<OtpScreen> {
       ],
     ),);
   }
+
+  Widget resendButton() {
+    final isTimerRunning = _seconds > 0;
+
+    return InkWell(
+      onTap: isTimerRunning
+          ? null
+          : () {
+        BlocProvider.of<LoginBloc>(context, listen: false)
+            .add(LoginRefreshEvent(widget.phone, widget.isLogin=="true"?true:false));
+      },
+      child: Text(
+        isTimerRunning
+            ? "Resend in ${formatTime(_seconds)}"
+            : GuardLocalizations.of(context)!.translate("resend") ?? "Resend",
+        style: TextStyle(
+          color: isTimerRunning ? Colors.grey : ColorConstant.primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
 }
