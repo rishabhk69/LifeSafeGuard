@@ -23,4 +23,5 @@ class AppConfig {
   static const cityList = "cities/incidents";
   static const typeList = "types/incidents";
   static const getSetting = "settings";
+  static const getInstructions = "instructions";
 }

@@ -77,7 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: BaseAppBar(title: GuardLocalizations.of(context)!.translate("reportIncident") ?? "",showAction: true,
+      appBar: BaseAppBar(
+      title: GuardLocalizations.of(context)!.translate("reportIncident") ?? "",
+      showAction: true,
       isVideo: isVideo,
       onActionTap: (){
        if(selectedFiles.isNotEmpty){
