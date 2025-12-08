@@ -17,6 +17,7 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
+import 'package:untitled/localization/language_constants.dart';
 import 'package:untitled/screens/other_screens/preview_images.dart';
 import 'package:video_compress/video_compress.dart';
 
@@ -258,6 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       },
                     ),
+                    const SizedBox(height: 10),
+                    if(isVideo)
+                    FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? ""))
                   ],
                 ) : isVideo ?
                 Stack(
@@ -367,36 +371,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: SizedBox(
                           height: 150,
                           width: double.infinity,
-                          child: CarouselSlider.builder(
-                            itemCount: selectedFiles.length,
-                            itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-                                Image.file(File(selectedFiles[itemIndex].path,),fit: BoxFit.fitWidth,),
-                            options: CarouselOptions(
-                              height: 400,
-                              // aspectRatio: 16/9,
-                              viewportFraction: 1,
-                              initialPage: 0,
-                              enableInfiniteScroll: selectedFiles.length>1 ?true:false,
-                              reverse: false,
-                              autoPlay: true,
-                              autoPlayInterval: Duration(seconds: 3),
-                              autoPlayAnimationDuration: Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: false,
-                              enlargeFactor: 0.3,
-                              scrollDirection: Axis.horizontal,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentIndex = index;
-                                });
-                              },
-                            ),
+                          child: Stack(
+                            children: [
+                              CarouselSlider.builder(
+                                itemCount: selectedFiles.length,
+                                itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                                    Image.file(File(selectedFiles[itemIndex].path,),fit: BoxFit.fitWidth,),
+                                options: CarouselOptions(
+                                  height: 400,
+                                  // aspectRatio: 16/9,
+                                  viewportFraction: 1,
+                                  initialPage: 0,
+                                  enableInfiniteScroll: selectedFiles.length>1 ?true:false,
+                                  reverse: false,
+                                  autoPlay: false,
+                                  autoPlayInterval: Duration(seconds: 3),
+                                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enlargeCenterPage: false,
+                                  enlargeFactor: 0.3,
+                                  scrollDirection: Axis.horizontal,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentIndex = index;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                left: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(selectedFiles.length, (dotIndex) {
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      width: _currentIndex == dotIndex ? 10 : 8,
+                                      height: _currentIndex == dotIndex ? 10 : 8,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _currentIndex == dotIndex ? ColorConstant.primaryColor : Colors.grey,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
                           ),
                           // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
                       ),
                     ),
 
-                    // if(selectedFiles.length<=5)
+                    if(selectedFiles.length<5)
                     Positioned(
                         right: -10,
                         left: 0,

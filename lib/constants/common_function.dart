@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/video_trimmer.dart';
+import 'package:untitled/localization/fitness_localization.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -203,7 +204,7 @@ class CommonFunction{
     // 2. If user cancelled or trimming failed
     if (trimmedFile == null) return null;
 
-    locator<DialogService>().showLoader(message: 'Compressing..');
+    locator<DialogService>().showLoader(message: GuardLocalizations.of(context)!.translate('loading') ?? "");
     // 3. Compress trimmed video
     final MediaInfo? response = await VideoCompress.compressVideo(
       trimmedFile.path,

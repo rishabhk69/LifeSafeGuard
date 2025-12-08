@@ -265,7 +265,7 @@
   "verificationCode": "Verification Code",
   "reportIncident": "Report Incident",
   "uploadVideo": "Upload Video",
-  "uploadImage": "Upload Image",
+  "uploadImage": "Upload Photo",
   "shootVideo": "Shoot Video",
   "shootImage": "Click Photo",
   "chooseFromGallery": "Choose from Gallery",
@@ -339,5 +339,7 @@
   "viewIncident": "View Incident",
   "incidentPreview": "Incident Preview",
   "youWantToDeleteIncident": "You want to delete Incident",
-  "instructions": "Instructions"
+  "instructions": "Instructions",
+  "loading": "Loading..",
+  "videoUploadLimitText": "Video upload limit: Maximum duration allowed is 20 seconds."
 }

@@ -295,7 +295,6 @@ class _VideoScreenState extends State<VideoScreen> {
                         ),
                       ),
 
-                      // Caption / User info
                       Positioned(
                         bottom: 30,
                         left: 16,
@@ -324,7 +323,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                   SizedBox(
                                     width: 40,
                                     height: 40,
-                                    child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
+                                    child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ?
+                                    Icon(Icons.person_4_sharp,color: Colors.white,):CircleAvatar(
                                       backgroundImage:
                                       NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentState.incidentsModel[index].profilePic??"")), // User profile
                                       radius: 25,
