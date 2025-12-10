@@ -352,12 +352,12 @@ class _VideoScreenState extends State<VideoScreen> {
                                 SvgPicture.asset(ImageHelper.locationIc),
                                 addWidth(5),
                                 Text(
-                                (incidentState.incidentsModel[index].address??"").split(',').first,
                                 style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,
                                 color: ColorConstant.whiteColor,
                                  ),
+                                "${incidentState.incidentsModel[index].city??""},${incidentState.incidentsModel[index].state??""}",
                                 ),
                               ],
                             ),
@@ -376,13 +376,13 @@ class _VideoScreenState extends State<VideoScreen> {
                               ],
                             ),
 
-                            InkWell(
-                              onTap: () async {
+                            TextButton(
+                              onPressed: ()async{
                                 await _videoController?.pause();
                                 // await _videoController?.dispose();
                                 context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                               },
-                              child: Text(GuardLocalizations.of(context)!.translate("seeMore") ?? "",
+                              child: Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 12,

@@ -123,6 +123,22 @@ class MainRepository extends BaseRepository {
         category: category));
   }
 
+    Future<Result<dynamic>> editIncidents({String? title,
+      String? description,
+      String? category,
+      String? city,
+      String? userId,
+      bool? reportAnonymously,
+     }) async {
+    final service = MainService(await dio);
+    return safeCall(service.editIncidents(title: title,
+        reportAnonymously: reportAnonymously,
+        description: description,
+        city: city,
+        userId: userId,
+        category: category));
+  }
+
     Future<Result<dynamic>> blockIncident({String? title,
       String? description,
       String? incidentId,

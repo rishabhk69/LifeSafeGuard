@@ -289,6 +289,50 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> editIncidents({String? title,
+     String? description,
+     String? category,
+     String? city,
+     String? state,
+     String? userId,
+     bool? reportAnonymously,
+    }) async {
+     try {
+       String token = await AppUtils().getToken();
+
+       final formData ={
+         "title": title,
+         "description": description,
+         "category": category,
+         "isReportedAnonymously": reportAnonymously,
+
+         "city": city,
+         "state": state,
+
+         "userId": userId,
+
+         "isMediaDeleted": false};
+
+
+       final response = await _dio.post(
+         AppConfig.editIncidents,
+         data: formData,
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             HttpHeaders.contentTypeHeader: "multipart/form-data",
+             'language': "English",
+           },
+         ),
+       );
+
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
 
    Future<dynamic> blockIncident({String? title,
      String? incidentId,

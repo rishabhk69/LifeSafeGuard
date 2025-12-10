@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/constants/colors_constant.dart';
-import 'package:untitled/constants/strings.dart';
+import 'package:untitled/constants/common_function.dart';
+import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+
 
 
 class IncidentDetails extends StatefulWidget {
@@ -75,29 +78,42 @@ class _IncidentDetailsState extends State<IncidentDetails> {
               child: incidentsModel?.location?.latitude != null && incidentsModel?.location?.longitude != null
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      (incidentsModel?.location?.latitude??0.0).toDouble(),
-                      (incidentsModel?.location?.longitude??0.0).toDouble(),
-                    ),
-                    zoom: 15,
-                  ),
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId("incident_location"),
-                      position: LatLng(
-                        (incidentsModel?.location?.latitude??0).toDouble(),
-                        (incidentsModel?.location?.longitude??0).toDouble(),
+                child: Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                          (incidentsModel?.location?.latitude??0.0).toDouble(),
+                          (incidentsModel?.location?.longitude??0.0).toDouble(),
+                        ),
+                        zoom: 15,
                       ),
-                      infoWindow: InfoWindow(
-                        title: incidentsModel?.title ?? "Incident",
-                        snippet: incidentsModel?.address ?? "",
-                      ),
+                      markers: {
+                        Marker(
+                          markerId: const MarkerId("incident_location"),
+                          position: LatLng(
+                            (incidentsModel?.location?.latitude??0).toDouble(),
+                            (incidentsModel?.location?.longitude??0).toDouble(),
+                          ),
+                          infoWindow: InfoWindow(
+                            title: incidentsModel?.title ?? "Incident",
+                            snippet: incidentsModel?.address ?? "",
+                          ),
+                        ),
+                      },
+                      myLocationEnabled: false,
+                      zoomControlsEnabled: true,
                     ),
-                  },
-                  myLocationEnabled: false,
-                  zoomControlsEnabled: false,
+                    Positioned(
+                        left: 10,
+                        bottom: 30,
+                        child: InkWell(
+                            onTap: (){
+                              CommonFunction().openGoogleMaps((incidentsModel?.location?.latitude??0.0).toDouble(),
+                                (incidentsModel?.location?.longitude??0.0).toDouble(),);
+                            },
+                            child: SvgPicture.asset(ImageHelper.redirectIc))),
+                  ],
                 ),
               )
                   : const Center(

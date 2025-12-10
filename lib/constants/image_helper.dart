@@ -54,5 +54,6 @@ class ImageHelper{
   static const String startHereIc = "assets/images/start_here_ic.svg";
   static const String photoIcWhite = "assets/images/photo_ic_white.svg";
   static const String playCircle = "assets/images/play_circle.svg";
+  static const String redirectIc = "assets/images/redirect_ic.svg";
 
 }

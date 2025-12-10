@@ -11,6 +11,8 @@ class IncidentsModel {
   List<Media>? media;
   String? time;
   String? address;
+  String? city;
+  String? state;
   String? description;
   String? title;
   dynamic commentCount;
@@ -29,6 +31,8 @@ class IncidentsModel {
         this.title,
         this.commentCount,
         this.description,
+        this.city,
+        this.state,
         this.location});
 
   IncidentsModel.fromJson(Map<String, dynamic> json) {
@@ -46,6 +50,8 @@ class IncidentsModel {
     }
     time = json['time'];
     address = json['address'];
+    city = json['city'];
+    state = json['state'];
     title = json['title'];
     commentCount = json['commentCount'];
     description = json['description'];
@@ -68,6 +74,8 @@ class IncidentsModel {
     data['time'] = this.time;
     data['commentCount'] = this.commentCount;
     data['title'] = this.title;
+    data['city'] = this.city;
+    data['state'] = this.state;
     data['description'] = this.description;
     data['address'] = this.address;
     if (this.location != null) {

@@ -10,6 +10,7 @@ import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/video_trimmer.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -23,6 +24,16 @@ class CommonFunction{
   XFile? selectedFile;
   XFile? updatedFile;
 
+
+  void openGoogleMaps(double lat, double lng) async {
+    final url = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
 
   static String getFileSizeString({required int bytes, int decimals = 0}) {
@@ -344,5 +355,6 @@ Future<LocationData?> getLocationData() async {
 
   return null;
 }
+
 
 

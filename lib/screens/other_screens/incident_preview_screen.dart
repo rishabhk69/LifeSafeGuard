@@ -54,6 +54,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
   @override
   void initState() {
     super.initState();
+    getId();
     ProfileModel? incidentData = widget.incidentData;
     if(incidentData.incidents?[widget.index!].isVideo=='true') {
       _initializeVideoIfNeeded(
@@ -80,6 +81,11 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
           }
         });
       setState(() {});
+  }
+
+  getId()async{
+    userId = await AppUtils().getUserId();
+    setState(() {});
   }
 
   getAddress(lat,long) async {
@@ -126,7 +132,9 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                 locator<DialogService>().hideLoader();
                 context.pop();
                 context.go('/dashboardScreen');
-                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+                BlocProvider.of<ProfileBloc>(context, listen: false).add(
+                    ProfileRefreshEvent(10, 0, userId));
+                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
                 locator<ToastService>().show(deleteListener.commonModel.message??"");
               }
               else if(deleteListener is DeleteIncidentErrorState){

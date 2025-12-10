@@ -260,8 +260,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    if(isVideo)
-                    FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? ""))
+                    // if(isVideo)
+                    // FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? ""))
                   ],
                 ) : isVideo ?
                 Stack(
@@ -424,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-                    if(selectedFiles.length<5)
+                    if(selectedFiles.length<5 && isCameraUpload==true)
                     Positioned(
                         right: -10,
                         left: 0,
@@ -585,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 else if(blocListener is PostIncidentsErrorState){
                   clearSelected();
-                  locator<ToastService>().show(blocListener.errorMsg??"");
+                  locator<ToastService>().show(blocListener.errorMsg);
                   locator<DialogService>().hideLoader();
                 }
               },child: CustomButton(text: GuardLocalizations.of(context)!.translate("post") ?? "", onTap: (){

@@ -178,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 20),
 
                   (profileState.profileModel.incidents ?? []).isEmpty
-                      ? SizedBox()
+                      ? Center(child: Text('No Incidents'))
                       : GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

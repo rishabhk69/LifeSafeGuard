@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:untitled/localization/fitness_localization.dart';
 import 'package:video_player/video_player.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
@@ -147,7 +148,12 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
                   child: const Text("SAVE", style: TextStyle(color: Colors.blue)),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 10),
+            FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
+            style: TextStyle(
+              color: Colors.white
+            ),))
           ],
         ),
       ),
