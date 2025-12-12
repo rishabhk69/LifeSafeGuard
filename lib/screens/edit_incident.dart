@@ -5,17 +5,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/edit_incidents_bloc.dart';
+import 'package:untitled/bloc/get_incident_type_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
+import 'package:untitled/constants/app_config.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+
+import '../constants/common_function.dart';
 
 class EditIncidentScreen extends StatefulWidget {
   final dynamic incidentData;
@@ -33,12 +39,14 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
   bool isVideo = false;
   bool? isCameraUpload;
   String? createdDate;
+  String? userId;
+  LocationData? data;
 
   @override
   void initState() {
     super.initState();
-
-    /// PREFILL DATA HERE
+    BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
+    getUserId();
     titleController.text = widget.incidentData.title ?? "";
     detailController.text = widget.incidentData.desc ?? "";
     // isAnonymous = widget.incidentData.reportAnonymously ?? false;
@@ -62,6 +70,18 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
     //     selectedFiles.add(m); // you must store URLs directly
     //   }
     // }
+  }
+
+  Future<void> getUserId() async {
+    final id = await AppUtils().getUserId();
+    final loc = await getLocationData();
+
+
+    if (!mounted) return;
+    setState(() {
+      userId = id;
+      data = loc;
+    });
   }
 
   Future<File> getThumbnail(XFile thumbnailFile) async {
@@ -93,7 +113,7 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// ------------------- MEDIA SECTION -------------------
-            _buildMediaSection(context),
+            _buildMediaSection(context,AppConfig.IMAGE_BASE_URL+widget.incidentData.thumbnail),
             const SizedBox(height: 20),
 
             /// ------------------- INCIDENT TYPE -------------------
@@ -136,7 +156,8 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
                 } else if (state is EditIncidentsSuccessState) {
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show("Incident Updated Successfully");
-                  Navigator.pop(context);
+                  context.go('/dashboardScreen');
+                  BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                 } else if (state is EditIncidentsErrorState) {
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show(state.errorMsg);
@@ -154,7 +175,9 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
                     else{
                       BlocProvider.of<EditIncidentsBloc>(context).add(
                         EditIncidentsRefreshEvent(
-                          incidentId: widget.incidentData.id,
+                          city: widget.incidentData.city,
+                          userId: userId,
+                          incidentId: widget.incidentData.incidentId,
                           category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
                           description: detailController.text.trim(),
                           title: titleController.text.trim(),
@@ -172,70 +195,33 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
   }
 
   // ------------------------ MEDIA SECTION ------------------------
-  Widget _buildMediaSection(BuildContext context) {
+  Widget _buildMediaSection(BuildContext context, String thumbnail) {
     return Container(
+      alignment: Alignment.center,
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.orange, width: 1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child:/* selectedFiles.isEmpty
-          ?*/ Center(child: Text("No media found"))
+      child: thumbnail.isEmpty
+          ? Center(child: Text("No media found"))
           // : isVideo
           // ? _buildVideoPreview(context)
-          // : _buildImagePreview(context),
+          : _buildImagePreview(context,thumbnail),
     );
   }
 
-  // Widget _buildImagePreview(BuildContext context) {
-  //   return Stack(
-  //     children: [
-  //       SizedBox(
-  //         height: 150,
-  //         child: CarouselSlider.builder(
-  //           itemCount: selectedFiles.length,
-  //           itemBuilder: (_, i, __) =>
-  //               Image.file(File(selectedFiles[i].path), fit: BoxFit.cover),
-  //           options: CarouselOptions(
-  //             viewportFraction: 1,
-  //             autoPlay: true,
-  //             onPageChanged: (i, _) {
-  //               setState(() => _currentIndex = i);
-  //             },
-  //           ),
-  //         ),
-  //       ),
-  //       Positioned(
-  //         right: -10,
-  //         top: -10,
-  //         child: IconButton(
-  //           icon: Icon(Icons.add_circle_outline, color: Colors.grey),
-  //           onPressed: () async {
-  //             final files = await ImagePicker().pickMultiImage();
-  //             if (files.isNotEmpty) {
-  //               setState(() {
-  //                 selectedFiles.addAll(files);
-  //               });
-  //             }
-  //           },
-  //         ),
-  //       ),
-  //       Positioned(
-  //         bottom: -10,
-  //         right: -10,
-  //         child: IconButton(
-  //           icon: Icon(Icons.delete, color: Colors.grey),
-  //           onPressed: () {
-  //             setState(() {
-  //               selectedFiles.removeAt(_currentIndex);
-  //             });
-  //           },
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
+  Widget _buildImagePreview(BuildContext context, String thumb) {
+    return Stack(
+      children: [
+        SizedBox(
+          height: 150,
+          child: Image.network(thumb, fit: BoxFit.cover)
+        ),
+      ],
+    );
+  }
 
   Widget _buildIncidentType(BuildContext context) {
     return Row(

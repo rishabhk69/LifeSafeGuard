@@ -599,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           PostIncidentsRefreshEvent(
                               category: BlocProvider
                                   .of<SetIncidentsBloc>(context)
-                                  .selectedIncident ?? "",
+                                  .selectedIncident,
                               description: detailController.text.trim(),
                               files: selectedFiles
                                   .map((f) => File(f.path))

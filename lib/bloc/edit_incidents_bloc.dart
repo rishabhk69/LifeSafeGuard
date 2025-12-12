@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/api/model/main/post_incidents_model.dart';
@@ -58,6 +57,7 @@ class EditIncidentsBloc extends Bloc<EditIncidentsEvent, EditIncidentsState> {
           title:event.title,
           city: event.city,
           userId: event.userId,
+        incidentId: event.incidentId,
       ); // API call
 
       if (result.isSuccess) {

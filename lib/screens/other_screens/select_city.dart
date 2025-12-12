@@ -121,16 +121,18 @@ class _SelectCityState extends State<SelectCity> {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        "${currentCity.city ?? ""}, ${currentCity.state ?? ""}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                          color: isSelected
-                                              ? Colors.orange
-                                              : Colors.black,
+                                      Expanded(
+                                        child: Text(
+                                          "${currentCity.city ?? ""}, ${currentCity.state ?? ""}",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                            color: isSelected
+                                                ? Colors.orange
+                                                : Colors.black,
+                                          ),
                                         ),
                                       ),
                                       if (isSelected)

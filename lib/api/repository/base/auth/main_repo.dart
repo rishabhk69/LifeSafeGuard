@@ -128,6 +128,7 @@ class MainRepository extends BaseRepository {
       String? category,
       String? city,
       String? userId,
+      String? incidentId,
       bool? reportAnonymously,
      }) async {
     final service = MainService(await dio);
@@ -136,6 +137,7 @@ class MainRepository extends BaseRepository {
         description: description,
         city: city,
         userId: userId,
+        incidentId: incidentId,
         category: category));
   }
 

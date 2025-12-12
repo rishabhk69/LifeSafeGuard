@@ -293,35 +293,27 @@ import '../../main.dart';
      String? description,
      String? category,
      String? city,
-     String? state,
+     String? incidentId,
      String? userId,
      bool? reportAnonymously,
     }) async {
      try {
        String token = await AppUtils().getToken();
 
-       final formData ={
-         "title": title,
-         "description": description,
-         "category": category,
-         "isReportedAnonymously": reportAnonymously,
-
-         "city": city,
-         "state": state,
-
-         "userId": userId,
-
-         "isMediaDeleted": false};
-
-
        final response = await _dio.post(
          AppConfig.editIncidents,
-         data: formData,
+         data: {
+           "title": title,
+           "description": description,
+           "category": category,
+           "isReportedAnonymously": reportAnonymously,
+           "incidentId" : incidentId,
+           "city": city,
+           "userId": userId},
          options: Options(
            headers: {
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
-             HttpHeaders.contentTypeHeader: "multipart/form-data",
              'language': "English",
            },
          ),

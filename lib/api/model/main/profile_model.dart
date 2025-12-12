@@ -56,8 +56,10 @@ class ProfileModel {
 
 class Incidents {
   String? incidentId;
+  String? city;
   int? viewCount;
   String? category;
+  String? thumbnail;
   String? isVideo;
   String? time;
   String? title;
@@ -69,6 +71,8 @@ class Incidents {
   Incidents(
       {this.incidentId,
         this.viewCount,
+        this.city,
+        this.thumbnail,
         this.category,
         this.isVideo,
         this.time,
@@ -81,6 +85,8 @@ class Incidents {
   Incidents.fromJson(Map<String, dynamic> json) {
     incidentId = json['incidentId'];
     viewCount = json['viewCount'];
+    city = json['city'];
+    thumbnail = json['thumbnail'];
     category = json['category'];
     isVideo = json['isVideo'];
     time = json['time'];
@@ -102,6 +108,8 @@ class Incidents {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['incidentId'] = this.incidentId;
     data['viewCount'] = this.viewCount;
+    data['thumbnail'] = this.thumbnail;
+    data['city'] = this.city;
     data['category'] = this.category;
     data['isVideo'] = this.isVideo;
     data['time'] = this.time;
