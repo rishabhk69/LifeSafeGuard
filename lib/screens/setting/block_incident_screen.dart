@@ -149,6 +149,7 @@ class _BlockIncidentScreenState extends State<BlockIncidentScreen> {
                         locator<ToastService>().show(blockState.blockIncidentData.status??"");
                         context.go('/dashboardScreen');
                         BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+                        context.push('/blockedIncidents');
                       }
                       else if(blockState is BlockIncidentErrorState){
                         locator<DialogService>().hideLoader();

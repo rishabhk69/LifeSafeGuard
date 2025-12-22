@@ -16,12 +16,9 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
-import 'package:untitled/constants/sizes.dart';
-import 'package:untitled/localization/language_constants.dart';
 import 'package:untitled/screens/other_screens/preview_images.dart';
 import 'package:video_compress/video_compress.dart';
 
-import '../../constants/app_styles.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
 import '../../main.dart';
@@ -84,44 +81,22 @@ class _HomeScreenState extends State<HomeScreen> {
       isVideo: isVideo,
       onActionTap: (){
        if(selectedFiles.isNotEmpty){
-         locator<DialogService>().showCommonDialog(context, Padding(
-           padding: const EdgeInsets.all(10),
-           child: Column(
-             mainAxisSize: MainAxisSize.min,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               addHeight(10),
-               Text(
-                 GuardLocalizations.of(context)!.translate("fileAlreadySelectedYouWantToReplace") ?? "",
-                 style: MyTextStyleBase.headingStyleLight,
-                 textAlign: TextAlign.center,),
-               addHeight(20),
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                 children: [
-                   ElevatedButton(
-                     child: Text(GuardLocalizations.of(context)!.translate("yes") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                     onPressed: (){
-                       context.pop();
-                       selectedFiles=[];
-                       setState(() {
-                         isVideo = !isVideo;
-                       });
-                       // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
-                     },
-                   ),
-                   ElevatedButton(
-                     child: Text(GuardLocalizations.of(context)!.translate("no") ?? "",style: MyTextStyleBase.headingStyleLight,),
-                     onPressed: (){
-                       context.pop();
-                       // context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
-                     },
-                   ),
-                 ],
-               ),
-             ],
-           ),
-         ));
+         locator<DialogService>().showLogoutDialog(
+             title: "Note",
+             subTitle: GuardLocalizations.of(context)!.translate("fileAlreadySelectedYouWantToReplace") ?? "",
+             negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+             positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+             negativeTap: () {
+               context.pop();
+             },
+             positiveTap: () {
+               context.pop();
+               selectedFiles=[];
+               setState(() {
+                 isVideo = !isVideo;
+               });
+             }
+         );
        }
        else {
          setState(() {
@@ -176,16 +151,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               XFile videoFile = files.first;
                               selectedFiles = [];
                               selectedFiles.add(videoFile);
-                              CommonFunction().compressVideo(videoFile,context).then((compressed) async {
-                                if (compressed != null) {
-                                  locator<DialogService>().hideLoader();
-                                  setState(() {
+                              CommonFunction().compressVideo(videoFile, context).then((compressed) async {
+                                locator<DialogService>().hideLoader();
+
+                                setState(() {
+                                  if (compressed == null) {
+                                    // User cancelled trimming
+                                    selectedFiles = [];
+                                    isCameraUpload = false;
+                                  } else {
                                     selectedFiles = [XFile(compressed.path)];
                                     createdDate = currentDate;
                                     isCameraUpload = true;
-                                  });
-                                }
+                                  }
+                                });
                               });
+
                             } else {
                               // ---- MULTIPLE IMAGES ----
                               setState(() {
@@ -226,16 +207,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                FileStat stat = await File(videoFile.path).stat();
                                createdDate = stat.accessed.toString();
 
-                               CommonFunction().compressVideo(videoFile,context).then((v) async {
-                                 if (v != null) {
-                                   setState(() {
-                                     selectedFiles = [XFile(v.path)];
-                                     createdDate = stat.accessed.toString();
+                               CommonFunction().compressVideo(videoFile, context).then((compressed) async {
+                                 locator<DialogService>().hideLoader();
+
+                                 setState(() {
+                                   if (compressed == null) {
+                                     selectedFiles = [];
                                      isCameraUpload = false;
-                                   });
-                                   // locator<DialogService>().hideLoader();
-                                 }
+                                   } else {
+                                     selectedFiles = [XFile(compressed.path)];
+                                     createdDate = currentDate;
+                                     isCameraUpload = true;
+                                   }
+                                 });
                                });
+
                              }
                              catch(e){
                                print(e);
@@ -354,7 +340,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ) :
                 Stack(
                   children: [
-
                     InkWell(
                       onTap: (){
                         Navigator.push(
@@ -368,7 +353,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
 
                       },
-                      child: SizedBox(
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 20),
                           height: 150,
                           width: double.infinity,
                           child: Stack(
@@ -398,33 +384,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                left: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(selectedFiles.length, (dotIndex) {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                                      width: _currentIndex == dotIndex ? 10 : 8,
-                                      height: _currentIndex == dotIndex ? 10 : 8,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: _currentIndex == dotIndex ? ColorConstant.primaryColor : Colors.grey,
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
                             ],
                           ),
                           // child: Image.file(File(selectedFiles[0]!.path,),fit: BoxFit.fill,)
                       ),
                     ),
 
-                    if(selectedFiles.length<5 && isCameraUpload==true)
+                    Positioned(
+                      bottom: -0,
+                      right: 0,
+                      left: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(selectedFiles.length, (dotIndex) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: _currentIndex == dotIndex ? 10 : 8,
+                            height: _currentIndex == dotIndex ? 10 : 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentIndex == dotIndex ? ColorConstant.primaryColor : Colors.grey,
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+
+                    if(selectedFiles.length<5)
                     Positioned(
                         right: -10,
                         left: 0,
@@ -435,18 +421,39 @@ class _HomeScreenState extends State<HomeScreen> {
                             IconButton(
                             onPressed: () async {
                               if(selectedFiles.length<5){
-                                await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
-                                  if (files != null && files.isNotEmpty) {
-                                    setState(() {
-                                      selectedFiles.add(files.first); // directly assign all picked images
-                                      createdDate = currentDate;
-                                      isCameraUpload = true;
-                                    });
+                                if(isCameraUpload ==false){
+                                  await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
+                                    if (files != null && files.isNotEmpty) {
+                                        List<FileStat> stats = await Future.wait(
+                                          files.map((file) => File(file.path).stat()),
+                                        );
 
-                                  } else {
-                                    return null;
-                                  }
-                                });
+                                        setState(() {
+                                          selectedFiles.addAll(files);
+                                          createdDate = stats.first.accessed.toString();
+                                          isCameraUpload = false;
+                                        });
+
+                                    } else {
+                                      return null;
+                                    }
+                                  });
+
+                                }
+                               else{
+                                  await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
+                                    if (files != null && files.isNotEmpty) {
+                                      setState(() {
+                                        selectedFiles.add(files.first); // directly assign all picked images
+                                        createdDate = currentDate;
+                                        isCameraUpload = true;
+                                      });
+
+                                    } else {
+                                      return null;
+                                    }
+                                  });
+                                }
                               }
                            else{
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -621,6 +628,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                   }
                   else{
+                    isVideo==true ? locator<ToastService>().show(GuardLocalizations.of(context)!.translate("uploadVideo") ?? ""):
                     locator<ToastService>().show(GuardLocalizations.of(context)!.translate("uploadImage") ?? "");
                   }
                 // }

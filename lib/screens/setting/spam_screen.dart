@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
-import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/spam_incident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/toast_service.dart';
@@ -10,7 +9,6 @@ import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
-import 'package:untitled/constants/strings.dart';
 
 import '../../common/Utils/validations.dart';
 import '../../common/service/dialog_service.dart';
@@ -145,10 +143,10 @@ class _SpamScreenState extends State<SpamScreen> {
                       }
                       else if(blockState is SpamIncidentSuccessState){
                         locator<DialogService>().hideLoader();
-                        context.pop();
+                        // context.pop();
                         locator<ToastService>().show(blockState.spamIncidentData.message??"");
-                        context.go('/dashboardScreen');
-                        BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+                        // context.go('/dashboardScreen');
+                        // BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
                       }
                       else if(blockState is SpamIncidentErrorState){
                         locator<DialogService>().hideLoader();
@@ -166,7 +164,7 @@ class _SpamScreenState extends State<SpamScreen> {
                               context.pop();
                             },
                             positiveTap: () {
-                              context.pop();
+                              // context.pop();
                               AppUtils().getUserId().then((userId) {
                                 BlocProvider.of<SpamIncidentBloc>(context).add(
                                     SpamIncidentRefreshEvent(

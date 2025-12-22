@@ -357,7 +357,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 fontSize: 12,
                                 color: ColorConstant.whiteColor,
                                  ),
-                                "${incidentState.incidentsModel[index].city??""},${incidentState.incidentsModel[index].state??""}",
+                                "${incidentState.incidentsModel[index].city??""}, ${incidentState.incidentsModel[index].state??""}",
                                 ),
                               ],
                             ),
@@ -376,19 +376,35 @@ class _VideoScreenState extends State<VideoScreen> {
                               ],
                             ),
 
-                            TextButton(
-                              onPressed: ()async{
+                            InkWell(
+                              onTap: ()async{
                                 await _videoController?.pause();
                                 // await _videoController?.dispose();
                                 context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
                               },
-                              child: Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: ColorConstant.whiteColor
-                                ),),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: ColorConstant.whiteColor
+                                  ),),
+                              ),
                             ),
+                            // TextButton(
+                            //   onPressed: ()async{
+                            //     await _videoController?.pause();
+                            //     // await _videoController?.dispose();
+                            //     context.push('/incidentDetails',extra: incidentState.incidentsModel[index]);
+                            //   },
+                            //   child: Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
+                            //     style: GoogleFonts.poppins(
+                            //         fontWeight: FontWeight.w400,
+                            //         fontSize: 12,
+                            //         color: ColorConstant.whiteColor
+                            //     ),),
+                            // ),
                           ],
                         ),
                       ),

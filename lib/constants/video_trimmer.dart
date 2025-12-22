@@ -90,6 +90,11 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
+              style: TextStyle(
+                  color: Colors.white
+              ),)),
+            const SizedBox(height: 10),
             AspectRatio(
               aspectRatio: _controller.value.isInitialized
                   ? _controller.value.aspectRatio
@@ -140,7 +145,7 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context, null),
                   child: const Text("CANCEL", style: TextStyle(color: Colors.red)),
                 ),
                 TextButton(
@@ -149,11 +154,6 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
-            style: TextStyle(
-              color: Colors.white
-            ),))
           ],
         ),
       ),

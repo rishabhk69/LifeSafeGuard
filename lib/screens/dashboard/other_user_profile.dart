@@ -77,7 +77,6 @@ class _OtherUserProfileDialogState extends State<OtherUserProfileDialog> {
 
               const SizedBox(height: 20),
 
-              // 🔹 Grid of Posts (same layout)
               (widget.incidentsModel.media ?? []).isEmpty
                   ? const Text("No incidents available.")
                   : GridView.builder(

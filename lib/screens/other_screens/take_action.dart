@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, BlocListener;
 import 'package:go_router/go_router.dart';
-import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/spam_incident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
@@ -82,10 +81,10 @@ class _TakeActionState extends State<TakeAction> {
               }
               else if(spamStates is SpamIncidentSuccessState){
                 locator<DialogService>().hideLoader();
-                context.pop();
+                // context.pop();
                 locator<ToastService>().show(spamStates.spamIncidentData.message??"");
-                context.go('/dashboardScreen');
-                BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
+                // context.go('/dashboardScreen');
+                // BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(0));
               }
               else if(spamStates is SpamIncidentErrorState){
                 locator<DialogService>().hideLoader();

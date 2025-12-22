@@ -69,14 +69,21 @@ class _SelectCityState extends State<SelectCity> {
                   if (cityState is CityListLoadingState) {
                     return const BuilderDialog();
                   } else if (cityState is CityListSuccessState) {
-                    // 🔎 Filter cities based on searchQuery
-                    final filteredCities = cityState.cityListModel.cities!
-                        .where((city) {
+                    final allCities = cityState.cityListModel.cities!;
+
+                    final filteredCities = searchQuery.isEmpty
+                        ? allCities
+                        : allCities.where((city) {
                       final cityName = city.city?.toLowerCase() ?? "";
                       final stateName = city.state?.toLowerCase() ?? "";
-                      return cityName.contains(searchQuery) || stateName.contains(searchQuery);
-                    })
-                        .toList();
+
+                      final cityWords = cityName.split(RegExp(r'\s+'));
+                      final stateWords = stateName.split(RegExp(r'\s+'));
+
+                      return cityWords.contains(searchQuery) ||
+                          stateWords.contains(searchQuery);
+                    }).toList();
+
 
                     if (filteredCities.isEmpty) {
                       return const Expanded(

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
@@ -24,13 +25,23 @@ class _IncidentDetailsState extends State<IncidentDetails> {
 
 
   IncidentsModel? incidentsModel;
+  String? userId;
 
   @override
   void initState() {
     super.initState();
+    getUserId();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         incidentsModel = widget.incidentData;
+      });
+    });
+  }
+
+  getUserId()async{
+   await AppUtils().getUserId().then((value) {
+      setState(() {
+        userId = value.toString();
       });
     });
   }
@@ -49,6 +60,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
+          incidentsModel?.userId ==  userId ? SizedBox():
           TextButton(
             onPressed: () {
               context.push('/takeAction',extra:
