@@ -10,6 +10,7 @@ import 'package:untitled/screens/other_screens/blocked_incidents.dart';
 import 'package:untitled/screens/other_screens/filter_screen.dart';
 import 'package:untitled/screens/other_screens/incident_details.dart';
 import 'package:untitled/screens/other_screens/incident_type_screen.dart';
+import 'package:untitled/screens/other_screens/other_user_profile.dart';
 import 'package:untitled/screens/other_screens/select_city.dart';
 import 'package:untitled/screens/other_screens/t&c_screen.dart';
 import 'package:untitled/screens/other_screens/take_action.dart';
@@ -166,6 +167,13 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/instructionScreen',
       builder: (context, state) => const InstructionScreen(),
+    ),
+    GoRoute(
+      path: '/otherProfileScreen',
+      builder: (context, state) {
+        dynamic args = state.extra;
+        return OtherProfileScreen(args['userId'].toString());
+      },
     ),
   ],
 );

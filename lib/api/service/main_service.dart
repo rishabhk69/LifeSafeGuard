@@ -92,6 +92,29 @@ import '../../main.dart';
      }
    }
 
+   Future<dynamic> getIncidentsById({int? offset, int? size,String? id,}) async {
+     String token = await AppUtils().getToken();
+     try {
+       final response = await _dio.get(
+         "${AppConfig.getIncidents}/$id",
+         options: Options(
+           headers: {
+             HttpHeaders.acceptHeader: "application/json",
+             HttpHeaders.authorizationHeader: "Bearer $token",
+             'language': "English",
+           },
+         ),
+         queryParameters: {
+           'offset':offset,
+           'size' :size,
+         },
+       );
+       return response.data;
+     } catch (e) {
+       rethrow;
+     }
+   }
+
    Future<dynamic> getProfile({int? offset, int? size, String? userId}) async {
      String token = await AppUtils().getToken();
      try {

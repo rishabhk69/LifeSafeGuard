@@ -62,6 +62,16 @@ class MainRepository extends BaseRepository {
     ));
   }
 
+  Future<Result<dynamic>> getIncidentsById(
+      {int? offset, int? size,String? id}) async {
+    final service = MainService(await dio);
+    return safeCall(service.getIncidentsById(
+      offset: offset,
+      size: size,
+      id: id
+    ));
+  }
+
 
   Future<Result<dynamic>> getProfile(
       {int? offset, int? size,String? userId}) async {

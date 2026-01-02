@@ -57,6 +57,7 @@ class ProfileModel {
 class Incidents {
   String? incidentId;
   String? city;
+  String? state;
   int? viewCount;
   String? category;
   String? thumbnail;
@@ -72,6 +73,7 @@ class Incidents {
       {this.incidentId,
         this.viewCount,
         this.city,
+        this.state,
         this.thumbnail,
         this.category,
         this.isVideo,
@@ -86,6 +88,7 @@ class Incidents {
     incidentId = json['incidentId'];
     viewCount = json['viewCount'];
     city = json['city'];
+    state = json['state'];
     thumbnail = json['thumbnail'];
     category = json['category'];
     isVideo = json['isVideo'];
@@ -110,6 +113,7 @@ class Incidents {
     data['viewCount'] = this.viewCount;
     data['thumbnail'] = this.thumbnail;
     data['city'] = this.city;
+    data['state'] = this.state;
     data['category'] = this.category;
     data['isVideo'] = this.isVideo;
     data['time'] = this.time;

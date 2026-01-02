@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/video_trimmer.dart';
@@ -124,6 +125,31 @@ class CommonFunction{
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  String formatLocal(String utcString) {
+    if(utcString.isEmpty) {
+      return '';
+    }
+    else{
+    DateTime utcDateTime = DateFormat("dd MMM yyyy hh:mm:ss a",).parseUtc(utcString);
+    DateTime localDateTime = utcDateTime.toLocal();
+    String formattedLocal = DateFormat("dd MMM yyyy hh:mm:ss a",).format(localDateTime);
+    return formattedLocal;
+    }
+  }
+
+  getFileTime()
+  async {
+    final PermissionState ps = await PhotoManager.requestPermissionExtend();
+    if (!ps.isAuth) return;
+
+    final List<AssetPathEntity> paths =
+        await PhotoManager.getAssetPathList(type: RequestType.video);
+
+    final List<AssetEntity> videos =
+        await paths.first.getAssetListPaged(page: 0, size: 1);
+
+    DateTime? createDate = videos.first.createDateTime;
+  }
 
   bool calculateExpire(String date) {
     final now = DateTime.now();

@@ -16,6 +16,7 @@ import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
+import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
@@ -349,12 +350,12 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     SvgPicture.asset(ImageHelper.locationIc),
                     addWidth(5),
                     Text(
-                      address??"",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
                         color: ColorConstant.whiteColor,
                       ),
+                      "${incidentData!.incidents![widget.index!].city??""}, ${incidentData!.incidents![widget.index!].state??""}",
                     ),
                   ],
                 ),
@@ -363,7 +364,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     SvgPicture.asset(ImageHelper.timerIc),
                     addWidth(5),
                     Text(
-                      incidentData!.incidents![widget.index!].time??"",
+                      CommonFunction().formatLocal(incidentData!.incidents![widget.index!].time??""),
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,

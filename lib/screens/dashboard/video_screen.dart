@@ -9,6 +9,7 @@ import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_city_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/bloc/get_profile_bloc.dart';
+import 'package:untitled/bloc/get_user_incident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
@@ -16,6 +17,7 @@ import 'package:untitled/constants/app_config.dart';
 import 'package:untitled/constants/app_styles.dart';
 import 'package:untitled/constants/app_utils.dart';
 import 'package:untitled/constants/colors_constant.dart';
+import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/constants/strings.dart';
@@ -310,12 +312,13 @@ class _VideoScreenState extends State<VideoScreen> {
                                   BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
                                 }
                                 else{
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => OtherUserProfileDialog(
-                                      incidentState.incidentsModel[index],
-                                    ),
-                                  );
+                                  BlocProvider.of<UserIncidentsBloc>(context).add(UserIncidentsRefreshEvent(
+                                      incidentState.incidentsModel[index].userId.toString(),
+                                      10,
+                                      0));
+                                  context.push('/otherProfileScreen',extra: {
+                                    'userId' : incidentState.incidentsModel[index].userId
+                                  });
                                 }
                               },
                               child: Row(
@@ -366,7 +369,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                 SvgPicture.asset(ImageHelper.timerIc),
                                 addWidth(5),
                                 Text(
-                                  incidentState.incidentsModel[index].time??"",
+                                  // incidentState.incidentsModel[index].time??"",
+                                  CommonFunction().formatLocal(incidentState.incidentsModel[index].time??""),
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
