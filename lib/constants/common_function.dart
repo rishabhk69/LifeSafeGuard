@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_manager/photo_manager.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/video_trimmer.dart';
@@ -137,19 +136,6 @@ class CommonFunction{
     }
   }
 
-  getFileTime()
-  async {
-    final PermissionState ps = await PhotoManager.requestPermissionExtend();
-    if (!ps.isAuth) return;
-
-    final List<AssetPathEntity> paths =
-        await PhotoManager.getAssetPathList(type: RequestType.video);
-
-    final List<AssetEntity> videos =
-        await paths.first.getAssetListPaged(page: 0, size: 1);
-
-    DateTime? createDate = videos.first.createDateTime;
-  }
 
   bool calculateExpire(String date) {
     final now = DateTime.now();
@@ -208,6 +194,23 @@ class CommonFunction{
       if (kDebugMode) {
         print("Error in pickImageVideoFile: $e");
       }
+    }
+    return null;
+  }
+
+
+  Future<DateTime?> getImageCaptureTime(XFile image) async {
+    final bytes = await File(image.path).readAsBytes();
+    final tags = await readExifFromBytes(bytes);
+
+    if (tags.containsKey('EXIF DateTimeOriginal')) {
+      final value = tags['EXIF DateTimeOriginal']!.printable;
+      // Format: "2023:08:25 14:32:10"
+      return DateTime.parse(
+        value.replaceFirst(':', '-')
+            .replaceFirst(':', '-')
+            .replaceFirst(' ', 'T'),
+      );
     }
     return null;
   }

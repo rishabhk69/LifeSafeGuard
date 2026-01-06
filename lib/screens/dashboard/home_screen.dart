@@ -2,10 +2,13 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:metadata_retriver/metadata_retriver.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:metadata_retriver/metadata_retriver_platform_interface.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
@@ -153,7 +156,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               selectedFiles.add(videoFile);
                               CommonFunction().compressVideo(videoFile, context).then((compressed) async {
                                 locator<DialogService>().hideLoader();
-
+                                final String? videoDate =
+                                await getVideoFormattedDate(videoFile);
+                                currentDate = videoDate;
+                                print(videoDate);
                                 setState(() {
                                   if (compressed == null) {
                                     // User cancelled trimming
@@ -168,10 +174,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               });
 
                             } else {
+                              CommonFunction().getImageCaptureTime(XFile(files.first.path)).then((onValue){
+                                if(onValue!=null) {
+                                  createdDate = onValue.toString();
+                                }else
+                                {
+                                  createdDate = currentDate;
+                                }
+                              });
                               // ---- MULTIPLE IMAGES ----
                               setState(() {
                                 selectedFiles = files; // directly assign all picked images
-                                createdDate = currentDate;
+                                // createdDate = currentDate;
                                 isCameraUpload = true;
                               });
                             }
@@ -206,10 +220,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                selectedFiles = [];
                                FileStat stat = await File(videoFile.path).stat();
                                createdDate = stat.accessed.toString();
-
                                CommonFunction().compressVideo(videoFile, context).then((compressed) async {
                                  locator<DialogService>().hideLoader();
-
+                                 final String? videoDate =
+                                 await getVideoFormattedDate(videoFile);
+                                 currentDate = videoDate;
+                                 print(videoDate);
                                  setState(() {
                                    if (compressed == null) {
                                      selectedFiles = [];
@@ -228,13 +244,19 @@ class _HomeScreenState extends State<HomeScreen> {
                              }
                             } else {
                               // ---- MULTIPLE IMAGES ----
-                              List<FileStat> stats = await Future.wait(
-                                files.map((file) => File(file.path).stat()),
-                              );
+
+                              CommonFunction().getImageCaptureTime(XFile(files.first.path)).then((onValue){
+                                if(onValue!=null) {
+                                  createdDate = onValue.toString();
+                                }else
+                                {
+                                  createdDate = currentDate;
+                                }
+                              });
 
                               setState(() {
                                 selectedFiles = files;
-                                createdDate = stats.first.accessed.toString(); // take first image’s timestamp
+                                // createdDate = stats.first.accessed.toString(); // take first image’s timestamp
                                 isCameraUpload = false;
                               });
                             }
@@ -424,13 +446,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if(isCameraUpload ==false){
                                   await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
                                     if (files != null && files.isNotEmpty) {
-                                        List<FileStat> stats = await Future.wait(
-                                          files.map((file) => File(file.path).stat()),
-                                        );
-
+                                      CommonFunction().getImageCaptureTime(XFile(files.first.path)).then((onValue){
+                                        if(onValue!=null) {
+                                          createdDate = onValue.toString();
+                                        }else
+                                        {
+                                          createdDate = currentDate;
+                                        }
+                                      });
                                         setState(() {
                                           selectedFiles.addAll(files);
-                                          createdDate = stats.first.accessed.toString();
+                                          // createdDate = stats.first.accessed.toString();
                                           isCameraUpload = false;
                                         });
 
@@ -442,10 +468,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                                else{
                                   await CommonFunction().pickImageVideoFile(!isVideo, false, context).then((files) async {
+                                    CommonFunction().getImageCaptureTime(XFile(files?.first.path??"")).then((onValue){
+                                      if(onValue!=null) {
+                                        createdDate = onValue.toString();
+                                      }else
+                                        {
+                                          createdDate = currentDate;
+                                        }
+                                    });
                                     if (files != null && files.isNotEmpty) {
                                       setState(() {
                                         selectedFiles.add(files.first); // directly assign all picked images
-                                        createdDate = currentDate;
+                                        // createdDate = currentDate;
                                         isCameraUpload = true;
                                       });
 
@@ -649,5 +683,32 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedFiles.clear();
     });
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  Future<String?> getVideoFormattedDate(XFile videoFile) async {
+    try {
+      final metadata =
+      await MetadataRetriverPlatform.instance.getDetails(
+        File(videoFile.path),
+      );
+
+      if (metadata == null || metadata['date_time'] == null) {
+        return null;
+      }
+
+      /// Example value:
+      /// 2025-12-27T04:51:27.000Z
+      final String rawDate = metadata['date_time'];
+
+      final DateTime parsedDate = DateTime.parse(rawDate).toLocal();
+
+      final String formattedDate =
+      DateFormat('yyyy-MM-dd').format(parsedDate);
+
+      return formattedDate;
+    } catch (e) {
+      debugPrint('Error reading video date: $e');
+      return null;
+    }
   }
 }
