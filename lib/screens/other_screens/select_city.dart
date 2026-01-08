@@ -75,13 +75,13 @@ class _SelectCityState extends State<SelectCity> {
                         ? allCities
                         : allCities.where((city) {
                       final cityName = city.city?.toLowerCase() ?? "";
-                      final stateName = city.state?.toLowerCase() ?? "";
+                      // final stateName = city.state?.toLowerCase() ?? "";
 
                       final cityWords = cityName.split(RegExp(r'\s+'));
-                      final stateWords = stateName.split(RegExp(r'\s+'));
+                      // final stateWords = stateName.split(RegExp(r'\s+'));
 
-                      return cityWords.contains(searchQuery) ||
-                          stateWords.contains(searchQuery);
+                      return cityWords.any((word) => word.startsWith(searchQuery)); /*||
+                          stateWords.any((word) => word.startsWith(searchQuery));*/
                     }).toList();
 
 

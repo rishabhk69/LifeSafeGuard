@@ -172,7 +172,9 @@ final goRouter = GoRouter(
       path: '/otherProfileScreen',
       builder: (context, state) {
         dynamic args = state.extra;
-        return OtherProfileScreen(args['userId'].toString());
+        String userId = args['userId'].toString();
+        String userName = args['userName'].toString();
+        return OtherProfileScreen(userId,userName);
       },
     ),
   ],

@@ -129,9 +129,9 @@ class CommonFunction{
       return '';
     }
     else{
-    DateTime utcDateTime = DateFormat("dd MMM yyyy hh:mm:ss a",).parseUtc(utcString);
+    DateTime utcDateTime = DateFormat("dd MMM yyyy hh:mm",).parseUtc(utcString);
     DateTime localDateTime = utcDateTime.toLocal();
-    String formattedLocal = DateFormat("dd MMM yyyy hh:mm:ss a",).format(localDateTime);
+    String formattedLocal = DateFormat("dd MMM yyyy hh:mm",).format(localDateTime);
     return formattedLocal;
     }
   }

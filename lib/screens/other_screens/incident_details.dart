@@ -167,8 +167,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 const Icon(Icons.access_time, color: Colors.orange, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  incidentsModel?.time??"",
-                  // "23 JAN, 2025 | 06:23pm",
+                  CommonFunction().formatLocal(incidentsModel?.time??""),
+                  // incidentsModel?.time??"",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ],

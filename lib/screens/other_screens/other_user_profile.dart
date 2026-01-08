@@ -13,7 +13,8 @@ import '../../constants/app_config.dart';
 
 class OtherProfileScreen extends StatefulWidget {
   dynamic userId;
-  OtherProfileScreen(this.userId);
+  dynamic username;
+  OtherProfileScreen(this.userId,this.username);
 
 
   @override
@@ -65,7 +66,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title:  Text(
-          GuardLocalizations.of(context)!.translate("profile") ?? "",
+          widget.username,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
@@ -105,7 +106,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              profileState.userIncidentsModel.userName ?? "",
+                              '${profileState.userIncidentsModel.firstName ?? ""} ${profileState.userIncidentsModel.lastName ?? ""}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -116,16 +117,27 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        profileState.userIncidentsModel.phone ?? "",
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "${profileState.userIncidentsModel.totalIncidents ?? ""} incidents",
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
+                        RichText(
+                                text: TextSpan(
+                                    text:   profileState.userIncidentsModel.totalIncidents ?? "",
+                                    style: TextStyle( fontSize: 18,
+                                      fontWeight: FontWeight.bold,color: Colors.black),
+                                    children: [
+                                      const TextSpan(
+                                        text: ' ',
+                                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                                      ),
+                                     const TextSpan(
+                                        text: 'incidents',
+                                       style: TextStyle(color: Colors.grey, fontSize: 14),
+                                      ),
+                                    ])),
+
+                      // const SizedBox(height: 4),
+                      // Text(
+                      //   "${profileState.userIncidentsModel.totalIncidents ?? ""} incidents",
+                      //   style: TextStyle(color: Colors.grey, fontSize: 14),
+                      // ),
                     ],
                   ),
 

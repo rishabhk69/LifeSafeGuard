@@ -312,12 +312,15 @@ class _VideoScreenState extends State<VideoScreen> {
                                   BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
                                 }
                                 else{
+                                      await _videoController?.pause();
+                                      // await _videoController?.dispose();
                                   BlocProvider.of<UserIncidentsBloc>(context).add(UserIncidentsRefreshEvent(
                                       incidentState.incidentsModel[index].userId.toString(),
                                       10,
                                       0));
                                   context.push('/otherProfileScreen',extra: {
-                                    'userId' : incidentState.incidentsModel[index].userId
+                                    'userId' : incidentState.incidentsModel[index].userId,
+                                    'userName' : incidentState.incidentsModel[index].userName
                                   });
                                 }
                               },

@@ -197,77 +197,77 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorConstant.primaryColor,
-                        minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      icon: Icon(Icons.photo_library_outlined, color: Colors.white),
-                      label: Text(GuardLocalizations.of(context)!.translate("chooseFromGallery") ?? "",style: GoogleFonts.poppins(
-                          color: ColorConstant.whiteColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18
-                      ),),
-                      onPressed: () async {
-                        await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
-                          if (files != null && files.isNotEmpty) {
-                            if (isVideo) {
-                             try{
-                               XFile videoFile = files.first;
-                               selectedFiles = [];
-                               FileStat stat = await File(videoFile.path).stat();
-                               createdDate = stat.accessed.toString();
-                               CommonFunction().compressVideo(videoFile, context).then((compressed) async {
-                                 locator<DialogService>().hideLoader();
-                                 final String? videoDate =
-                                 await getVideoFormattedDate(videoFile);
-                                 currentDate = videoDate;
-                                 print(videoDate);
-                                 setState(() {
-                                   if (compressed == null) {
-                                     selectedFiles = [];
-                                     isCameraUpload = false;
-                                   } else {
-                                     selectedFiles = [XFile(compressed.path)];
-                                     createdDate = currentDate;
-                                     isCameraUpload = true;
-                                   }
-                                 });
-                               });
-
-                             }
-                             catch(e){
-                               print(e);
-                             }
-                            } else {
-                              // ---- MULTIPLE IMAGES ----
-
-                              CommonFunction().getImageCaptureTime(XFile(files.first.path)).then((onValue){
-                                if(onValue!=null) {
-                                  createdDate = onValue.toString();
-                                }else
-                                {
-                                  createdDate = currentDate;
-                                }
-                              });
-
-                              setState(() {
-                                selectedFiles = files;
-                                // createdDate = stats.first.accessed.toString(); // take first image’s timestamp
-                                isCameraUpload = false;
-                              });
-                            }
-                          } else {
-                            return null;
-                          }
-                        });
-
-                      },
-                    ),
-                    const SizedBox(height: 10),
+                    // ElevatedButton.icon(
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: ColorConstant.primaryColor,
+                    //     minimumSize: Size(double.infinity, 50),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(8),
+                    //     ),
+                    //   ),
+                    //   icon: Icon(Icons.photo_library_outlined, color: Colors.white),
+                    //   label: Text(GuardLocalizations.of(context)!.translate("chooseFromGallery") ?? "",style: GoogleFonts.poppins(
+                    //       color: ColorConstant.whiteColor,
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 18
+                    //   ),),
+                    //   onPressed: () async {
+                    //     await CommonFunction().pickImageVideoFile(!isVideo, true, context).then((files) async {
+                    //       if (files != null && files.isNotEmpty) {
+                    //         if (isVideo) {
+                    //          try{
+                    //            XFile videoFile = files.first;
+                    //            selectedFiles = [];
+                    //            FileStat stat = await File(videoFile.path).stat();
+                    //            createdDate = stat.accessed.toString();
+                    //            CommonFunction().compressVideo(videoFile, context).then((compressed) async {
+                    //              locator<DialogService>().hideLoader();
+                    //              final String? videoDate =
+                    //              await getVideoFormattedDate(videoFile);
+                    //              currentDate = videoDate;
+                    //              print(videoDate);
+                    //              setState(() {
+                    //                if (compressed == null) {
+                    //                  selectedFiles = [];
+                    //                  isCameraUpload = false;
+                    //                } else {
+                    //                  selectedFiles = [XFile(compressed.path)];
+                    //                  createdDate = currentDate;
+                    //                  isCameraUpload = true;
+                    //                }
+                    //              });
+                    //            });
+                    //
+                    //          }
+                    //          catch(e){
+                    //            print(e);
+                    //          }
+                    //         } else {
+                    //           // ---- MULTIPLE IMAGES ----
+                    //
+                    //           CommonFunction().getImageCaptureTime(XFile(files.first.path)).then((onValue){
+                    //             if(onValue!=null) {
+                    //               createdDate = onValue.toString();
+                    //             }else
+                    //             {
+                    //               createdDate = currentDate;
+                    //             }
+                    //           });
+                    //
+                    //           setState(() {
+                    //             selectedFiles = files;
+                    //             // createdDate = stats.first.accessed.toString(); // take first image’s timestamp
+                    //             isCameraUpload = false;
+                    //           });
+                    //         }
+                    //       } else {
+                    //         return null;
+                    //       }
+                    //     });
+                    //
+                    //   },
+                    // ),
+                    // const SizedBox(height: 10),
                     // if(isVideo)
                     // FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? ""))
                   ],
