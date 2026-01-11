@@ -124,6 +124,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
+          userId==widget.incidentData.userId ?
           BlocListener<DeleteIncidentBloc,DeleteIncidentState>(
             listener: (context,deleteListener) {
               if(deleteListener is DeleteIncidentLoadingState){
@@ -211,7 +212,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
               ),
             ));
           },),
-          )
+          ) :Container()
         ],
       ),
       body:  Stack(

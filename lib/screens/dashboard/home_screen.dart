@@ -622,6 +622,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 else if(blocListener is PostIncidentsSuccessState){
                   locator<DialogService>().hideLoader();
                   locator<ToastService>().show(blocListener.postIncidentsData.message??"");
+                  BlocProvider.of<SetIncidentsBloc>(context).selectedIncident =
+                      GuardLocalizations.of(NavigationServiceKey.navigatorKey.currentState!.context)!.translate("selectType") ?? "";
                   clearSelected();
                 }
                 else if(blocListener is PostIncidentsErrorState){

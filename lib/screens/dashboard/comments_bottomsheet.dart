@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
+import 'package:untitled/bloc/dashboard_bloc.dart';
+import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
@@ -140,13 +142,13 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                         margin: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              radius: 18,
-                              backgroundImage: NetworkImage(
-                                "https://randomuser.me/api/portraits/men/1.jpg",
-                              ),
-                            ),
-                            const SizedBox(width: 8),
+                            // CircleAvatar(
+                            //   radius: 18,
+                            //   backgroundImage: NetworkImage(
+                            //     "https://randomuser.me/api/portraits/men/1.jpg",
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 8),
                             Expanded(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -178,6 +180,7 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                                 context.pop();
                                 locator<DialogService>().hideLoader();
                                 locator<ToastService>().show(postListener.postCommentData.message??"");
+                                BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentsModel.incidentId));
                               }
                               else if(postListener is PostCommentErrorState){
                                 commentsController.clear();

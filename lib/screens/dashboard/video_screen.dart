@@ -20,9 +20,7 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
-import 'package:untitled/constants/strings.dart';
 import 'package:untitled/screens/dashboard/comments_bottomsheet.dart';
-import 'package:untitled/screens/dashboard/other_user_profile.dart';
 import 'package:video_player/video_player.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
@@ -67,7 +65,7 @@ class _VideoScreenState extends State<VideoScreen> {
       currentIndex = index;
       _currentPage = index;
     });
-
+    BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidents[index].incidentId));
     // Initialize video
     final current = incidents[index];
     if (current.isVideo == 'true' && current.media!.isNotEmpty) {
@@ -78,7 +76,6 @@ class _VideoScreenState extends State<VideoScreen> {
       _videoController = null;
     }
 
-    // ✅ Load next page if reached near the end
     if (index == incidents.length - 1) {
       final bloc = BlocProvider.of<IncidentsBloc>(context, listen: false);
       final nextOffset = bloc.allIncidents.length;
@@ -97,7 +94,6 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   void dispose() {
-    print('dispossees');
     _videoController?.pause();
     _videoController?.dispose();
     super.dispose();
@@ -175,7 +171,7 @@ class _VideoScreenState extends State<VideoScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              height: 200,
+                              height: MediaQuery.of(context).size.height-150,
                               child: PageView.builder(
                                 controller: _pageController,
                                 scrollDirection: Axis.horizontal,
@@ -190,7 +186,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                   return Image.network(
                                     AppConfig.IMAGE_BASE_URL +
                                         incidentState.incidentsModel[index].media![mediaIndex].name!,
-                                    fit: BoxFit.fitWidth,
+                                    fit: BoxFit.fill,
                                     // width: double.infinity,
                                   );
                                 },
@@ -280,10 +276,25 @@ class _VideoScreenState extends State<VideoScreen> {
                                    fit: BoxFit.scaleDown,
                                    height: 35,
                                    width: 35,),
-                                 Text(incidentState.incidentsModel[index].commentCount.toString(),style: GoogleFonts.poppins(
-                                     fontWeight: FontWeight.w400,
-                                     color: ColorConstant.whiteColor
-                                 ),),
+                                 BlocBuilder<CommentsBloc,CommentsState>(
+                                   builder: (context,commentsBuilder){
+                                   if(commentsBuilder is CommentsSuccessState){
+                                      return commentsBuilder.commentsModel.isEmpty?
+                                     Text(incidentState.incidentsModel[index].commentCount.toString(),style: GoogleFonts.poppins(
+                                         fontWeight: FontWeight.w400,
+                                         color: ColorConstant.whiteColor
+                                     ),):
+                                     Text(commentsBuilder.commentsModel.length.toString(),style: GoogleFonts.poppins(
+                                         fontWeight: FontWeight.w400,
+                                         color: ColorConstant.whiteColor
+                                     ),);
+                                   }
+                                  return  Text(incidentState.incidentsModel[index].commentCount.toString(),style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorConstant.whiteColor
+                                  ),);
+                                 }),
+
                                ],
                              ),
                            ),
@@ -305,23 +316,32 @@ class _VideoScreenState extends State<VideoScreen> {
                           children:  [
                             InkWell(
                               onTap: () async {
-                                String userId = await AppUtils().getUserId();
-                                if(incidentState.incidentsModel[index].userId==userId){
-                                  BlocProvider.of<ProfileBloc>(context, listen: false).add(
-                                      ProfileRefreshEvent(10, 0, userId));
-                                  BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
-                                }
-                                else{
-                                      await _videoController?.pause();
-                                      // await _videoController?.dispose();
-                                  BlocProvider.of<UserIncidentsBloc>(context).add(UserIncidentsRefreshEvent(
-                                      incidentState.incidentsModel[index].userId.toString(),
-                                      10,
-                                      0));
-                                  context.push('/otherProfileScreen',extra: {
-                                    'userId' : incidentState.incidentsModel[index].userId,
-                                    'userName' : incidentState.incidentsModel[index].userName
-                                  });
+                                if(incidentState.incidentsModel[index].isAnonymous==false) {
+                                  String userId = await AppUtils().getUserId();
+                                  if (incidentState.incidentsModel[index]
+                                      .userId == userId) {
+                                    BlocProvider.of<ProfileBloc>(
+                                        context, listen: false).add(
+                                        ProfileRefreshEvent(10, 0, userId));
+                                    BlocProvider.of<DashboardBloc>(context).add(
+                                        DashboardRefreshEvent(2));
+                                  }
+                                  else {
+                                    await _videoController?.pause();
+                                    // await _videoController?.dispose();
+                                    BlocProvider.of<UserIncidentsBloc>(context)
+                                        .add(UserIncidentsRefreshEvent(
+                                        incidentState.incidentsModel[index]
+                                            .userId.toString(),
+                                        10,
+                                        0));
+                                    context.push('/otherProfileScreen', extra: {
+                                      'userId': incidentState
+                                          .incidentsModel[index].userId,
+                                      'userName': incidentState
+                                          .incidentsModel[index].userName
+                                    });
+                                  }
                                 }
                               },
                               child: Row(
@@ -337,7 +357,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                     ),
                                   ),
                                   addWidth(5),
-                                  Text(incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
+                                  Text(incidentState.incidentsModel[index].isAnonymous??false ?  GuardLocalizations.of(context)!.translate("anonymous") ?? "":incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
                                       color: ColorConstant.whiteColor

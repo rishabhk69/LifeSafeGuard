@@ -125,16 +125,15 @@ class CommonFunction{
   }
 
   String formatLocal(String utcString) {
-    if(utcString.isEmpty) {
+    if (utcString.isEmpty) {
       return '';
     }
-    else{
-    DateTime utcDateTime = DateFormat("dd MMM yyyy hh:mm",).parseUtc(utcString);
+    DateTime utcDateTime =
+    DateFormat("dd MMM yyyy hh:mm:ss a").parseUtc(utcString);
     DateTime localDateTime = utcDateTime.toLocal();
-    String formattedLocal = DateFormat("dd MMM yyyy hh:mm",).format(localDateTime);
-    return formattedLocal;
-    }
+    return DateFormat("dd MMM yyyy hh:mm a").format(localDateTime);
   }
+
 
 
   bool calculateExpire(String date) {
