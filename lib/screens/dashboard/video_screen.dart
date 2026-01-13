@@ -316,7 +316,7 @@ class _VideoScreenState extends State<VideoScreen> {
                           children:  [
                             InkWell(
                               onTap: () async {
-                                if(incidentState.incidentsModel[index].isAnonymous==false) {
+                                if(incidentState.incidentsModel[index].isReportedAnonymously==false) {
                                   String userId = await AppUtils().getUserId();
                                   if (incidentState.incidentsModel[index]
                                       .userId == userId) {
@@ -357,7 +357,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                     ),
                                   ),
                                   addWidth(5),
-                                  Text(incidentState.incidentsModel[index].isAnonymous??false ?  GuardLocalizations.of(context)!.translate("anonymous") ?? "":incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
+                                  Text(incidentState.incidentsModel[index].isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymous") ?? "":incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
                                       color: ColorConstant.whiteColor
