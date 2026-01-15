@@ -43,6 +43,8 @@ dependencies:
   photo_view: ^0.15.0
   exif: ^3.1.4
   metadata_retriver: ^0.0.2
+  path_provider: ^2.1.2
+  path: ^1.9.0
 #  ffmpeg_kit_flutter_new: ^4.1.0
 
 

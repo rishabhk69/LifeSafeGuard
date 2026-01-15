@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -92,30 +94,51 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 borderRadius: BorderRadius.circular(12),
                 child: Stack(
                   children: [
-                    GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                          (incidentsModel?.location?.latitude??0.0).toDouble(),
-                          (incidentsModel?.location?.longitude??0.0).toDouble(),
-                        ),
-                        zoom: 15,
-                      ),
-                      markers: {
-                        Marker(
-                          markerId: const MarkerId("incident_location"),
-                          position: LatLng(
-                            (incidentsModel?.location?.latitude??0).toDouble(),
-                            (incidentsModel?.location?.longitude??0).toDouble(),
+                    Stack(
+                      children: [
+                        GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              (incidentsModel?.location?.latitude ?? 0.0).toDouble(),
+                              (incidentsModel?.location?.longitude ?? 0.0).toDouble(),
+                            ),
+                            zoom: 15,
                           ),
-                          infoWindow: InfoWindow(
-                            title: incidentsModel?.title ?? "Incident",
-                            snippet: incidentsModel?.address ?? "",
-                          ),
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId("incident_location"),
+                              position: LatLng(
+                                (incidentsModel?.location?.latitude ?? 0).toDouble(),
+                                (incidentsModel?.location?.longitude ?? 0).toDouble(),
+                              ),
+                              infoWindow: InfoWindow(
+                                title: incidentsModel?.title ?? "Incident",
+                                snippet: incidentsModel?.address ?? "",
+                              ),
+                            ),
+                          },
+                          zoomControlsEnabled: true,
                         ),
-                      },
-                      myLocationEnabled: false,
-                      zoomControlsEnabled: true,
+
+                        if (incidentsModel?.isHideLocation??false) // your condition
+                          Positioned.fill(
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                child: Container(
+                                  color: Colors.black.withOpacity(0.3),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    'Map hidden for your role',
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
+                    if(incidentsModel?.isHideLocation==false)
                     Positioned(
                         left: 10,
                         bottom: 30,

@@ -11,8 +11,9 @@ class UserIncidentsRefreshEvent extends UserIncidentsEvent {
   String userId;
   int size;
   int offSet;
+  bool isLoggedInUser;
 
-  UserIncidentsRefreshEvent(this.userId,this.size,this.offSet);
+  UserIncidentsRefreshEvent(this.userId,this.size,this.offSet,this.isLoggedInUser);
 }
 
 class UserIncidentsState {}
@@ -46,7 +47,7 @@ class UserIncidentsBloc extends Bloc<UserIncidentsEvent, UserIncidentsState> {
       UserIncidentsRefreshEvent event, Emitter<UserIncidentsState> emit) async {
     emit(UserIncidentsLoadingState());
     try {
-      final result = await repository.getIncidentsById(id: event.userId,offset: event.offSet,size: event.size);
+      final result = await repository.getIncidentsById(id: event.userId,offset: event.offSet,size: event.size,isLoggedInUser: event.isLoggedInUser);
 
       if (result.isSuccess) {
         ProfileModel  userIncidents = ProfileModel.fromJson(result.data);

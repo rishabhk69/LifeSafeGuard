@@ -92,7 +92,7 @@ import '../../main.dart';
      }
    }
 
-   Future<dynamic> getIncidentsById({int? offset, int? size,String? id,}) async {
+   Future<dynamic> getIncidentsById({int? offset, int? size,String? id,bool? isLoggedInUser,}) async {
      String token = await AppUtils().getToken();
      try {
        final response = await _dio.get(
@@ -107,6 +107,7 @@ import '../../main.dart';
          queryParameters: {
            'offset':offset,
            'size' :size,
+           'isLoggedInUser' :isLoggedInUser,
          },
        );
        return response.data;
@@ -115,7 +116,7 @@ import '../../main.dart';
      }
    }
 
-   Future<dynamic> getProfile({int? offset, int? size, String? userId}) async {
+   Future<dynamic> getProfile({int? offset, int? size, String? userId, bool? isLoggedInUser}) async {
      String token = await AppUtils().getToken();
      try {
        final response = await _dio.get(
@@ -129,7 +130,8 @@ import '../../main.dart';
          ),
          queryParameters: {
            'offset':offset,
-           'size' :size
+           'size' :size,
+           'isLoggedInUser' :isLoggedInUser
          },
        );
        return response.data;
@@ -261,6 +263,7 @@ import '../../main.dart';
      bool? isCameraUpload,
      bool? isVideo,
      bool? isEdited,
+     bool? isHideLocation,
      List<File>? files}) async {
      try {
        String token = await AppUtils().getToken();
@@ -282,6 +285,7 @@ import '../../main.dart';
          "isVideo": isVideo,
          "address": address,
          "pincode": pincode,
+         "isHideLocation": isHideLocation,
          "time": time,
          "isMediaDeleted": false,
          if (files != null && files.isNotEmpty)
@@ -509,7 +513,7 @@ import '../../main.dart';
         "lastName": lastName,
         "userName": userName,
         "comment": comment,
-        "timestamp": currentDate
+        // "timestamp": currentDate
       };
        final response = await _dio.post(
          AppConfig.postComments,

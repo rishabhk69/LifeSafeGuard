@@ -148,6 +148,8 @@ class _VideoScreenState extends State<VideoScreen> {
                   if (index == incidents.length) {
                     return const Center(child: CircularProgressIndicator(color: Colors.white));
                   }
+
+                  print("ProfilePic:${incidentState.incidentsModel.toString()}");
                   return Stack(
                     children: [
                       incidentState.incidentsModel[index].isVideo == 'true'?
@@ -322,19 +324,22 @@ class _VideoScreenState extends State<VideoScreen> {
                                       .userId == userId) {
                                     BlocProvider.of<ProfileBloc>(
                                         context, listen: false).add(
-                                        ProfileRefreshEvent(10, 0, userId));
+                                        ProfileRefreshEvent(10, 0, userId,true));
                                     BlocProvider.of<DashboardBloc>(context).add(
                                         DashboardRefreshEvent(2));
                                   }
                                   else {
                                     await _videoController?.pause();
+                                    final id = await AppUtils().getUserId();
+
                                     // await _videoController?.dispose();
                                     BlocProvider.of<UserIncidentsBloc>(context)
                                         .add(UserIncidentsRefreshEvent(
                                         incidentState.incidentsModel[index]
                                             .userId.toString(),
                                         10,
-                                        0));
+                                        0,id==incidentState.incidentsModel[index]
+                                        .userId.toString()));
                                     context.push('/otherProfileScreen', extra: {
                                       'userId': incidentState
                                           .incidentsModel[index].userId,
@@ -349,15 +354,17 @@ class _VideoScreenState extends State<VideoScreen> {
                                   SizedBox(
                                     width: 40,
                                     height: 40,
-                                    child: (incidentState.incidentsModel[index].profilePic??"").isEmpty ?
-                                    Icon(Icons.person_4_sharp,color: Colors.white,):CircleAvatar(
+                                    child: incidentState.incidentsModel[index].isReportedAnonymously??false ?
+                                    SvgPicture.asset(ImageHelper.unknownUser):
+                                    incidentState.incidentsModel[index].profilePic!.contains('DemoProfilePic.svg') ?SvgPicture.network(AppConfig.IMAGE_BASE_URL+(incidentState.incidentsModel[index].profilePic??"")):
+                                    CircleAvatar(
                                       backgroundImage:
                                       NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentState.incidentsModel[index].profilePic??"")), // User profile
                                       radius: 25,
                                     ),
                                   ),
                                   addWidth(5),
-                                  Text(incidentState.incidentsModel[index].isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymous") ?? "":incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
+                                  Text(incidentState.incidentsModel[index].isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymousUser") ?? "":incidentState.incidentsModel[index].userName??"",style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
                                       color: ColorConstant.whiteColor

@@ -50,6 +50,7 @@ class PostIncidentsErrorState extends PostIncidentsState {
 
 class PostIncidentsBloc extends Bloc<PostIncidentsEvent, PostIncidentsState> {
   final MainRepository repository;
+  bool isHideLocation = false;
 
   PostIncidentsBloc(this.repository) : super(PostIncidentsInitialState()) {
     on<PostIncidentsRefreshEvent>(_onPostIncidentsRefresh);
@@ -76,6 +77,7 @@ class PostIncidentsBloc extends Bloc<PostIncidentsEvent, PostIncidentsState> {
           address: event.address,
           pincode: event.pinCode,
           time: event.time,
+          isHideLocation: isHideLocation,
       ); // API call
 
       if (result.isSuccess) {

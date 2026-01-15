@@ -18,6 +18,7 @@ class IncidentsModel {
   dynamic commentCount;
   Location? location;
   bool? isReportedAnonymously;
+  bool? isHideLocation;
 
   IncidentsModel(
       {this.incidentId,
@@ -35,6 +36,7 @@ class IncidentsModel {
         this.city,
         this.state,
         this.isReportedAnonymously,
+        this.isHideLocation,
         this.location});
 
   IncidentsModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class IncidentsModel {
     commentCount = json['commentCount'];
     description = json['description'];
     isReportedAnonymously = json['isReportedAnonymously'];
+    isHideLocation = json['isHideLocation'];
     location = json['incidentLocation'] != null
         ? new Location.fromJson(json['incidentLocation'])
         : null;
@@ -82,6 +85,7 @@ class IncidentsModel {
     data['description'] = this.description;
     data['address'] = this.address;
     data['isReportedAnonymously'] = this.isReportedAnonymously;
+    data['isHideLocation'] = this.isHideLocation;
     if (this.location != null) {
       data['incidentLocation'] = this.location!.toJson();
     }

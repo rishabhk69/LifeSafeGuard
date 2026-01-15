@@ -341,5 +341,6 @@
   "youWantToDeleteIncident": "You want to delete Incident",
   "instructions": "Instructions",
   "loading": "Loading..",
-  "videoUploadLimitText": "Video upload limit: Maximum duration allowed is 20 seconds."
+  "videoUploadLimitText": "Max video limit allowed to upload : 20 sec",
+  "anonymousUser": "Anonymous User"
 }

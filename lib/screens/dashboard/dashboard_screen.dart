@@ -37,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         userId = onValue;
         BlocProvider.of<ProfileBloc>(context, listen: false).add(
-            ProfileRefreshEvent(12, 0, userId));
+            ProfileRefreshEvent(12, 0, userId,true));
       });
     });
   }
@@ -87,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                     else if (index == 2) {
                       BlocProvider.of<ProfileBloc>(context, listen: false).add(
-                          ProfileRefreshEvent(10, 0, userId));
+                          ProfileRefreshEvent(10, 0, userId,true));
                     }
                     else{
                       BlocProvider.of<SettingBloc>(context, listen: false).add(

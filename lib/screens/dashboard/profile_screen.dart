@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         String userId = await AppUtils().getUserId();
         offset += size;
-        bloc.add(ProfileRefreshEvent(size, offset, userId));
+        bloc.add(ProfileRefreshEvent(size, offset, userId,true));
       }
     });
   }
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                                 else if(loginState is UpdateProfileSuccessState){
                                   BlocProvider.of<ProfileBloc>(context, listen: false).add(
-                                      ProfileRefreshEvent(10, 0, profileState.profileModel.userId??""));
+                                      ProfileRefreshEvent(10, 0, profileState.profileModel.userId??"",true));
                                   locator<DialogService>().hideLoader();
                                   locator<ToastService>().show(loginState.commonModel.message??"");
                                 }

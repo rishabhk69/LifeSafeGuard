@@ -63,23 +63,25 @@ class MainRepository extends BaseRepository {
   }
 
   Future<Result<dynamic>> getIncidentsById(
-      {int? offset, int? size,String? id}) async {
+      {int? offset, int? size,String? id,bool? isLoggedInUser}) async {
     final service = MainService(await dio);
     return safeCall(service.getIncidentsById(
       offset: offset,
       size: size,
-      id: id
+      id: id,
+      isLoggedInUser: isLoggedInUser
     ));
   }
 
 
   Future<Result<dynamic>> getProfile(
-      {int? offset, int? size,String? userId}) async {
+      {int? offset, int? size,String? userId,bool? isLoggedInUser}) async {
     final service = MainService(await dio);
     return safeCall(service.getProfile(
       userId: userId,
       offset: offset,
-      size: size
+      size: size,
+      isLoggedInUser: isLoggedInUser,
     ));
   }
 
@@ -112,6 +114,7 @@ class MainRepository extends BaseRepository {
       bool? reportAnonymously,
       bool? isCameraUpload,
       bool? isVideo,
+      bool? isHideLocation,
       bool? isEdited,
       List<File>? files}) async {
     final service = MainService(await dio);
@@ -129,6 +132,7 @@ class MainRepository extends BaseRepository {
         userId: userId,
         address: address,
         pincode: pincode,
+        isHideLocation: isHideLocation,
         time: time,
         category: category));
   }

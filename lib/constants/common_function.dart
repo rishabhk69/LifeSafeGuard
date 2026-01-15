@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
@@ -260,6 +262,32 @@ class CommonFunction{
     }
 
     return null;
+  }
+
+  Future<File?> saveFileToDevice(File source) async {
+    try {
+      if (!Platform.isAndroid) {
+        // iOS fallback
+        final dir = await getApplicationDocumentsDirectory();
+        return source.copy('${dir.path}/${basename(source.path)}');
+      }
+
+      final Directory downloadsDir =
+      Directory('/storage/emulated/0/Download');
+
+      if (!downloadsDir.existsSync()) {
+        downloadsDir.createSync(recursive: true);
+      }
+
+      final String fileName = basename(source.path);
+      final String newPath = '${downloadsDir.path}/$fileName';
+
+      final File savedFile = await source.copy(newPath);
+      return savedFile;
+    } catch (e) {
+      print('Video error: $e');
+      return null;
+    }
   }
 
 

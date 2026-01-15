@@ -13,8 +13,9 @@ class ProfileRefreshEvent extends ProfileEvent {
   int? offset;
   int? size;
   String? userId;
+  bool? isLoggedInUser;
 
-  ProfileRefreshEvent(this.size,this.offset,this.userId);
+  ProfileRefreshEvent(this.size,this.offset,this.userId,this.isLoggedInUser);
 }
 
 class ProfileState {}
@@ -60,7 +61,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       final result = await repository.getProfile(
-          size: event.size, offset: event.offset, userId: event.userId);
+          size: event.size, offset: event.offset, userId: event.userId,isLoggedInUser: event.isLoggedInUser);
 
       if (result.isSuccess) {
         ProfileModel profileModel = ProfileModel.fromJson(result.data);

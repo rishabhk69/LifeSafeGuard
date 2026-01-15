@@ -154,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               XFile videoFile = files.first;
                               selectedFiles = [];
                               selectedFiles.add(videoFile);
+                              CommonFunction().saveFileToDevice(File(videoFile.path));
                               CommonFunction().compressVideo(videoFile, context).then((compressed) async {
                                 locator<DialogService>().hideLoader();
                                 final String? videoDate =
@@ -197,6 +198,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
+                    if(isVideo)
+                    FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
+                      style: TextStyle(
+                          color: Colors.black
+                      ),)),
                     // ElevatedButton.icon(
                     //   style: ElevatedButton.styleFrom(
                     //     backgroundColor: ColorConstant.primaryColor,
@@ -580,6 +586,31 @@ class _HomeScreenState extends State<HomeScreen> {
                        setState(() {
                          isAnonymous= !isAnonymous;
                        });
+                      if(isAnonymous){
+                        locator<DialogService>().showCommonDialog(context, Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Hide Location from other users?'),
+                              SizedBox(height: 10,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  ElevatedButton(onPressed: (){
+                                    BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = true;
+                                    context.pop();
+                                  }, child: Text(GuardLocalizations.of(context)!.translate("yes") ?? "")),
+                                  ElevatedButton(onPressed: (){
+                                    BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = false;
+                                    context.pop();
+                                  }, child: Text(GuardLocalizations.of(context)!.translate("no") ?? "")),
+                                ],)
+
+                            ],
+                          ),
+                        ));
+                      }
                       },
                       child: SvgPicture.asset(isAnonymous == false ?ImageHelper.imageDisableToggle: ImageHelper.imageEnableToggle))
                 ],

@@ -135,7 +135,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                 context.pop();
                 context.go('/dashboardScreen');
                 BlocProvider.of<ProfileBloc>(context, listen: false).add(
-                    ProfileRefreshEvent(10, 0, userId));
+                    ProfileRefreshEvent(10, 0, userId,true));
                 BlocProvider.of<DashboardBloc>(context).add(DashboardRefreshEvent(2));
                 locator<ToastService>().show(deleteListener.commonModel.message??"");
               }
