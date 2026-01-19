@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:media_scanner/media_scanner.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -267,7 +268,6 @@ class CommonFunction{
   Future<File?> saveFileToDevice(File source) async {
     try {
       if (!Platform.isAndroid) {
-        // iOS fallback
         final dir = await getApplicationDocumentsDirectory();
         return source.copy('${dir.path}/${basename(source.path)}');
       }
@@ -283,6 +283,9 @@ class CommonFunction{
       final String newPath = '${downloadsDir.path}/$fileName';
 
       final File savedFile = await source.copy(newPath);
+
+      await MediaScanner.loadMedia(path: savedFile.path);
+
       return savedFile;
     } catch (e) {
       print('Video error: $e');

@@ -45,6 +45,7 @@ dependencies:
   metadata_retriver: ^0.0.2
   path_provider: ^2.1.2
   path: ^1.9.0
+  media_scanner: ^2.1.0
 #  ffmpeg_kit_flutter_new: ^4.1.0
 
 

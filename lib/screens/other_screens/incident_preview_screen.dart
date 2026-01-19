@@ -235,7 +235,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 200,
+                  height: MediaQuery.of(context).size.height-150,
                   child: PageView.builder(
                     controller: _pageController,
                     scrollDirection: Axis.horizontal,
@@ -318,19 +318,24 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     context.pop();
                     }
                   },
-                  child: Row(
+                  child:Row(
                     children: [
                       SizedBox(
                         width: 40,
                         height: 40,
-                        child: (incidentData!.profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
+                        child: incidentData?.isReportedAnonymously??false ?
+                        SvgPicture.asset(ImageHelper.unknownUser):
+                        incidentData!.profilePic==null? Icon(Icons.person,color: Colors.white,):
+                        incidentData!.profilePic!.contains('DemoProfilePic.svg') ?
+                        SvgPicture.network(AppConfig.IMAGE_BASE_URL+(incidentData?.profilePic??"")):
+                        CircleAvatar(
                           backgroundImage:
-                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData!.profilePic??"")), // User profile
+                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData?.profilePic??"")), // User profile
                           radius: 25,
                         ),
                       ),
                       addWidth(5),
-                      Text(incidentData!.userName??"",style: GoogleFonts.poppins(
+                      Text(incidentData?.isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymousUser") ?? "":incidentData?.userName??"",style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
                           color: ColorConstant.whiteColor
@@ -381,10 +386,10 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     // await _videoController?.dispose();
                     context.push('/incidentDetails',extra: incidentData);
                   },
-                  child: Text(GuardLocalizations.of(context)!.translate("seeMore") ?? "",
+                  child:  Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
-                        fontSize: 12,
+                        fontSize: 14,
                         color: ColorConstant.whiteColor
                     ),),
                 ),

@@ -183,7 +183,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     BlocProvider.of<SupportHelpBloc>(context,listen: false).add(SupportHelpRefreshEvent(
                         supportType: 'contact',
                         subject:'',
-                        number: numberController.text.trim(),
+                        number: "+91${numberController.text.trim()}",
                         inqueryType: selectedQuery,
                         email: emailController.text.trim(),
                         details: helpController.text.trim(),
