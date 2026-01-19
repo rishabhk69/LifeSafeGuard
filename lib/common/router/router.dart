@@ -155,7 +155,7 @@ final goRouter = GoRouter(
       path: '/incidentPreviewScreen',
       builder: (context, state) {
         dynamic args = state.extra;
-        final incident = ProfileModel.fromJson(args['incidentData']);
+        List<IncidentsModel> incident = args['incidentData'];
         dynamic index = args['index'];
         return  IncidentPreviewScreen(index,incident);
       },

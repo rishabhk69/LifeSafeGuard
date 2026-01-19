@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/constants/app_utils.dart';
 
@@ -39,7 +40,7 @@ class ProfileErrorState extends ProfileState {
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final MainRepository repository;
   String? userName;
-  List<Incidents> allIncidents = [];
+  List<IncidentsModel> allIncidents = [];
   bool hasMore = true;
   bool isLoadingMore = false;
 

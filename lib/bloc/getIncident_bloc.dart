@@ -110,7 +110,7 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
 
         if (newData.isNotEmpty) {
           allIncidents.addAll(newData);
-          emit(IncidentsSuccessState(List.from(allIncidents),isFilter)); // ✅ update UI
+          emit(IncidentsSuccessState(List.from(allIncidents),isFilter));
         }
       }
     } catch (e) {

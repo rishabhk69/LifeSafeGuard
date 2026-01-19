@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/get_user_incident_bloc.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
@@ -158,13 +159,13 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                     profileState.userIncidentsModel.incidents?.length,
                     // Number of posts
                     itemBuilder: (context, index) {
-                      final item = profileState.userIncidentsModel.incidents![index];
+                      final item = profileState.userIncidentsModel.incidents;
                       return InkWell(
                         onTap: (){
                           context.push('/incidentPreviewScreen',extra:
                           {
                             "index":index,
-                            "incidentData":profileState.userIncidentsModel.toJson()
+                            "incidentData":item
                           }
                           );
 
@@ -201,7 +202,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
                             ),
                           );
                         },
-                        child: buildItem(item),
+                        child: buildItem(item??[],index),
                       );
                     },
                   ),
@@ -217,8 +218,8 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
     );
   }
 
-  buildItem(Incidents item){
-    return item
+  buildItem(List<IncidentsModel> item,index){
+    return item[index]
         .isVideo ==
         "true"
         ? Stack(
@@ -228,7 +229,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
             image: DecorationImage(
               image: NetworkImage(
                 AppConfig.IMAGE_BASE_URL +
-                    (item
+                    (item[index]
                         .media![0]
                         .thumbnail ??
                         "")
@@ -247,7 +248,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
             child: SvgPicture.asset(ImageHelper.playCircle)),
       ],
     )
-        : (item
+        : (item[index]
         .media??[]).isEmpty ? Icon(Icons.image):Stack(
       children: [
         Container(
@@ -255,7 +256,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> {
             image: DecorationImage(
               image: NetworkImage(
                 AppConfig.IMAGE_BASE_URL +
-                    (item
+                    (item[index]
                         .media![0]
                         .name ??
                         "")

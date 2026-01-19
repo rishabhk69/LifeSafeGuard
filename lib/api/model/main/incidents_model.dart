@@ -112,3 +112,25 @@ class Location {
     return data;
   }
 }
+
+class Media {
+  bool? isMediaDeleted;
+  String? name;
+  String? thumbnail;
+
+  Media({this.isMediaDeleted, this.name, this.thumbnail});
+
+  Media.fromJson(Map<String, dynamic> json) {
+    isMediaDeleted = json['isMediaDeleted'];
+    thumbnail = json['thumbnail'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isMediaDeleted'] = this.isMediaDeleted;
+    data['name'] = this.name;
+    data['thumbnail'] = this.thumbnail;
+    return data;
+  }
+}

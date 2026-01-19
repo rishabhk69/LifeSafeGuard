@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/getIncident_bloc.dart';
@@ -251,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  buildItem(Incidents item){
+  buildItem(IncidentsModel item){
     return item
         .isVideo ==
         "true"

@@ -27,7 +27,7 @@ import '../dashboard/comments_bottomsheet.dart';
 
 class IncidentPreviewScreen extends StatefulWidget {
   int? index;
-  final ProfileModel incidentData;
+  final List<IncidentsModel> incidentData;
   IncidentPreviewScreen(this.index,this.incidentData);
 
   @override
@@ -35,7 +35,7 @@ class IncidentPreviewScreen extends StatefulWidget {
 }
 
 class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
-  ProfileModel? incidentData;
+  IncidentsModel? incidentData;
   VideoPlayerController? _videoController;
   int _currentPage = 0;
   int currentIndex = 0;
@@ -56,10 +56,10 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
   void initState() {
     super.initState();
     getId();
-    ProfileModel? incidentData = widget.incidentData;
-    if(incidentData.incidents?[widget.index!].isVideo=='true') {
+    IncidentsModel? incidentData = widget.incidentData[widget.index!];
+    if(incidentData.isVideo=='true') {
       _initializeVideoIfNeeded(
-          incidentData.incidents?[widget.index!].media?[0].name ?? "");
+          incidentData.media?[0].name ?? "");
     }
   }
 
@@ -98,7 +98,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    incidentData =  widget.incidentData;
+    incidentData =  widget.incidentData[widget.index!];
     address = 'Jaipur';
     // if(address==null) {
     //   getAddress(
@@ -124,7 +124,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
-          userId==widget.incidentData.userId ?
+          userId==widget.incidentData[widget.index!].userId ?
           BlocListener<DeleteIncidentBloc,DeleteIncidentState>(
             listener: (context,deleteListener) {
               if(deleteListener is DeleteIncidentLoadingState){
@@ -179,7 +179,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                             }
                             else{
                               context.read<DeleteIncidentBloc>().add(
-                                  DeleteIncidentRefreshEvent(widget.incidentData.incidents![widget.index!].incidentId.toString(),detailController.text));
+                                  DeleteIncidentRefreshEvent(incidentData!.incidentId.toString(),detailController.text));
                               context.pop();
                             }
                           }
@@ -202,7 +202,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => EditIncidentScreen(
-                            incidentData: widget.incidentData.incidents![widget.index!],
+                            incidentData: incidentData!,
                           ),
                         ),
                       );
@@ -217,7 +217,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
       ),
       body:  Stack(
         children: [
-          incidentData!.incidents![widget.index!].isVideo == 'true'?
+          incidentData!.isVideo == 'true'?
           Center(
             child: AspectRatio(
               aspectRatio: _videoController!.value.aspectRatio,
@@ -241,11 +241,11 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     scrollDirection: Axis.horizontal,
                     physics: const PageScrollPhysics(),
                     onPageChanged: _onPageChanged,
-                    itemCount: incidentData?.incidents?[widget.index!].media?.length ?? 0,
+                    itemCount: incidentData!.media?.length ?? 0,
                     itemBuilder: (context, mediaIndex) {
                       return Image.network(
                         AppConfig.IMAGE_BASE_URL +
-                            (incidentData?.incidents?[widget.index!].media![mediaIndex].name??""),
+                            (incidentData!.media![mediaIndex].name??""),
                         fit: BoxFit.fitWidth,
                         // width: double.infinity,
                       );
@@ -255,7 +255,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate((incidentData?.incidents?[widget.index!].media??[]).length, (dotIndex) {
+                  children: List.generate((incidentData!.media??[]).length, (dotIndex) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       width: _currentPage == dotIndex ? 10 : 8,
@@ -278,7 +278,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
               children: [
                 InkWell(
                   onTap: (){
-                    BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidents![widget.index!].incidentId));
+                    BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidentId));
                     showCommentsBottomSheet(context,incidentData as IncidentsModel);
                   },
                   child: Column(
@@ -287,7 +287,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                         fit: BoxFit.scaleDown,
                         height: 35,
                         width: 35,),
-                      Text(incidentData!.incidents![widget.index!].commentCount.toString(),style: GoogleFonts.poppins(
+                      Text(incidentData!.commentCount.toString(),style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           color: ColorConstant.whiteColor
                       ),),
@@ -323,9 +323,9 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                       SizedBox(
                         width: 40,
                         height: 40,
-                        child: (incidentData!.profilePhotoUrl??"").isEmpty ? Icon(Icons.person):CircleAvatar(
+                        child: (incidentData!.profilePic??"").isEmpty ? Icon(Icons.person):CircleAvatar(
                           backgroundImage:
-                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData!.profilePhotoUrl??"")), // User profile
+                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData!.profilePic??"")), // User profile
                           radius: 25,
                         ),
                       ),
@@ -340,7 +340,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                   ),
                 ),
                 addHeight(5),
-                Text(incidentData!.incidents![widget.index!].category??"",style: GoogleFonts.poppins(
+                Text(incidentData!.category??"",style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     color: ColorConstant.whiteColor
@@ -356,7 +356,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                         fontSize: 12,
                         color: ColorConstant.whiteColor,
                       ),
-                      "${incidentData!.incidents![widget.index!].city??""}, ${incidentData!.incidents![widget.index!].state??""}",
+                      "${incidentData!.city??""}, ${incidentData!.state??""}",
                     ),
                   ],
                 ),
@@ -365,7 +365,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                     SvgPicture.asset(ImageHelper.timerIc),
                     addWidth(5),
                     Text(
-                      CommonFunction().formatLocal(incidentData!.incidents![widget.index!].time??""),
+                      CommonFunction().formatLocal(incidentData!.time??""),
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
