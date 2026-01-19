@@ -342,5 +342,7 @@
   "instructions": "Instructions",
   "loading": "Loading..",
   "videoUploadLimitText": "Max video limit allowed to upload : 20 sec",
-  "anonymousUser": "Anonymous User"
+  "anonymousUser": "Anonymous User",
+  "preparing": "Preparing",
+  "videoIsSavedInYourGallery": "Video is saved in your gallery"
 }

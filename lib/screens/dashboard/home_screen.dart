@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:metadata_retriver/metadata_retriver.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -154,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               XFile videoFile = files.first;
                               selectedFiles = [];
                               selectedFiles.add(videoFile);
-                              CommonFunction().saveFileToDevice(File(videoFile.path));
+                              CommonFunction().saveFileToDevice(File(videoFile.path),context);
                               CommonFunction().compressVideo(videoFile, context).then((compressed) async {
                                 locator<DialogService>().hideLoader();
                                 final String? videoDate =

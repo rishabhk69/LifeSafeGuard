@@ -339,7 +339,13 @@
   "editIncident": "घटना संपादित करें",
   "viewIncident": "घटना देखें",
   "incidentPreview": "घटना पूर्वावलोकन",
-  "youWantToDeleteIncident": "क्या आप घटना हटाना चाहते हैं?"
+  "youWantToDeleteIncident": "क्या आप घटना हटाना चाहते हैं?",
+  "instructions": "निर्देश",
+  "loading": "लोड हो रहा है..",
+  "videoUploadLimitText": "वीडियो अपलोड करने की अधिकतम सीमा : 20 सेकंड",
+  "anonymousUser": "गुमनाम उपयोगकर्ता",
+  "preparing": "तैयारी हो रही है",
+  "videoIsSavedInYourGallery": "वीडियो आपकी गैलरी में सहेज दिया गया है"
 
 
 }

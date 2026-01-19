@@ -57,7 +57,13 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
     );
 
     final cmd =
-        "-i ${widget.file.path} -ss ${start / 1000} -to ${end / 1000} -c copy $output";
+        "-ss ${start / 1000} "
+        "-i \"${widget.file.path}\" "
+        "-t ${selectedDurationSeconds} "
+        "-map 0:v:0 -map 0:a:0 "
+        "-c:v copy -c:a aac "
+        "\"$output\"";
+
 
     final session = await FFmpegKit.execute(cmd);
     final rc = await session.getReturnCode();

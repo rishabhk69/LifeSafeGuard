@@ -246,7 +246,7 @@ class CommonFunction{
     // 2. If user cancelled or trimming failed
     if (trimmedFile == null) return null;
 
-    locator<DialogService>().showLoader(message: GuardLocalizations.of(context)!.translate('loading') ?? "");
+    locator<DialogService>().showLoader(message: GuardLocalizations.of(context)!.translate('preparing') ?? "");
     // 3. Compress trimmed video
     final MediaInfo? response = await VideoCompress.compressVideo(
       trimmedFile.path,
@@ -258,14 +258,14 @@ class CommonFunction{
       Future.delayed(const Duration(seconds: 1)).then((_) {
         locator<DialogService>().hideLoader();
       });
-
+      locator<ToastService>().show(GuardLocalizations.of(context)!.translate('videoIsSavedInYourGallery') ?? "");
       return XFile(response.path!);
     }
 
     return null;
   }
 
-  Future<File?> saveFileToDevice(File source) async {
+  Future<File?> saveFileToDevice(File source,BuildContext context) async {
     try {
       if (!Platform.isAndroid) {
         final dir = await getApplicationDocumentsDirectory();
