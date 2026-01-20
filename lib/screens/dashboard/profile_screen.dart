@@ -196,10 +196,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final item = profileState.profileModel.incidents![index];
                             return InkWell(
                               onTap: (){
-                                context.push('/incidentPreviewScreen',extra:
+                                context.push('/profilePreviewScreen',extra:
                                   {
                                     "index":index,
-                                    "incidentData":profileState.profileModel.toJson()
+                                    "incidentData":profileState.profileModel
                                   }
                                 );
 
