@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
 import 'package:untitled/api/model/main/profile_model.dart';
-import 'package:untitled/bloc/dashboard_bloc.dart';
-import 'package:untitled/bloc/getIncident_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/common_builder_dialog.dart';
 import 'package:untitled/common/service/dialog_service.dart';
 import 'package:untitled/common/service/toast_service.dart';
-
+import 'package:untitled/constants/common_function.dart';
 import '../../bloc/post_comment_bloc.dart';
+import '../../constants/app_config.dart';
 import '../../constants/app_utils.dart';
 import 'package:untitled/localization/fitness_localization.dart';
-
 
 void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel) {
   showModalBottomSheet(
@@ -84,10 +83,23 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: NetworkImage(commentsState.commentsModel[index].profilePicURL??""),
+                                  SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: /*commentsState.commentsModel[index].isReportedAnonymously??false ?
+                                    SvgPicture.asset(ImageHelper.unknownUser):*/
+                                    commentsState.commentsModel[index].profilePicURL!.contains('DemoProfilePic.svg') ?
+                                    SvgPicture.network(AppConfig.IMAGE_BASE_URL+(commentsState.commentsModel[index].profilePicURL??"")):
+                                    CircleAvatar(
+                                      backgroundImage:
+                                      NetworkImage(AppConfig.IMAGE_BASE_URL+(commentsState.commentsModel[index].profilePicURL??"")), // User profile
+                                      radius: 25,
+                                    ),
                                   ),
+                                  // CircleAvatar(
+                                  //   radius: 20,
+                                  //   backgroundImage: NetworkImage(commentsState.commentsModel[index].profilePicURL??""),
+                                  // ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
@@ -110,7 +122,8 @@ void showCommentsBottomSheet(BuildContext context, IncidentsModel incidentsModel
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          commentsState.commentsModel[index].time??"",
+                                          // incidentState.incidentsModel[index].time??"",
+                                          CommonFunction().formatLocal(commentsState.commentsModel[index].time??""),
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 12,

@@ -55,6 +55,7 @@ class _BlockedIncidentsState extends State<BlockedIncidents> {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
+          centerTitle: true,
           title: Text(
             GuardLocalizations.of(context)!.translate("blockedIncidents") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

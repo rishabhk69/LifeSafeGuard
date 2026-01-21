@@ -125,9 +125,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         });
                       }),
                       const SizedBox(height: 10),
-                      const Center(
+                       Center(
                         child: Text(
-                          "App Version - 1.2.9",
+                          "App Version - ${settingBuilder.settingModel.appVersion}",
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ),

@@ -73,6 +73,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
           ),
         ),
         body: CommonBackground(
+          '',
           iconName: ImageHelper.aggrementIc,
           title: GuardLocalizations.of(context)!.translate("agreement") ?? "",
           showBack: true,

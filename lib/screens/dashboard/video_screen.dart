@@ -188,7 +188,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                   return Image.network(
                                     AppConfig.IMAGE_BASE_URL +
                                         incidentState.incidentsModel[index].media![mediaIndex].name!,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitWidth,
                                     // width: double.infinity,
                                   );
                                 },

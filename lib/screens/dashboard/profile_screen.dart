@@ -152,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              profileState.profileModel.userName ?? "",
+                              "${profileState.profileModel.firstName ?? ""} ${profileState.profileModel.lastName ?? ""}",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

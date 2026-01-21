@@ -119,6 +119,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         title: Text(
           GuardLocalizations.of(context)!.translate("incidentPreview") ?? "",
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

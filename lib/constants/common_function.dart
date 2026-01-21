@@ -258,7 +258,6 @@ class CommonFunction{
       Future.delayed(const Duration(seconds: 1)).then((_) {
         locator<DialogService>().hideLoader();
       });
-      locator<ToastService>().show(GuardLocalizations.of(context)!.translate('videoIsSavedInYourGallery') ?? "");
       return XFile(response.path!);
     }
 

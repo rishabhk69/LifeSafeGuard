@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/common_background.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/image_helper.dart';
-import 'package:untitled/constants/strings.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 
@@ -18,7 +17,8 @@ class _ChooseLoginState extends State<ChooseLogin> {
   @override
   Widget build(BuildContext context) {
     return CommonBackground(
-        iconName: ImageHelper.startHereIc,
+          'Welcome! Get Started',
+        // iconName: ImageHelper.startHereIc,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

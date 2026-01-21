@@ -47,12 +47,12 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               child: const Icon(Icons.arrow_back, color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
+          centerTitle: true,
           title:  Text(
             widget.isReport=="true"?GuardLocalizations.of(context)!.translate("reportAnIssue") ?? "":
             GuardLocalizations.of(context)!.translate("feedback") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
-          centerTitle: false,
         ),
         body: Form(
           key: formGlobalKey,

@@ -48,7 +48,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   },
                   child: Row(
                     children: [
-                      SvgPicture.asset(ImageHelper.languageCircle),
+                      SvgPicture.asset(ImageHelper.langIc),
                       addWidth(5),
                       Text(GuardLocalizations.of(context)!.translate("language") ?? "",style: GoogleFonts.poppins(
                         color: ColorConstant.blackColor,
@@ -56,7 +56,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                         fontWeight: FontWeight.w500
                       ),),
                       Spacer(),
-                      Text(GuardLocalizations.of(context)!.translate("english") ?? "",style: GoogleFonts.poppins(
+                      Text(selectedLanguage == 'English' ? "English" :'हिंदी',style: GoogleFonts.poppins(
                           color: Color(0xff191919),
                           fontSize: 15,
                           fontWeight: FontWeight.w400

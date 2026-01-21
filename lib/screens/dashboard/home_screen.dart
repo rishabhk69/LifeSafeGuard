@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onActionTap: (){
        if(selectedFiles.isNotEmpty){
          locator<DialogService>().showLogoutDialog(
-             title: "Note",
+             title: GuardLocalizations.of(context)!.translate("warning") ?? "",
              subTitle: GuardLocalizations.of(context)!.translate("fileAlreadySelectedYouWantToReplace") ?? "",
              negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
              positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
@@ -197,6 +197,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
+                    if(isVideo)
+
+                    FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoIsSavedInYourGallery") ?? "",
+                      style: TextStyle(
+                          color: Colors.black
+                      ),)),
                     if(isVideo)
                     FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
                       style: TextStyle(
@@ -547,9 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.category, color: Colors.orange),
+                        SvgPicture.asset(ImageHelper.threeDCube,height: 20,width: 20,),
+                        // Icon(Icons.category, color: Colors.orange),
                         const SizedBox(width: 8),
-                        Text(GuardLocalizations.of(context)!.translate("typeOfIncident") ?? "",
+                        Text("${GuardLocalizations.of(context)!.translate("typeOfIncident") ?? ""}*",
                             style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
                       ],
                     ),
@@ -574,7 +581,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.person_outline, color: Colors.orange),
+                      SvgPicture.asset(ImageHelper.anonymous,height: 20,width: 20),
+                      // Icon(Icons.person_outline, color: Colors.orange),
                       const SizedBox(width: 8),
                       Text(GuardLocalizations.of(context)!.translate("anonymous") ?? "",
                           style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.w500)),
@@ -586,29 +594,21 @@ class _HomeScreenState extends State<HomeScreen> {
                          isAnonymous= !isAnonymous;
                        });
                       if(isAnonymous){
-                        locator<DialogService>().showCommonDialog(context, Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Hide Location from other users?'),
-                              SizedBox(height: 10,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(onPressed: (){
-                                    BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = true;
-                                    context.pop();
-                                  }, child: Text(GuardLocalizations.of(context)!.translate("yes") ?? "")),
-                                  ElevatedButton(onPressed: (){
-                                    BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = false;
-                                    context.pop();
-                                  }, child: Text(GuardLocalizations.of(context)!.translate("no") ?? "")),
-                                ],)
 
-                            ],
-                          ),
-                        ));
+                        locator<DialogService>().showLogoutDialog(
+                            title: "",
+                            subTitle: GuardLocalizations.of(context)!.translate("hideLocationFromOtherUsers") ?? "",
+                            negativeButtonText:  GuardLocalizations.of(context)!.translate("no") ?? "",
+                            positiveButtonText: GuardLocalizations.of(context)!.translate("yes") ?? "",
+                            negativeTap: () {
+                              BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = false;
+                              context.pop();
+                            },
+                            positiveTap: () {
+                              BlocProvider.of<PostIncidentsBloc>(context).isHideLocation = true;
+                              context.pop();
+                            }
+                        );
                       }
                       },
                       child: SvgPicture.asset(isAnonymous == false ?ImageHelper.imageDisableToggle: ImageHelper.imageEnableToggle))
@@ -641,7 +641,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 5),
 
               // Post Button
               BlocListener<PostIncidentsBloc,PostIncidentsState>(

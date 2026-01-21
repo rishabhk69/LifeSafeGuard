@@ -11,14 +11,16 @@ class CommonBackground extends StatelessWidget {
   final Widget child;
   final String? title;
   final bool showBack;
+  final String? isText;
   final dynamic iconName;
   final Function()? onTap;
 
-  const CommonBackground({
+  const CommonBackground(this.isText,{
     super.key,
     required this.child,
     this.title,
     this.iconName,
+
     this.onTap,
     this.showBack = false,
   });
@@ -80,7 +82,7 @@ class CommonBackground extends StatelessWidget {
                       color: Colors.white,
                       shape: BoxShape.circle
                     ),
-                    child: Container(
+                    child:      (isText??"").isEmpty? Container(
                       margin: EdgeInsets.all(5),
                       height: 140,
                       width: 140,
@@ -96,6 +98,20 @@ class CommonBackground extends StatelessWidget {
                         child:iconName.contains('svg')  ? SvgPicture.asset(iconName??""):
                         Image.file(File(iconName.path)),
                       ),
+                    ) : Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.all(5),
+                      height: 140,
+                      width: 140,
+                      padding: EdgeInsets.all(40),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: ColorConstant.primaryColor),
+                          color: Colors.white,
+                          shape: BoxShape.circle
+                      ),
+                      child: Text('Welcome! \nGet Started',style: TextStyle(
+                        color: ColorConstant.primaryColor
+                      ),),
                     ),
                   ),
                 ),

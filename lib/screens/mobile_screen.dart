@@ -40,6 +40,7 @@ class _MobileScreenState extends State<MobileScreen> {
   Widget build(BuildContext context) {
     print("isLogin:${widget.isLogin}");
     return CommonBackground(
+      '',
         iconName: ImageHelper.mobileIc,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

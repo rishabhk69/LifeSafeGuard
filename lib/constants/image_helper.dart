@@ -2,7 +2,7 @@
 class ImageHelper{
   static const appLogo = "assets/images/logo_image.png";
   static const appLogoWhite = "assets/images/logo_image_white.png";
-  static const String img_splash = "assets/images/splash_screen_img.png";
+  static const String img_splash = "assets/images/splash_screen.png";
   static const String imgEmailVerify = "assets/images/img_email_verify.png";
   static const String logoLion = "assets/images/logo_lion.png";
   static const String labourImage = "assets/images/labour_image.jpg";
@@ -56,5 +56,10 @@ class ImageHelper{
   static const String playCircle = "assets/images/play_circle.svg";
   static const String redirectIc = "assets/images/redirect_ic.svg";
   static const String unknownUser = "assets/images/unknown_user.svg";
+  static const String threeDCube = "assets/images/3dcube.svg";
+  static const String location = "assets/images/location.svg";
+  static const String time = "assets/images/time.svg";
+  static const String anonymous = "assets/images/anonymous.svg";
+  static const String langIc = "assets/images/lang_ic.svg";
 
 }

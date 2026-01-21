@@ -34,6 +34,7 @@ class _FilterScreenState extends State<FilterScreen> {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
+          centerTitle: true,
           title: Text(
             GuardLocalizations.of(context)!.translate("filter") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

@@ -79,6 +79,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     print(widget.phone);
     return CommonBackground(
+      '',
       iconName: ImageHelper.mobileIc,
       child:Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

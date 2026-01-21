@@ -61,6 +61,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         actions: [
           incidentsModel?.userId ==  userId ? SizedBox():
           TextButton(
@@ -162,8 +163,9 @@ class _IncidentDetailsState extends State<IncidentDetails> {
             // Info rows
             Row(
               children: [
-                const Icon(Icons.warning_amber_rounded,
-                    color: Colors.orange, size: 20),
+                SvgPicture.asset(ImageHelper.threeDCube,height: 20,width: 20,),
+                // const Icon(Icons.warning_amber_rounded,
+                //     color: Colors.orange, size: 20),
                 const SizedBox(width: 8),
                  Text(
                   "${GuardLocalizations.of(context)!.translate("type") ?? ""} - ${incidentsModel?.category??""}",
@@ -174,7 +176,8 @@ class _IncidentDetailsState extends State<IncidentDetails> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.red, size: 20),
+                SvgPicture.asset(ImageHelper.location,height: 20,width: 20,),
+                // const Icon(Icons.location_on, color: Colors.red, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -187,7 +190,7 @@ class _IncidentDetailsState extends State<IncidentDetails> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.access_time, color: Colors.orange, size: 20),
+                SvgPicture.asset(ImageHelper.time,height: 20,width: 20,color: ColorConstant.primaryColor,),
                 const SizedBox(width: 8),
                 Text(
                   CommonFunction().formatLocal(incidentsModel?.time??""),

@@ -100,11 +100,11 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
             child: const Icon(Icons.arrow_back, color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         title: Text(
           GuardLocalizations.of(context)!.translate("editIncident") ?? "",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        centerTitle: false,
       ),
       backgroundColor: ColorConstant.scaffoldColor,
       body: SingleChildScrollView(

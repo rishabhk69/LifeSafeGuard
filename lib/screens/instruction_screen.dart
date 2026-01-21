@@ -31,11 +31,11 @@ class _InstructionScreenState extends State<InstructionScreen> {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
+          centerTitle: true,
           title: Text(
             GuardLocalizations.of(context)!.translate("instructions") ?? "",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
-          centerTitle: false,
         ),
         body: BlocBuilder<InstructionBloc, InstructionState>(
           builder: (context, instructionState) {
