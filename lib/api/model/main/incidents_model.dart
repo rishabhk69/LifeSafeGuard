@@ -1,6 +1,3 @@
-import 'package:untitled/api/model/main/profile_model.dart';
-
-
 class IncidentsModel {
   String? incidentId;
   String? userId;

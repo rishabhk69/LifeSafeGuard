@@ -148,7 +148,12 @@ class _VideoScreenState extends State<VideoScreen> {
                   if (index == incidents.length) {
                     return const Center(child: CircularProgressIndicator(color: Colors.white));
                   }
-
+                  if (incidentState.incidentsModel[index].isVideo == 'false') {
+                    _videoController?.setVolume(0.0);
+                  }
+                  else{
+                    _videoController?.setVolume(1.0);
+                  }
                   print("ProfilePic:${incidentState.incidentsModel.toString()}");
                   return Stack(
                     children: [

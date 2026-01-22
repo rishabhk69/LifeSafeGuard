@@ -35,7 +35,7 @@ class ProfilePreviewScreen extends StatefulWidget {
 }
 
 class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
-  IncidentsModel? incidentData;
+  ProfileModel? incidentData;
   VideoPlayerController? _videoController;
   int _currentPage = 0;
   int currentIndex = 0;
@@ -98,7 +98,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    incidentData =  widget.incidentData.incidents?[widget.index!];
+    incidentData =  widget.incidentData;
     address = 'Jaipur';
     // if(address==null) {
     //   getAddress(
@@ -124,7 +124,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
-          userId==widget.incidentData.incidents?[widget.index!].userId ?
+          userId==widget.incidentData.userId ?
           BlocListener<DeleteIncidentBloc,DeleteIncidentState>(
             listener: (context,deleteListener) {
               if(deleteListener is DeleteIncidentLoadingState){
@@ -179,7 +179,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                             }
                             else{
                               context.read<DeleteIncidentBloc>().add(
-                                  DeleteIncidentRefreshEvent(incidentData!.incidentId.toString(),detailController.text));
+                                  DeleteIncidentRefreshEvent((incidentData!.incidents?[widget.index!].incidentId??"").toString(),detailController.text));
                               context.pop();
                             }
                           }
@@ -217,7 +217,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
       ),
       body:  Stack(
         children: [
-          incidentData!.isVideo == 'true'?
+          incidentData!.incidents?[widget.index!].isVideo == 'true'?
           Center(
             child: AspectRatio(
               aspectRatio: _videoController!.value.aspectRatio,
@@ -241,11 +241,11 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                     scrollDirection: Axis.horizontal,
                     physics: const PageScrollPhysics(),
                     onPageChanged: _onPageChanged,
-                    itemCount: incidentData!.media?.length ?? 0,
+                    itemCount: incidentData!.incidents?[widget.index!].media?.length ?? 0,
                     itemBuilder: (context, mediaIndex) {
                       return Image.network(
                         AppConfig.IMAGE_BASE_URL +
-                            (incidentData!.media![mediaIndex].name??""),
+                            (incidentData!.incidents?[widget.index!].media![mediaIndex].name??""),
                         fit: BoxFit.fitWidth,
                         // width: double.infinity,
                       );
@@ -255,7 +255,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate((incidentData!.media??[]).length, (dotIndex) {
+                  children: List.generate((incidentData!.incidents?[widget.index!].media??[]).length, (dotIndex) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       width: _currentPage == dotIndex ? 10 : 8,
@@ -278,7 +278,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
               children: [
                 InkWell(
                   onTap: (){
-                    BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidentId));
+                    BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidents?[widget.index!].incidentId));
                     showCommentsBottomSheet(context,incidentData as IncidentsModel);
                   },
                   child: Column(
@@ -287,7 +287,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                         fit: BoxFit.scaleDown,
                         height: 35,
                         width: 35,),
-                      Text(incidentData!.commentCount.toString(),style: GoogleFonts.poppins(
+                      Text((incidentData!.incidents?[widget.index!].commentCount).toString(),style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           color: ColorConstant.whiteColor
                       ),),
@@ -323,19 +323,19 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                       SizedBox(
                         width: 40,
                         height: 40,
-                        child: incidentData?.isReportedAnonymously??false ?
+                        child: incidentData!.incidents?[widget.index!].isReportedAnonymously??false ?
                         SvgPicture.asset(ImageHelper.unknownUser):
-                        incidentData!.profilePic==null? Icon(Icons.person,color: Colors.white,):
-                        incidentData!.profilePic!.contains('DemoProfilePic.svg') ?
-                        SvgPicture.network(AppConfig.IMAGE_BASE_URL+(incidentData?.profilePic??"")):
+                        incidentData!.profilePhotoUrl==null? Icon(Icons.person,color: Colors.white,):
+                        (incidentData!.profilePhotoUrl??"").contains('DemoProfilePic.svg') ?
+                        SvgPicture.network(AppConfig.IMAGE_BASE_URL+(incidentData!.profilePhotoUrl??"")):
                         CircleAvatar(
                           backgroundImage:
-                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData?.profilePic??"")), // User profile
+                          NetworkImage(AppConfig.IMAGE_BASE_URL+(incidentData!.profilePhotoUrl??"")), // User profile
                           radius: 25,
                         ),
                       ),
                       addWidth(5),
-                      Text(incidentData?.isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymousUser") ?? "":incidentData?.userName??"",style: GoogleFonts.poppins(
+                      Text(incidentData!.incidents?[widget.index!].isReportedAnonymously??false ?  GuardLocalizations.of(context)!.translate("anonymousUser") ?? "":incidentData?.userName??"",style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
                           color: ColorConstant.whiteColor
@@ -345,7 +345,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                   ),
                 ),
                 addHeight(5),
-                Text(incidentData!.category??"",style: GoogleFonts.poppins(
+                Text(incidentData!.incidents?[widget.index!].category??"",style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     color: ColorConstant.whiteColor
@@ -359,9 +359,9 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
-                        color: ColorConstant.blackColor,
+                        color: ColorConstant.whiteColor,
                       ),
-                      "${incidentData!.city??""}, ${incidentData!.state??""}",
+                      "${incidentData!.incidents?[widget.index!].city??""}, ${incidentData!.incidents?[widget.index!].state??""}",
                     ),
                   ],
                 ),
@@ -370,7 +370,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                     SvgPicture.asset(ImageHelper.timerIc),
                     addWidth(5),
                     Text(
-                      CommonFunction().formatLocal(incidentData!.time??""),
+                      CommonFunction().formatLocal(incidentData!.incidents?[widget.index!].time??""),
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
