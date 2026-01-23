@@ -384,7 +384,12 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                   onTap: () async {
                     await _videoController?.pause();
                     // await _videoController?.dispose();
-                    context.push('/incidentDetails',extra: incidentData);
+
+                    context.push('/profileIncidentDetails',extra:
+                    {
+                      "index":widget.index,
+                      "incidentData":incidentData
+                    });
                   },
                   child:  Text( GuardLocalizations.of(context)!.translate("seeMore") ?? "",
                     style: GoogleFonts.poppins(

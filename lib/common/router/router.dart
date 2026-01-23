@@ -11,6 +11,7 @@ import 'package:untitled/screens/other_screens/filter_screen.dart';
 import 'package:untitled/screens/other_screens/incident_details.dart';
 import 'package:untitled/screens/other_screens/incident_type_screen.dart';
 import 'package:untitled/screens/other_screens/other_user_profile.dart';
+import 'package:untitled/screens/other_screens/profile_incident_details.dart';
 import 'package:untitled/screens/other_screens/profile_preview_screen.dart';
 import 'package:untitled/screens/other_screens/select_city.dart';
 import 'package:untitled/screens/other_screens/t&c_screen.dart';
@@ -30,8 +31,6 @@ import '../../screens/setting/contact_us_screen.dart';
 import '../../screens/setting/donate_screen.dart';
 import '../../screens/setting/report_issue_screen.dart';
 import '../../screens/splash_screen.dart';
-
-
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -117,6 +116,15 @@ final goRouter = GoRouter(
             incidentData
         );
       }
+    ),
+    GoRoute(
+      path: '/profileIncidentDetails',
+      builder: (context, state) {
+        dynamic args = state.extra;
+        dynamic incident = args['incidentData'] as ProfileModel;
+        dynamic index = args['index'];
+        return  ProfileIncidentDetails(index,incident);
+      },
     ),
     GoRoute(
       path: '/filterScreen',
