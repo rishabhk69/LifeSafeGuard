@@ -236,7 +236,7 @@ class StringHelper {
   static String departmentUser = 'Department User';
   static String eMitraText = 'e-mitra';
   static String selectUserType = 'Select User Type';
-  static String selectLanguage = 'Language Select';
+  static String selectLanguage = 'Select Language';
   static String language = 'Language';
   static String english = 'English';
   static String hindi = 'Hindi';

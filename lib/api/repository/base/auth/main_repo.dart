@@ -52,13 +52,14 @@ class MainRepository extends BaseRepository {
   }
 
   Future<Result<dynamic>> getIncidents(
-      {int? offset, int? size,String? city,String? type}) async {
+      {int? offset, int? size,String? city,String? type,String? userId}) async {
     final service = MainService(await dio);
     return safeCall(service.getIncidents(
       offset: offset,
       size: size,
       city: city,
       type: type,
+      userId: userId
     ));
   }
 

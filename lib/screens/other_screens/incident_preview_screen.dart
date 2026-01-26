@@ -202,6 +202,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => EditIncidentScreen(
+                            widget.index!,
                             incidentData: incidentData!,
                           ),
                         ),

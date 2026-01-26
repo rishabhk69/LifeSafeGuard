@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/constants/app_utils.dart';
 
 import '../api/repository/base/auth/main_repo.dart';
 
@@ -70,7 +71,11 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
       IncidentsRefreshEvent event, Emitter<IncidentsState> emit) async {
     emit(IncidentsLoadingState());
     try {
+
+
+      String userId = await AppUtils().getUserId();
       final result = await repository.getIncidents(
+        userId: userId,
         city: event.city,
         size: event.size,
         offset: event.offset,
@@ -99,6 +104,7 @@ class IncidentsBloc extends Bloc<IncidentsEvent, IncidentsState> {
       IncidentsLoadMoreEvent event, Emitter<IncidentsState> emit) async {
     try {
       final result = await repository.getIncidents(
+
         size: event.size,
         offset: event.offset,
       );

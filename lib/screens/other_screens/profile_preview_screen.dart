@@ -21,6 +21,7 @@ import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 import 'package:untitled/screens/edit_incident.dart';
+import 'package:untitled/screens/profile_edit_incident.dart';
 import 'package:video_player/video_player.dart';
 
 import '../dashboard/comments_bottomsheet.dart';
@@ -201,7 +202,8 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => EditIncidentScreen(
+                          builder: (_) => ProfileEditIncidentScreen(
+                            widget.index!,
                             incidentData: incidentData!,
                           ),
                         ),

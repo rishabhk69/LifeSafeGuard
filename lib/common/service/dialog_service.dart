@@ -454,7 +454,7 @@ class DialogService {
                           // validator: (v){
                           //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterIncidentDetails") ?? "");
                           // },
-                          hintText: GuardLocalizations.of(context)!.translate("enterDetails") ?? "",
+                          hintText: GuardLocalizations.of(context)!.translate("enterReason") ?? "",
                           isPassword: false, textController: detailController!,
 
                         ),
@@ -470,12 +470,14 @@ class DialogService {
                                   // padding: EdgeInsets.symmetric(horizontal: 50.w),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      color: ColorConstant.primaryColor, borderRadius: BorderRadius.circular(8)),
+                                      border: Border.all(
+                                          color: ColorConstant.primaryColor),
+                                      borderRadius: BorderRadius.circular(8)),
                                   child: Text(
                                     // GuardLocalizations.of(context)!.translate("save") ?? "",
                                     positiveButtonText??"",
                                     style: GoogleFonts.jost(
-                                        color: ColorConstant.whiteColor,
+                                        color: ColorConstant.primaryColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600
                                     ),
@@ -491,17 +493,16 @@ class DialogService {
                                   // padding: EdgeInsets.symmetric(horizontal: 50.w),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: ColorConstant.primaryColor),
-                                      borderRadius: BorderRadius.circular(8)),
+                                      color: ColorConstant.primaryColor, borderRadius: BorderRadius.circular(8)),
                                   child: Text(
                                     // GuardLocalizations.of(context)!.translate("save") ?? "",
                                     negativeButtonText??"",
                                     style: GoogleFonts.jost(
-                                        color: ColorConstant.primaryColor,
+                                        color: ColorConstant.whiteColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600
                                     ),
+
                                   ),
                                 ),
                               )),

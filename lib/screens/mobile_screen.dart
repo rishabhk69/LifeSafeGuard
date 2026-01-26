@@ -68,24 +68,31 @@ class _MobileScreenState extends State<MobileScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CountryCodePicker(
-                    flagWidth: 20,
-                    textStyle: TextStyle(fontSize: 10),
-                    initialSelection: 'IN',
-                    favorite: ['+91','IN'],
-                    showCountryOnly: false,
-                    showOnlyCountryWhenClosed: false,
-                    alignLeft: false,
-                    enabled: true,
-                    showFlag: true,
-                    showFlagMain: true,
-                    onChanged: (countryCode) {
-                      setState(() {
-                        selectedPhoneCode = countryCode.dialCode??"";
-                      });
-                    },
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    // color: Colors.red,
+                    child: CountryCodePicker(
+                      padding: EdgeInsets.zero,
+                      flagWidth: 30,
+                      textStyle: GoogleFonts.poppins(color: ColorConstant.textFiledColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: textSize20),
+                      initialSelection: 'IN',
+                      favorite: ['+91','IN'],
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
+                      enabled: true,
+                      showFlag: true,
+                      showFlagMain: true,
+                      onChanged: (countryCode) {
+                        setState(() {
+                          selectedPhoneCode = countryCode.dialCode??"";
+                        });
+                      },
+                    ),
                   ),
-                  addWidth(5),
+                  // addWidth(5),
                   Expanded(child: CommonTextFieldWidget(
                       validator: (v){
                         return Validations.phoneValidation(v,GuardLocalizations.of(context)!.translate("mobileNo") ?? "");

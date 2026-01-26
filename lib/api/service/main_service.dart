@@ -67,7 +67,7 @@ import '../../main.dart';
      }
    }
 
-   Future<dynamic> getIncidents({int? offset, int? size,String? city,String? type}) async {
+   Future<dynamic> getIncidents({int? offset, int? size,String? city,String? type,String? userId}) async {
      String token = await AppUtils().getToken();
      try {
        final response = await _dio.get(
@@ -77,6 +77,7 @@ import '../../main.dart';
              HttpHeaders.acceptHeader: "application/json",
              HttpHeaders.authorizationHeader: "Bearer $token",
              'language': "English",
+             'userId': userId,
            },
          ),
          queryParameters: {

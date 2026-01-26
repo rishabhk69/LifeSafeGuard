@@ -278,7 +278,7 @@
   "pleaseEnterCodeSentToYourNumber": "Please enter code sent to \nyour number",
   "des1": "Report incidents instantly with photos, videos, and location tags. Your report can save lives. Together, we build a safer community.",
   "des2": "Stay updated on local incidents by quickly filtering incidents by city and incident type, and remain safe by tracking those that may impact you.",
-  "des3": "If you come across any incident that could threaten your life or safety, the app allows you to hide your identity, with the option to hide your exact location.",
+  "des3": "If you come across any incident that could threaten your life or safety, the app allows you to hide your identity, with the option to hide your exact location in map.",
   "reportAnIssue": "Report an Issue",
   "contactUs": "Contact Us",
   "donation": "Donation",
@@ -326,9 +326,9 @@
   "signOut": "Sign Out",
   "resend": "Resend",
   "selectType": "Select Type",
-  "youWantToDeleteAccount": "You want to delete account",
+  "youWantToDeleteAccount": "Do you want to delete your account?",
   "addReason": "Add Reason",
-  "enterReason": "Enter Reason",
+  "enterReason": "Please enter reason",
   "incidentsNotFound": "Incidents Not Found",
   "queryType": "Query Type",
   "enterDetails": "Enter Details",
@@ -338,7 +338,7 @@
   "editIncident": "Edit Incident",
   "viewIncident": "View Incident",
   "incidentPreview": "Incident",
-  "youWantToDeleteIncident": "You want to delete Incident",
+  "youWantToDeleteIncident": "Do you want to delete Incident?",
   "instructions": "Instructions",
   "loading": "Loading..",
   "videoUploadLimitText": "Max video limit allowed to upload : 20 sec",
@@ -346,5 +346,6 @@
   "preparing": "Preparing",
   "videoIsSavedInYourGallery": "Original video will be saved in your phone's gallery",
   "hideLocationFromOtherUsers": "Your Identity will be hidden but, Do you want to hide your exact location in map?",
-  "warning": "Warning"
+  "warning": "Warning",
+  "mapIsHiddenByTheReporterOfThisIncident": "Map is hidden by the reporter of this incident"
 }

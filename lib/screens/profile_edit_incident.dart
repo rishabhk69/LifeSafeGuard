@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/edit_incidents_bloc.dart';
 import 'package:untitled/bloc/get_incident_type_bloc.dart';
-import 'package:untitled/bloc/post_incidents_bloc.dart';
+import 'package:untitled/bloc/post_incidents_bloc.dart' show PostIncidentsBloc;
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
 import 'package:untitled/common/service/dialog_service.dart';
@@ -24,17 +24,17 @@ import 'package:untitled/localization/fitness_localization.dart';
 
 import '../constants/common_function.dart';
 
-class EditIncidentScreen extends StatefulWidget {
+class ProfileEditIncidentScreen extends StatefulWidget {
   dynamic incidentData;
   int? index;
 
-  EditIncidentScreen(this.index,{required this.incidentData});
+  ProfileEditIncidentScreen(this.index,{required this.incidentData});
 
   @override
-  State<EditIncidentScreen> createState() => _EditIncidentScreenState();
+  State<ProfileEditIncidentScreen> createState() => _ProfileEditIncidentScreenState();
 }
 
-class _EditIncidentScreenState extends State<EditIncidentScreen> {
+class _ProfileEditIncidentScreenState extends State<ProfileEditIncidentScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController detailController = TextEditingController();
   bool isAnonymous = false;
@@ -49,8 +49,8 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
     super.initState();
     BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
     getUserId();
-    titleController.text = widget.incidentData.title ?? "";
-    detailController.text = widget.incidentData.desc ?? "";
+    titleController.text = widget.incidentData.incidents[widget.index].title;
+    detailController.text = widget.incidentData.incidents[widget.index].description;
     // isAnonymous = widget.incidentData.reportAnonymously ?? false;
 
     // createdDate = widget.incidentData.time;
@@ -115,7 +115,7 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// ------------------- MEDIA SECTION -------------------
-            _buildMediaSection(context,AppConfig.IMAGE_BASE_URL+widget.incidentData.thumbnail),
+            _buildMediaSection(context,AppConfig.IMAGE_BASE_URL+widget.incidentData.incidents[widget.index].thumbnail),
             const SizedBox(height: 20),
 
             /// ------------------- INCIDENT TYPE -------------------
@@ -177,9 +177,9 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
                     else{
                       BlocProvider.of<EditIncidentsBloc>(context).add(
                         EditIncidentsRefreshEvent(
-                          city: widget.incidentData.city,
+                          city:  widget.incidentData.incidents[widget.index].city,
                           userId: userId,
-                          incidentId: widget.incidentData.incidentId,
+                          incidentId:  widget.incidentData.incidents[widget.index].incidentId,
                           category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
                           description: detailController.text.trim(),
                           title: titleController.text.trim(),
@@ -254,7 +254,7 @@ class _EditIncidentScreenState extends State<EditIncidentScreen> {
 
   // ------------------------ ANONYMOUS TOGGLE ------------------------
   Widget _buildAnonymousToggle(BuildContext context) {
-    return Row(
+    return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(

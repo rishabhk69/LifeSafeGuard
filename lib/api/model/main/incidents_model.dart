@@ -10,6 +10,7 @@ class IncidentsModel {
   String? address;
   String? city;
   String? state;
+  String? thumbnail;
   String? description;
   String? title;
   dynamic commentCount;
@@ -27,6 +28,7 @@ class IncidentsModel {
         this.media,
         this.time,
         this.address,
+        this.thumbnail,
         this.title,
         this.commentCount,
         this.description,
@@ -42,7 +44,8 @@ class IncidentsModel {
     userName = json['userName'];
     category = json['category'];
     isVideo = json['isVideo'];
-    profilePic = json['profilePic'];
+    thumbnail = json['thumbnail'];
+    profilePic = json['profilePhotoUrl'];
     if (json['media'] != null) {
       media = <Media>[];
       json['media'].forEach((v) {
@@ -70,7 +73,8 @@ class IncidentsModel {
     data['userName'] = this.userName;
     data['category'] = this.category;
     data['isVideo'] = this.isVideo;
-    data['profilePic'] = this.profilePic;
+    data['thumbnail'] = this.thumbnail;
+    data['profilePhotoUrl'] = this.profilePic;
     if (this.media != null) {
       data['media'] = this.media!.map((v) => v.toJson()).toList();
     }

@@ -129,8 +129,8 @@ class _ProfileIncidentDetailsState extends State<ProfileIncidentDetails> {
                                 child: Container(
                                   color: Colors.black.withOpacity(0.3),
                                   alignment: Alignment.center,
-                                  child: const Text(
-                                    'Map hidden for your role',
+                                  child: Text(
+                                    GuardLocalizations.of(context)!.translate("mapIsHiddenByTheReporterOfThisIncident") ?? "",
                                     style: TextStyle(color: Colors.white, fontSize: 16),
                                   ),
                                 ),

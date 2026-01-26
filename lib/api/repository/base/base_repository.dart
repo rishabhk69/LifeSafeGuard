@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled/main.dart';
 import '../../../constants/alert_message.dart';
 import '../../../constants/app_config.dart';
 import '../../../constants/app_utils.dart';
@@ -70,8 +72,12 @@ abstract class BaseRepository {
             return handler.next(response);
           },
           onError: (error, handler) async {
-              if (error.response?.statusCode == 401) {
+              if (error.response?.statusCode == 401 && error.response?.statusCode==403) {
                 try {
+
+                  AppUtils().logoutUser().then((onValue){
+                    NavigationServiceKey.navigatorKey.currentContext?.go('/chooseLogin');
+                  });
                   // dio.lock();
                   // dio.interceptors.responseLock.lock();
                   // dio.interceptors.errorLock.lock();
