@@ -45,7 +45,7 @@ class IncidentsModel {
     category = json['category'];
     isVideo = json['isVideo'];
     thumbnail = json['thumbnail'];
-    profilePic = json['profilePhotoUrl'];
+    profilePic = json['profilePic'];
     if (json['media'] != null) {
       media = <Media>[];
       json['media'].forEach((v) {
@@ -74,7 +74,7 @@ class IncidentsModel {
     data['category'] = this.category;
     data['isVideo'] = this.isVideo;
     data['thumbnail'] = this.thumbnail;
-    data['profilePhotoUrl'] = this.profilePic;
+    data['profilePic'] = this.profilePic;
     if (this.media != null) {
       data['media'] = this.media!.map((v) => v.toJson()).toList();
     }

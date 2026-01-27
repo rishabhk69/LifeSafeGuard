@@ -63,10 +63,10 @@ class _TakeActionState extends State<TakeAction> {
             ),
 
              SizedBox(height: 4),
-            const Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Text(
-                "Notes: If you block these incidents, they will be removed from the app.",
+                GuardLocalizations.of(context)!.translate("ifYouBlockThisIncidentText") ?? "",
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
@@ -129,10 +129,10 @@ class _TakeActionState extends State<TakeAction> {
               ),
             ),),
             const SizedBox(height: 4),
-            const Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Text(
-                "Notes: If you Spam these incidents, they will be removed from the app.",
+                GuardLocalizations.of(context)!.translate("ifYouBelieveThisIsNotAGenuine") ?? "",
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),

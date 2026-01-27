@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/sizes.dart';
-import 'package:untitled/constants/strings.dart';
 import '../../constants/base_appbar.dart';
 import '../../constants/custom_text_field.dart';
 import '../../constants/logo_widget.dart';

@@ -93,6 +93,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Stack(
                         children: [
+                          profileState.profileModel.profilePhotoUrl!.contains('DemoProfilePic.svg') ?
+                          SvgPicture.network(
+                              AppConfig.IMAGE_BASE_URL+(profileState.profileModel.profilePhotoUrl??"")):
+
                           CircleAvatar(
                             radius: 45,
                             backgroundImage: NetworkImage(
