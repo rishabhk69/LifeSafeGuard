@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:metadata_retriver/metadata_retriver_platform_interface.dart';
+import 'package:untitled/bloc/get_incident_type_bloc.dart';
 import 'package:untitled/bloc/post_incidents_bloc.dart';
 import 'package:untitled/bloc/setincident_bloc.dart';
 import 'package:untitled/common/locator/locator.dart';
@@ -546,6 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Type of Incident
               InkWell(
                 onTap: (){
+                  BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
                   context.push('/incidentTypeScreen');
                 },
                 child: Row(

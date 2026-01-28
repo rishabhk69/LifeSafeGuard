@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled/api/model/main/incidents_model.dart';
+import 'package:untitled/api/model/main/profile_model.dart';
 import 'package:untitled/bloc/dashboard_bloc.dart';
 import 'package:untitled/bloc/delete_incident_bloc.dart';
 import 'package:untitled/bloc/get_comments_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+import 'package:untitled/screens/dashboard/comments_bottomsheet_user.dart';
 import 'package:untitled/screens/edit_incident.dart';
 import 'package:video_player/video_player.dart';
 
@@ -280,7 +282,7 @@ class _IncidentPreviewScreenState extends State<IncidentPreviewScreen> {
                 InkWell(
                   onTap: (){
                     BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidentId));
-                    showCommentsBottomSheet(context,incidentData as IncidentsModel);
+                    showCommentsBottomSheetUser(context,incidentData as ProfileModel,widget.index!);
                   },
                   child: Column(
                     children: [

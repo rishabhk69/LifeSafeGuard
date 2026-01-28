@@ -49,8 +49,8 @@ class _ProfileEditIncidentScreenState extends State<ProfileEditIncidentScreen> {
     super.initState();
     BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
     getUserId();
-    titleController.text = widget.incidentData.incidents[widget.index].title;
-    detailController.text = widget.incidentData.incidents[widget.index].description;
+    titleController.text = widget.incidentData.incidents[widget.index].title??'';
+    detailController.text = widget.incidentData.incidents[widget.index].description??"";
     // isAnonymous = widget.incidentData.reportAnonymously ?? false;
 
     // createdDate = widget.incidentData.time;
@@ -177,7 +177,7 @@ class _ProfileEditIncidentScreenState extends State<ProfileEditIncidentScreen> {
                     else{
                       BlocProvider.of<EditIncidentsBloc>(context).add(
                         EditIncidentsRefreshEvent(
-                          city:  widget.incidentData.incidents[widget.index].city,
+                          city:  widget.incidentData.incidents[widget.index].city??"",
                           userId: userId,
                           incidentId:  widget.incidentData.incidents[widget.index].incidentId,
                           category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,

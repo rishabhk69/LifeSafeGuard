@@ -20,6 +20,7 @@ import 'package:untitled/constants/common_function.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/constants/sizes.dart';
 import 'package:untitled/localization/fitness_localization.dart';
+import 'package:untitled/screens/dashboard/comments_bottomsheet_user.dart';
 import 'package:untitled/screens/edit_incident.dart';
 import 'package:untitled/screens/profile_edit_incident.dart';
 import 'package:video_player/video_player.dart';
@@ -281,7 +282,7 @@ class _ProfilePreviewScreenState extends State<ProfilePreviewScreen> {
                 InkWell(
                   onTap: (){
                     BlocProvider.of<CommentsBloc>(context).add(CommentsRefreshEvent(20, 0, incidentData!.incidents?[widget.index!].incidentId));
-                    showCommentsBottomSheet(context,incidentData as IncidentsModel);
+                    showCommentsBottomSheetUser(context,incidentData as ProfileModel,widget.index!);
                   },
                   child: Column(
                     children: [

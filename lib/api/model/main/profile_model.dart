@@ -29,7 +29,7 @@ class ProfileModel {
     firstName = json['firstName'];
     lastName = json['lastName'];
     phone = json['phone'];
-    profilePhotoUrl = json['profilePhotoUrl'];
+    profilePhotoUrl = json['profilePic'];
     totalIncidents = json['totalIncidents'];
     if (json['incidents'] != null) {
       incidents = <IncidentsModel>[];
@@ -47,7 +47,7 @@ class ProfileModel {
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['phone'] = this.phone;
-    data['profilePhotoUrl'] = this.profilePhotoUrl;
+    data['profilePic'] = this.profilePhotoUrl;
     data['totalIncidents'] = this.totalIncidents;
     if (this.incidents != null) {
       data['incidents'] = this.incidents!.map((v) => v.toJson()).toList();
