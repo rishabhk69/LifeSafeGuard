@@ -49,7 +49,7 @@ class _ProfileEditIncidentScreenState extends State<ProfileEditIncidentScreen> {
     super.initState();
     BlocProvider.of<IncidentTypeBloc>(context).add(IncidentTypeRefreshEvent());
     getUserId();
-    titleController.text = widget.incidentData.incidents[widget.index].title??'';
+    titleController.text = widget.incidentData.incidents[widget.index].title??"";
     detailController.text = widget.incidentData.incidents[widget.index].description??"";
     // isAnonymous = widget.incidentData.reportAnonymously ?? false;
 

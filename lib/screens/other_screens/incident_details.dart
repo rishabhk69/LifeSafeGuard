@@ -70,9 +70,10 @@ class _IncidentDetailsState extends State<IncidentDetails> {
                 incidentsModel
               );
             },
-            child: Text(
-              GuardLocalizations.of(context)!.translate("takeAction") ?? "",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+            child: Icon(
+              Icons.menu
+              // GuardLocalizations.of(context)!.translate("takeAction") ?? "",
+              // style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             ),
           )
         ],

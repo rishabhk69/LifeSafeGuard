@@ -109,7 +109,9 @@ class CommonBackground extends StatelessWidget {
                           color: Colors.white,
                           shape: BoxShape.circle
                       ),
-                      child: Text('Welcome! \nGet Started',style: TextStyle(
+                      child: Text('Welcome! \nGet Started',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                         color: ColorConstant.primaryColor
                       ),),
                     ),

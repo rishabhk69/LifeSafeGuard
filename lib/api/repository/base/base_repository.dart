@@ -74,7 +74,6 @@ abstract class BaseRepository {
           onError: (error, handler) async {
               if (error.response?.statusCode == 401 && error.response?.statusCode==403) {
                 try {
-
                   AppUtils().logoutUser().then((onValue){
                     NavigationServiceKey.navigatorKey.currentContext?.go('/chooseLogin');
                   });
