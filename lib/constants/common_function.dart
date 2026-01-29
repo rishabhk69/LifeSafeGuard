@@ -150,6 +150,12 @@ class CommonFunction{
 
   Future<List<XFile>?> pickImageVideoFile(
       bool isPhoto, bool isFromGallery, BuildContext context) async {
+    bool hasPermission = await checkAndRequestMediaPermission(
+      isCamera: !isFromGallery,
+      context: context,
+    );
+
+    if (!hasPermission) return null;
     final picker = ImagePicker();
     try {
       if (isPhoto) {
@@ -198,6 +204,77 @@ class CommonFunction{
       }
     }
     return null;
+  }
+
+  Future<bool> checkAndRequestLocationPermission(BuildContext context) async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      locator<ToastService>().show(
+        "Location permission is permanently denied. Please enable it from settings.",
+      );
+      await openAppSettings();
+      return false;
+    }
+
+    if (permission == LocationPermission.denied) {
+      locator<ToastService>().show(
+        "Location permission is required to post incident.",
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> checkAndRequestMediaPermission({
+    required bool isCamera,
+    required BuildContext context,
+  }) async {
+    Permission permission;
+
+    if (isCamera) {
+      permission = Permission.camera;
+    } else {
+      // Android 13+ uses photos, older uses storage
+      permission = Platform.isAndroid
+          ? Permission.photos
+          : Permission.photos;
+    }
+
+    PermissionStatus status = await permission.status;
+
+    if (status.isDenied) {
+      status = await permission.request();
+    }
+
+    if (status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Permission permanently denied. Please enable it from app settings.",
+          ),
+        ),
+      );
+      await openAppSettings();
+      return false;
+    }
+
+    if (!status.isGranted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Permission is required to continue."),
+        ),
+      );
+      await openAppSettings();
+      return false;
+    }
+
+    return true;
   }
 
 

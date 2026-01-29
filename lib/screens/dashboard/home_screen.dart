@@ -663,44 +663,47 @@ class _HomeScreenState extends State<HomeScreen> {
                   locator<ToastService>().show(blocListener.errorMsg);
                   locator<DialogService>().hideLoader();
                 }
-              },child: CustomButton(text: GuardLocalizations.of(context)!.translate("post") ?? "", onTap: (){
-                // if(formGlobalKey.currentState!.validate()){
-                  if(selectedFiles.isNotEmpty){
-                    if(BlocProvider.of<SetIncidentsBloc>(context).selectedIncident == 'Select Type'){
+              },child: CustomButton(
+                text: GuardLocalizations.of(context)!.translate("post") ?? "",
+                onTap: () async {
+
+                  bool hasPermission = await CommonFunction().checkAndRequestLocationPermission(context);
+                  if (!hasPermission) return;
+
+                  if (selectedFiles.isNotEmpty) {
+                    if (BlocProvider.of<SetIncidentsBloc>(context).selectedIncident == 'Select Type') {
                       locator<ToastService>().show('Please select incident type');
-                    }
-                    else {
+                    } else {
                       BlocProvider.of<PostIncidentsBloc>(context).add(
-                          PostIncidentsRefreshEvent(
-                              category: BlocProvider
-                                  .of<SetIncidentsBloc>(context)
-                                  .selectedIncident,
-                              description: detailController.text.trim(),
-                              files: selectedFiles
-                                  .map((f) => File(f.path))
-                                  .toList(),
-                              isCameraUpload: isCameraUpload,
-                              isVideo: isVideo,
-                              latitude: data?.latitude.toString() ?? "0.0",
-                              longitude: data?.longitude.toString() ?? "0.0",
-                              reportAnonymously: isAnonymous,
-                              title: titleController.text.trim(),
-                              userId: userId,
-                              state: data?.state,
-                              isEdited: false,
-                              city: data?.city,
-                              address: data?.address,
-                              pinCode: data?.postCode,
-                              time: createdDate
-                          ));
+                        PostIncidentsRefreshEvent(
+                          category: BlocProvider.of<SetIncidentsBloc>(context).selectedIncident,
+                          description: detailController.text.trim(),
+                          files: selectedFiles.map((f) => File(f.path)).toList(),
+                          isCameraUpload: isCameraUpload,
+                          isVideo: isVideo,
+                          latitude: data?.latitude.toString() ?? "0.0",
+                          longitude: data?.longitude.toString() ?? "0.0",
+                          reportAnonymously: isAnonymous,
+                          title: titleController.text.trim(),
+                          userId: userId,
+                          state: data?.state,
+                          isEdited: false,
+                          city: data?.city,
+                          address: data?.address,
+                          pinCode: data?.postCode,
+                          time: createdDate,
+                        ),
+                      );
                     }
+                  } else {
+                    isVideo == true
+                        ? locator<ToastService>().show(
+                        GuardLocalizations.of(context)!.translate("uploadVideo") ?? "")
+                        : locator<ToastService>().show(
+                        GuardLocalizations.of(context)!.translate("uploadImage") ?? "");
                   }
-                  else{
-                    isVideo==true ? locator<ToastService>().show(GuardLocalizations.of(context)!.translate("uploadVideo") ?? ""):
-                    locator<ToastService>().show(GuardLocalizations.of(context)!.translate("uploadImage") ?? "");
-                  }
-                // }
-              }),)
+                },
+              ),)
 
             ],
           ),

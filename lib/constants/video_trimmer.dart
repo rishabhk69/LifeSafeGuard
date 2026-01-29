@@ -49,7 +49,6 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
 
     final output = "${widget.file.path}_trimmed.mp4";
 
-    // Show loader
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -57,13 +56,16 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
     );
 
     final cmd =
-        "-ss ${start / 1000} "
+        "-y "
         "-i \"${widget.file.path}\" "
-        "-t ${selectedDurationSeconds} "
+        "-ss ${start / 1000} "
+        "-t $selectedDurationSeconds "
         "-map 0:v:0 -map 0:a:0 "
-        "-c:v copy -c:a aac "
+        "-c:v libx264 "
+        "-c:a aac "
+        "-preset ultrafast "
+        "-movflags +faststart "
         "\"$output\"";
-
 
     final session = await FFmpegKit.execute(cmd);
     final rc = await session.getReturnCode();
