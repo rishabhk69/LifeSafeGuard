@@ -116,5 +116,6 @@
   "warning": "Warning",
   "mapIsHiddenByTheReporterOfThisIncident": "Map is hidden by the reporter of this incident.",
   "ifYouBlockThisIncidentText": "If you block this incident, our team will review it and remove it from the app if necessary.",
-  "ifYouBelieveThisIsNotAGenuine": "If you believe this is not a genuine incident, you can mark it as spam."
+  "ifYouBelieveThisIsNotAGenuine": "If you believe this is not a genuine incident, you can mark it as spam.",
+  "userName": "User Name"
 }
