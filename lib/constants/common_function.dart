@@ -14,9 +14,10 @@ import 'package:untitled/common/service/toast_service.dart';
 import 'package:untitled/constants/video_trimmer.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:video_compress/video_compress.dart';
+// import 'package:video_compress/video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import '../common/locator/locator.dart';
 import '../localization/language_constants.dart';
 
@@ -325,17 +326,17 @@ class CommonFunction{
 
     locator<DialogService>().showLoader(message: GuardLocalizations.of(context)!.translate('preparing') ?? "");
     // 3. Compress trimmed video
-    final MediaInfo? response = await VideoCompress.compressVideo(
-      trimmedFile.path,
-      quality: VideoQuality.MediumQuality,
-      deleteOrigin: false,
-    );
+    // final MediaInfo? response = await VideoCompress.compressVideo(
+    //   trimmedFile.path,
+    //   quality: VideoQuality.MediumQuality,
+    //   deleteOrigin: false,
+    // );
 
-    if (response != null && response.path != null) {
+    if (trimmedFile.path != null && trimmedFile.path != null) {
       Future.delayed(const Duration(seconds: 1)).then((_) {
         locator<DialogService>().hideLoader();
       });
-      return XFile(response.path!);
+      return XFile(trimmedFile.path!);
     }
 
     return null;
@@ -383,14 +384,20 @@ class CommonFunction{
     }
   }
 
-  Future<File> getThumbnail(XFile file) async {
-    final thumbnailFile = await VideoCompress.getFileThumbnail(
-      file.path,
-      quality: 50, // 0-100 (higher is better quality, bigger file)
-      position: -1, // default is -1 (first frame). You can pass seconds (e.g., 2)
-    );
-    return thumbnailFile;
+  Future<File?> createThumbnail(XFile videoFile) async {
+    final dir = await getTemporaryDirectory();
 
+    final thumbnailPath = await VideoThumbnail.thumbnailFile(
+      video: videoFile.path,
+      thumbnailPath: dir.path,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 300, // optional
+      quality: 75,
+    );
+
+    if (thumbnailPath == null) return null;
+
+    return File(thumbnailPath);
   }
 
   Future<Placemark?> getPlacemarkFromCurrentLocation() async {

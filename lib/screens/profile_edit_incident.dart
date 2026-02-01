@@ -19,7 +19,6 @@ import 'package:untitled/constants/colors_constant.dart';
 import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
-import 'package:video_compress/video_compress.dart';
 import 'package:untitled/localization/fitness_localization.dart';
 
 import '../constants/common_function.dart';
@@ -84,11 +83,6 @@ class _ProfileEditIncidentScreenState extends State<ProfileEditIncidentScreen> {
       userId = id;
       data = loc;
     });
-  }
-
-  Future<File> getThumbnail(XFile thumbnailFile) async {
-    final file = await VideoCompress.getFileThumbnail(thumbnailFile.path);
-    return file;
   }
 
   @override

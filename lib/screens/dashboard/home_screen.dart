@@ -20,7 +20,6 @@ import 'package:untitled/constants/custom_button.dart';
 import 'package:untitled/constants/custom_text_field.dart';
 import 'package:untitled/constants/image_helper.dart';
 import 'package:untitled/screens/other_screens/preview_images.dart';
-import 'package:video_compress/video_compress.dart';
 
 import '../../constants/base_appbar.dart';
 import '../../constants/common_function.dart' show CommonFunction, LocationData, getLocationData;
@@ -66,12 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
       userId = id;
       data = loc;
     });
-  }
-
-
-  Future<File> getThumbnail(XFile thumbnailFile) async {
-    final file = await VideoCompress.getFileThumbnail(thumbnailFile.path);
-    return file;
   }
 
 
@@ -301,8 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: SizedBox(
                         height: 150,
                         width: double.infinity,
-                        child: FutureBuilder<File>(
-                          future: getThumbnail(selectedFiles[0]), // async call
+                        child: FutureBuilder<File?>(
+                          future: CommonFunction().createThumbnail(selectedFiles[0]), // async call
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Center(child: CircularProgressIndicator());

@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 import 'package:untitled/localization/fitness_localization.dart';
-import 'package:video_player/video_player.dart';
-import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 
 class ModernTrimDialog extends StatefulWidget {
   final File file;
@@ -15,76 +13,75 @@ class ModernTrimDialog extends StatefulWidget {
 }
 
 class _ModernTrimDialogState extends State<ModernTrimDialog> {
-  late VideoPlayerController _controller;
-  double start = 0.0, end = 0.0;
+  final Trimmer _trimmer = Trimmer();
+
+  double _startValue = 0.0;
+  double _endValue = 0.0;
+
+  bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
+    _loadVideo();
+  }
+  Future<void> _loadVideo() async {
+    await _trimmer.loadVideo(videoFile: widget.file);
 
-    _controller = VideoPlayerController.file(widget.file)
-      ..initialize().then((_) {
-        setState(() {
-          end = _controller.value.duration.inMilliseconds.toDouble();
-        });
-        _controller.play();
-        _controller.setLooping(true);
-      });
+    final duration = _trimmer.videoPlayerController!.value.duration;
+
+    setState(() {
+      _startValue = 0.0;
+      _endValue = duration.inSeconds.toDouble();
+    });
   }
 
-  Future<void> trimVideo() async {
-    final selectedDurationSeconds = (end - start) / 1000;
 
-    if (selectedDurationSeconds > 20) {
+  Future<void> _saveTrimmedVideo() async {
+    if (_endValue <= _startValue) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Maximum allowed trimmed duration is 20 seconds.\n"
-                "Selected: ${selectedDurationSeconds.toStringAsFixed(1)} sec",
-          ),
-        ),
+        const SnackBar(content: Text("Invalid trim range")),
       );
       return;
     }
 
-    final output = "${widget.file.path}_trimmed.mp4";
+    final selectedDuration = _endValue - _startValue;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+    // if (selectedDuration > 20) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text(
+    //         "Maximum allowed trimmed duration is 20 seconds.\n"
+    //             "Selected: ${selectedDuration.toStringAsFixed(1)} sec",
+    //       ),
+    //     ),
+    //   );
+    //   return;
+    // }
+
+    setState(() => _isSaving = true);
+
+    await _trimmer.saveTrimmedVideo(
+      startValue: _startValue,
+      endValue: _endValue,
+      onSave: (outputPath) {
+        setState(() => _isSaving = false);
+
+        if (outputPath != null) {
+          Navigator.pop(context, File(outputPath));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Error trimming video")),
+          );
+        }
+      },
     );
-
-    final cmd =
-        "-y "
-        "-i \"${widget.file.path}\" "
-        "-ss ${start / 1000} "
-        "-t $selectedDurationSeconds "
-        "-map 0:v:0 -map 0:a:0 "
-        "-c:v libx264 "
-        "-c:a aac "
-        "-preset ultrafast "
-        "-movflags +faststart "
-        "\"$output\"";
-
-    final session = await FFmpegKit.execute(cmd);
-    final rc = await session.getReturnCode();
-
-    Navigator.pop(context); // close loader
-
-    if (ReturnCode.isSuccess(rc)) {
-      Navigator.pop(context, File(output)); // return trimmed file
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error trimming video")),
-      );
-    }
   }
 
 
   @override
   void dispose() {
-    _controller.dispose();
+    _trimmer.dispose();
     super.dispose();
   }
 
@@ -94,71 +91,82 @@ class _ModernTrimDialogState extends State<ModernTrimDialog> {
       backgroundColor: Colors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FittedBox(child: Text(GuardLocalizations.of(context)!.translate("videoUploadLimitText") ?? "",
-              style: TextStyle(
-                  color: Colors.white
-              ),)),
-            const SizedBox(height: 10),
-            AspectRatio(
-              aspectRatio: _controller.value.isInitialized
-                  ? _controller.value.aspectRatio
-                  : 16 / 9,
-              child: VideoPlayer(_controller),
-            ),
-
-            const SizedBox(height: 10),
-
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Colors.blue,
-                inactiveTrackColor: Colors.grey,
-                thumbColor: Colors.white,
-              ),
-              child: RangeSlider(
-                values: RangeValues(start, end),
-                min: 0,
-                max: _controller.value.isInitialized
-                    ? _controller.value.duration.inMilliseconds.toDouble()
-                    : 1,
-                onChanged: (values) {
-                  final diff = values.end - values.start;
-
-                  // block if > 20 sec
-                  if (diff > 20000) return;
-
-                  setState(() {
-                    start = values.start;
-                    end = values.end;
-                  });
-
-                  _controller.seekTo(Duration(milliseconds: start.toInt()));
-                },
-
-              ),
-            ),
-
             Text(
-              "Start: ${(start / 1000).toStringAsFixed(2)}s   "
-                  "End: ${(end / 1000).toStringAsFixed(2)}s",
+              GuardLocalizations.of(context)!
+                  .translate("videoUploadLimitText") ??
+                  "",
               style: const TextStyle(color: Colors.white),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
+            /// VIDEO PREVIEW
+            AspectRatio(
+              aspectRatio: _trimmer.videoPlayerController!.value.aspectRatio,
+              child: VideoViewer(trimmer: _trimmer),
+            ),
+
+
+            const SizedBox(height: 12),
+
+            /// TRIM SLIDER
+            TrimViewer(
+              trimmer: _trimmer,
+              viewerHeight: 60,
+              viewerWidth: MediaQuery.of(context).size.width,
+              maxVideoLength: const Duration(seconds: 20),
+              onChangeStart: (value) {
+                setState(() {
+                  _startValue = value;
+                });
+              },
+              onChangeEnd: (value) {
+                setState(() {
+                  _endValue = value;
+                });
+              },
+              onChangePlaybackState: (isPlaying) {},
+            ),
+
+
+            const SizedBox(height: 8),
+
+            Text(
+              "Start: ${_startValue.toStringAsFixed(2)}s   "
+                  "End: ${_endValue.toStringAsFixed(2)}s",
+              style: const TextStyle(color: Colors.white),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// ACTIONS
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context, null),
-                  child: const Text("CANCEL", style: TextStyle(color: Colors.red)),
+                  onPressed:
+                  _isSaving ? null : () => Navigator.pop(context),
+                  child: const Text(
+                    "CANCEL",
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
                 TextButton(
-                  onPressed: trimVideo,
-                  child: const Text("SAVE", style: TextStyle(color: Colors.blue)),
+                  onPressed: _isSaving ? null : _saveTrimmedVideo,
+                  child: _isSaving
+                      ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                      : const Text(
+                    "SAVE",
+                    style: TextStyle(color: Colors.blue),
+                  ),
                 ),
               ],
             ),

@@ -154,7 +154,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 AppUtils().setUserLoggedIn();
                 AppUtils().setToken(otpState.otpData.token??"");
                 AppUtils().setUserId(otpState.otpData.userId??"");
-                context.push('/dashboardScreen');
+                context.go('/dashboardScreen');
               }
               else{
                 AppUtils().setToken(otpState.otpData.token??"");
