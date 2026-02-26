@@ -51,9 +51,9 @@
   "chooseFromGallery": "Choose from Gallery",
   "typeOfIncident": "Type of Incident",
   "addTitle": "Title",
-  "enterTitle": "Enter Title (Optional)",
+  "enterTitle": "Enter Title",
   "enterIncidentDetails": "Enter details (Optional)",
-  "anonymous": "Anonymous",
+  "anonymous": "Report Anonymously",
   "pleaseEnterCodeSentToYourNumber": "Please enter OTP sent to your phone number",
   "des1": "Report incidents instantly with photos, videos, and location tags. Your report can save lives. Together, we build a safer community.",
   "des2": "Stay updated on local incidents by quickly filtering incidents by city and incident type, and remain safe by tracking those that may impact you.",
@@ -117,5 +117,12 @@
   "mapIsHiddenByTheReporterOfThisIncident": "Map is hidden by the reporter of this incident.",
   "ifYouBlockThisIncidentText": "If you block this incident, our team will review it and remove it from the app if necessary.",
   "ifYouBelieveThisIsNotAGenuine": "If you believe this is not a genuine incident, you can mark it as spam.",
-  "userName": "User Name"
+  "userName": "User Name",
+  "welcome": "Welcome",
+  "sendOTP": "Send OTP",
+  "oTP": "OTP",
+  "verifyOTP": "Verify OTP",
+  "report": "Report",
+  "subject": "Subject",
+  "enterSubject": "Enter Subject"
 }

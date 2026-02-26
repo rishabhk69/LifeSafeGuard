@@ -62,13 +62,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title field
-                 Text(GuardLocalizations.of(context)!.translate("addTitle") ?? "",
+                 Text(GuardLocalizations.of(context)!.translate("subject") ?? "",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 CommonTextFieldWidget(
-                  hintText: GuardLocalizations.of(context)!.translate("enterTitle") ?? "",
+                  hintText: GuardLocalizations.of(context)!.translate("enterSubject") ?? "",
                   isPassword: false,
                   validator: (v){
-                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterTitle") ?? "");
+                    return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterSubject") ?? "");
                   },
                   textController: titleController,
                 ),
@@ -82,6 +82,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 CommonTextFieldWidget(
                   hintText: GuardLocalizations.of(context)!.translate("enterDetails") ?? "",
                   isPassword: false,
+                  maxLines: 4,
                   validator: (v){
                     return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("enterDetails") ?? "");
                   },

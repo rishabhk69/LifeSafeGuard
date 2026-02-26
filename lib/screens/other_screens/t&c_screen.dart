@@ -52,7 +52,9 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
                   });
                 }),
               ),
+              if(widget.isLogin=='true')
               addWidth(5),
+              if(widget.isLogin=='true')
               Expanded(
                 child: CustomButton(
                   buttonHeight: 50,

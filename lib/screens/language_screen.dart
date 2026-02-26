@@ -50,7 +50,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     children: [
                       SvgPicture.asset(ImageHelper.langIc),
                       addWidth(5),
-                      Text(GuardLocalizations.of(context)!.translate("language") ?? "",style: GoogleFonts.poppins(
+                      Text("Language/भाषा",style: GoogleFonts.poppins(
                         color: ColorConstant.blackColor,
                         fontSize: 17,
                         fontWeight: FontWeight.w500

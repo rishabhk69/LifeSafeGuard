@@ -38,9 +38,9 @@ class _MobileScreenState extends State<MobileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("isLogin:${widget.isLogin}");
     return CommonBackground(
       '',
+        title: GuardLocalizations.of(context)!.translate("phoneNumber") ?? "",
         iconName: ImageHelper.mobileIc,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -85,6 +85,7 @@ class _MobileScreenState extends State<MobileScreen> {
                       enabled: true,
                       showFlag: true,
                       showFlagMain: true,
+                      hideMainText: true,
                       onChanged: (countryCode) {
                         setState(() {
                           selectedPhoneCode = countryCode.dialCode??"";
@@ -129,7 +130,7 @@ class _MobileScreenState extends State<MobileScreen> {
             }
           },child:  CustomButton(
             buttonHeight: 50,
-            text: GuardLocalizations.of(context)!.translate("send") ?? "", onTap: (){
+            text: GuardLocalizations.of(context)!.translate("sendOTP") ?? "", onTap: (){
           if(formGlobalKey.currentState!.validate()){
             // context.go('/dashboardScreen');
             BlocProvider.of<LoginBloc>(context,listen: false).add(LoginRefreshEvent(

@@ -61,5 +61,7 @@ class ImageHelper{
   static const String time = "assets/images/time.svg";
   static const String anonymous = "assets/images/anonymous.svg";
   static const String langIc = "assets/images/lang_ic.svg";
+  static const String userIc = "assets/images/user_ic.svg";
+  static const String user = "assets/images/user.svg";
 
 }

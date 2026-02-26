@@ -17,8 +17,9 @@ class _ChooseLoginState extends State<ChooseLogin> {
   @override
   Widget build(BuildContext context) {
     return CommonBackground(
-          'Welcome! Get Started',
-        // iconName: ImageHelper.startHereIc,
+      title: GuardLocalizations.of(context)!.translate("welcome") ?? "",
+          '',
+        iconName: ImageHelper.startHereIc,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

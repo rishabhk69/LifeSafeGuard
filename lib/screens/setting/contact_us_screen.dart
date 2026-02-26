@@ -91,19 +91,19 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
-                    value: "business",
+                    value: "generalInquiry",
                     items: const [
                       DropdownMenuItem(
-                          value: "business", child: Text("Business")),
+                          value: "generalInquiry", child: Text("General Inquiry")),
                       DropdownMenuItem(
-                          value: "investment",
-                          child: Text("Investment")),
+                          value: "investmentInquiry",
+                          child: Text("Investment Inquiry")),
                       DropdownMenuItem(
-                          value: "media", child: Text("Media")),
+                          value: "partnershipInquiry", child: Text("Partnership Inquiry")),
                       DropdownMenuItem(
-                          value: "partnership", child: Text("Partnership")),
+                          value: "advertisementInquiry", child: Text("Advertisement Inquiry")),
                       DropdownMenuItem(
-                          value: "advertisement", child: Text("Advertisement")),
+                          value: "other", child: Text("Other")),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -124,6 +124,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       fit: BoxFit.scaleDown,
                       height: 20,
                       width: 20,
+                      color: ColorConstant.primaryColor,
                     ),
                     hintText: GuardLocalizations.of(context)!.translate("fullName") ?? "",
                     textController: fullNameController),
@@ -137,6 +138,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     prefix: SvgPicture.asset(ImageHelper.callIc,
                       fit: BoxFit.scaleDown,
                       height: 20,
+                      color: ColorConstant.primaryColor,
                       width: 20,),
                     hintText: GuardLocalizations.of(context)!.translate("phoneNumber") ?? "",
                     textController: numberController),
@@ -147,6 +149,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     prefix: SvgPicture.asset(ImageHelper.smsIc,
                       fit: BoxFit.scaleDown,
                       height: 20,
+                      color: ColorConstant.primaryColor,
                       width: 20,),
                     isPassword: false,
                     hintText: GuardLocalizations.of(context)!.translate("emailAddress") ?? "",

@@ -80,6 +80,7 @@ class _OtpScreenState extends State<OtpScreen> {
     print(widget.phone);
     return CommonBackground(
       '',
+      title: GuardLocalizations.of(context)!.translate("oTP") ?? "",
       iconName: ImageHelper.mobileIc,
       child:Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -169,7 +170,7 @@ class _OtpScreenState extends State<OtpScreen> {
             }
           },child: CustomButton(
             buttonHeight: 50,
-            text: GuardLocalizations.of(context)!.translate("verify") ?? "", onTap: (){
+            text: GuardLocalizations.of(context)!.translate("verifyOTP") ?? "", onTap: (){
           // context.push('/termsAndCondition');
         if((otpCode?.length)==6){
           BlocProvider.of<OtpBloc>(context).add(OtpRefreshEvent(otp: otpCode,phoneNumber: widget.phone,isRegistering: widget.isLogin=='true'? false:true));

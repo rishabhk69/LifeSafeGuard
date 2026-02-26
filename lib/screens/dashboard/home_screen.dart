@@ -121,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 selectedFiles.isEmpty ?Column(
                   children: [
                     Text(
-                      isVideo ? GuardLocalizations.of(context)!.translate("uploadVideo") ?? "" : GuardLocalizations.of(context)!.translate("uploadImage") ?? "",
+                      isVideo ?
+                      "${GuardLocalizations.of(context)!.translate("uploadVideo") ?? ""}*" :
+                      "${ GuardLocalizations.of(context)!.translate("uploadImage") ?? ""}*",
                       style: GoogleFonts.poppins(
                           fontSize: 20, fontWeight: FontWeight.w400),
                     ),
@@ -657,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   locator<DialogService>().hideLoader();
                 }
               },child: CustomButton(
-                text: GuardLocalizations.of(context)!.translate("post") ?? "",
+                text: GuardLocalizations.of(context)!.translate("report") ?? "",
                 onTap: () async {
 
                   bool hasPermission = await CommonFunction().checkAndRequestLocationPermission(context);

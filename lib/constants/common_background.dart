@@ -118,7 +118,6 @@ class CommonBackground extends StatelessWidget {
                   ),
                 ),
               ),
-              if(showBack)
               Positioned(
                 left: 0,
                 right: 0,
@@ -132,7 +131,7 @@ class CommonBackground extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.keyboard_backspace_outlined,color: ColorConstant.whiteColor,),
+                        showBack ? Icon(Icons.keyboard_backspace_outlined,color: ColorConstant.whiteColor,):SizedBox(),
                         Text(title??"",style: GoogleFonts.poppins(
                           fontSize: 20,
                           color: ColorConstant.whiteColor,

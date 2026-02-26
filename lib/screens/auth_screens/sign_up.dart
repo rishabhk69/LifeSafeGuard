@@ -83,6 +83,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         Column(
                           children: [
                             CommonTextFieldWidget(isPassword: false,
+                                prefix: SvgPicture.asset( fit: BoxFit.scaleDown,
+                                  height: 20,
+                                  width: 20,ImageHelper.user,),
                                 validator: (v){
                                   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("firstName") ?? "");
                                 },
@@ -93,10 +96,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               // validator: (v){
                               //   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("lastName") ?? "");
                               // },
+                              prefix: SvgPicture.asset( fit: BoxFit.scaleDown,
+                                height: 20,
+                                width: 20,ImageHelper.user,),
                               hintText: GuardLocalizations.of(context)!.translate("lastName") ?? "",
                               textController: lNameController,
                               maxLength: 20,),
                             CommonTextFieldWidget(isPassword: false,
+                                prefix: SvgPicture.asset( fit: BoxFit.scaleDown,
+                                  height: 20,
+                                  width: 20,ImageHelper.userIc,),
                                 validator: (v){
                                   return Validations.commonValidation(v,GuardLocalizations.of(context)!.translate("userName") ?? "");
                                 },
@@ -127,7 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             }
                           },child:  CustomButton(
                             buttonHeight: 50,
-                            text: GuardLocalizations.of(context)!.translate("submit") ?? "", onTap: (){
+                            text: GuardLocalizations.of(context)!.translate("done") ?? "", onTap: (){
                           if(formGlobalKey.currentState!.validate()){
                             // if(selectedFile==null){
                             //   locator<ToastService>().show('Please Select Image');
